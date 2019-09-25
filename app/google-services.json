@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "266699011642",
+    "firebase_url": "https://ssu-readingd.firebaseio.com",
+    "project_id": "ssu-readingd",
+    "storage_bucket": "ssu-readingd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266699011642:android:f80b58f1bb7454f19a2703",
+        "android_client_info": {
+          "package_name": "com.ssu.readingd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266699011642-0batc7d6objdscjo5kooocj8v9uutclc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRW5LRYZc7R4wM4Y-QNJ2c3zeH5AorQb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266699011642-0batc7d6objdscjo5kooocj8v9uutclc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
