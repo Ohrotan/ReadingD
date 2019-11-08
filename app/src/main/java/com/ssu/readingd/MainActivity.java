@@ -1,66 +1,79 @@
 package com.ssu.readingd;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageProxy;
+
 
 public class MainActivity extends AppCompatActivity {
-    final static String TAG = "firebase_test";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //바코드 감지기 구성
+        FirebaseVisionBarcodeDetectorOptions options =
+                new FirebaseVisionBarcodeDetectorOptions.Builder()
+                        .setBarcodeFormats(
+                                FirebaseVisionBarcode.FORMAT_QR_CODE,
+                                FirebaseVisionBarcode.FORMAT_AZTEC)
+                        .build();
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("first", "Ada");
-        user.put("last", "Lovelace");
-        user.put("born", 1815);
+        //바코드 감지기 실행
+         class YourAnalyzer implements ImageAnalysis.Analyzer {
 
-// Add a new document with a generated ID
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
+            private int degreesToFirebaseRotation(int degrees) {
+                switch (degrees) {
+                    case 0:
+                        return FirebaseVisionImageMetadata.ROTATION_0;
+                    case 90:
+                        return FirebaseVisionImageMetadata.ROTATION_90;
+                    case 180:
+                        return FirebaseVisionImageMetadata.ROTATION_180;
+                    case 270:
+                        return FirebaseVisionImageMetadata.ROTATION_270;
+                    default:
+                        throw new IllegalArgumentException(
+                                "Rotation must be 0, 90, 180, or 270.");
+                }
+            }
 
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
+            @Override
+            public void analyze(ImageProxy imageProxy, int degrees) {
+                if (imageProxy == null || imageProxy.getImage() == null) {
+                    return;
+                }
+                Image mediaImage = imageProxy.getImage();
+                int rotation = degreesToFirebaseRotation(degrees);
+                FirebaseVisionImage image =
+                        FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
+                // Pass image to an ML Kit Vision API
+                // ...
+                FirebaseVisionImage image2;
+                try {
+                    Context context =null;
+                    Uri uri = null;
+                    image2 = FirebaseVisionImage.fromFilePath(context, uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+
     }
 }
