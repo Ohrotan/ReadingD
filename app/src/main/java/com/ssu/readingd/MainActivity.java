@@ -1,79 +1,39 @@
 package com.ssu.readingd;
 
-import android.content.Context;
-import android.media.Image;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
-import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
-
-import java.io.IOException;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageProxy;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+    Button btn1;
+    Button btn2;
+    Button btn3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //바코드 감지기 구성
-        FirebaseVisionBarcodeDetectorOptions options =
-                new FirebaseVisionBarcodeDetectorOptions.Builder()
-                        .setBarcodeFormats(
-                                FirebaseVisionBarcode.FORMAT_QR_CODE,
-                                FirebaseVisionBarcode.FORMAT_AZTEC)
-                        .build();
+        btn1 = findViewById(R.id.park_btn);
+        btn2 = findViewById(R.id.yim_btn);
+        btn3 = findViewById(R.id.jo_btn);
 
-        //바코드 감지기 실행
-         class YourAnalyzer implements ImageAnalysis.Analyzer {
 
-            private int degreesToFirebaseRotation(int degrees) {
-                switch (degrees) {
-                    case 0:
-                        return FirebaseVisionImageMetadata.ROTATION_0;
-                    case 90:
-                        return FirebaseVisionImageMetadata.ROTATION_90;
-                    case 180:
-                        return FirebaseVisionImageMetadata.ROTATION_180;
-                    case 270:
-                        return FirebaseVisionImageMetadata.ROTATION_270;
-                    default:
-                        throw new IllegalArgumentException(
-                                "Rotation must be 0, 90, 180, or 270.");
-                }
-            }
+    }
 
-            @Override
-            public void analyze(ImageProxy imageProxy, int degrees) {
-                if (imageProxy == null || imageProxy.getImage() == null) {
-                    return;
-                }
-                Image mediaImage = imageProxy.getImage();
-                int rotation = degreesToFirebaseRotation(degrees);
-                FirebaseVisionImage image =
-                        FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
-                // Pass image to an ML Kit Vision API
-                // ...
-                FirebaseVisionImage image2;
-                try {
-                    Context context =null;
-                    Uri uri = null;
-                    image2 = FirebaseVisionImage.fromFilePath(context, uri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+    @Override
+    public void onClick(View v) {
+        if(v== btn1){//박슬우
 
+        }else if(v== btn1){//임혜선
+
+        }else if(v== btn1){//조란
+            Intent intent = new Intent(this,TestRanActivity.class);
+            startActivity(intent);
         }
-
-
     }
 }

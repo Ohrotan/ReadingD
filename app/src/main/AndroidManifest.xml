@@ -9,9 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-            android:value="barcode" />
+        <activity android:name=".TestRanActivity"></activity>
+        <activity android:name=".BookEditActivity" />
+        <activity android:name=".BookManualRegisterActivity" />
+        <activity android:name=".BookRegisterActivity" />
+        <activity android:name=".BookAddSearchResultActivity" />
+        <activity android:name=".FlashbackActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,6 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="barcode" />
     </application>
 
 </manifest>
