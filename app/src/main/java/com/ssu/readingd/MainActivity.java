@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if(v== btn1){//박슬우
 
-        }else if(v== btn1){//임혜선
+        }else if(v== btn2){//임혜선
 
-        }else if(v== btn1){//조란
+        }else if(v== btn3){//조란
             Intent intent = new Intent(this,TestRanActivity.class);
             startActivity(intent);
         }

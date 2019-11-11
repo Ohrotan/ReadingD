@@ -3,13 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="30dp">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="책 추가하기"
+        android:textColor="#000"
+        android:textSize="25dp"
+        android:gravity="center"/>
 
     <EditText
         android:id="@+id/editText"
@@ -17,11 +21,19 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:hint="책 제목"
+        android:textColorHint="@color/colorAccent"
+        android:paddingBottom="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"/>
 
     <Button
         android:id="@+id/barcode_search_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="ISBN 바코드 인식"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:background="@color/colorGray"/>
 </LinearLayout>

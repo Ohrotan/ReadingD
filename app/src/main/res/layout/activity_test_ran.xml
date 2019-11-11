@@ -18,13 +18,15 @@
                 android:id="@+id/button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="책 추가 레이아웃" />
+                android:text="책 추가 레이아웃"
+                android:onClick="onClick"/>
 
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="책 검색 결과" />
+                android:text="책 검색 결과"
+                android:onClick="onClick"/>
         </TableRow>
 
         <TableRow
@@ -35,13 +37,15 @@
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="책 직접 등록" />
+                android:text="책 직접 등록"
+                android:onClick="onClick" />
 
             <Button
                 android:id="@+id/button4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="책 정보 입력" />
+                android:text="책 정보 입력"
+                android:onClick="onClick"/>
         </TableRow>
 
         <TableRow
@@ -52,13 +56,15 @@
                 android:id="@+id/button5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="플래시백" />
+                android:text="플래시백"
+                android:onClick="onClick"/>
 
             <Button
                 android:id="@+id/button6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="디비 테스트" />
+                android:text="디비 테스트"
+                android:onClick="onClick"/>
         </TableRow>
 
         <TableRow
