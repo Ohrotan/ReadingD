@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity" >
-    <Button
-        android:id="@+id/park_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="박슬우"
-        android:onClick="onClick"/>
-    <Button
-        android:id="@+id/yim_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="임혜선"
-        android:onClick="onClick"/>
-    <Button
-        android:id="@+id/jo_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="조란"
-        android:onClick="onClick"/>
+    android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
+
+    <Button
+        android:id="@+id/barcode_search_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
 </LinearLayout>
