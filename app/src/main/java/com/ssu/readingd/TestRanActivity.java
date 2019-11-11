@@ -55,7 +55,9 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
 
                 }
             });
+
             builder.setNegativeButton("취소",null);
+
 
             dialog = builder.create();
             dialog.show();
