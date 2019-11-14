@@ -16,13 +16,15 @@
             android:id="@+id/BtnMemoListActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="메모리스트 메인"/>
+            android:onClick="onClick"
+            android:text="메모리스트 메인" />
 
         <Button
             android:id="@+id/BtnBookMemoListActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="책별 메모 리스트"/>
+            android:onClick="onClick"
+            android:text="책별 메모 리스트" />
 
 
     </LinearLayout>
@@ -36,13 +38,15 @@
             android:id="@+id/BtnMemoSearchLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="메모검색"/>
+            android:onClick="onClick"
+            android:text="메모검색" />
 
         <Button
             android:id="@+id/BtnMemoSearchResultActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="메모 검색 결과"/>
+            android:onClick="onClick"
+            android:text="메모 검색 결과" />
 
 
     </LinearLayout>
@@ -56,13 +60,15 @@
             android:id="@+id/BtnBookShelfActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="책장 메인"/>
+            android:onClick="onClick"
+            android:text="책장 메인" />
 
         <Button
             android:id="@+id/BtnBookShelfDeleteLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="책 삭제 팝업"/>
+            android:onClick="onClick"
+            android:text="책 삭제 팝업" />
 
 
     </LinearLayout>
@@ -76,25 +82,29 @@
             android:id="@+id/BtnLoginActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="로그인"/>
+            android:onClick="onClick"
+            android:text="로그인" />
 
         <Button
             android:id="@+id/BtnMemberRegisterActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="회원가입"/>
+            android:onClick="onClick"
+            android:text="회원가입" />
 
         <Button
             android:id="@+id/BtnFindPasswordLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="비밀번호찾기"/>
+            android:onClick="onClick"
+            android:text="비밀번호찾기" />
 
         <Button
             android:id="@+id/BtnMemberOutLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="회원탈퇴"/>
+            android:onClick="onClick"
+            android:text="회원탈퇴" />
 
     </LinearLayout>
 
@@ -107,19 +117,22 @@
             android:id="@+id/BtnCommunityActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="담벼락 메인"/>
+            android:onClick="onClick"
+            android:text="담벼락 메인" />
 
         <Button
             android:id="@+id/BtnCommunitySearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="담벼락 검색"/>
+            android:onClick="onClick"
+            android:text="담벼락 검색" />
 
         <Button
             android:id="@+id/BtnCommunitySearchResultActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="담벼락 검색결과"/>
+            android:onClick="onClick"
+            android:text="담벼락 검색결과" />
 
 
     </LinearLayout>
