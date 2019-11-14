@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TestRanActivity"/>
+        <activity android:name=".activity_test_HyeSeon"></activity>
+        <activity android:name=".TestRanActivity" />
         <activity android:name=".BookEditActivity" />
         <activity android:name=".BookManualRegisterActivity" />
         <activity android:name=".BookRegisterActivity" />
