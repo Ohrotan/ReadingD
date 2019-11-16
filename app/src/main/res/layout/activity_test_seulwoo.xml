@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TestSeulwooActivity">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/button101"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="메모 리스트 메인"
+                android:onClick="onClick"/>
+
+            <Button
+                android:id="@+id/button102"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="책 별 메모리스트"
+                android:onClick="onClick"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/button103"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="메모 삽입 액티비티"
+                android:onClick="onClick" />
+
+            <Button
+                android:id="@+id/button104"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="메모 수정 액티비티"
+                android:onClick="onClick"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
+
+</RelativeLayout>
