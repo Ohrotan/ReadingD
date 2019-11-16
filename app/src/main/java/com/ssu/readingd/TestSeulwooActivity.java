@@ -33,12 +33,12 @@ public class TestSeulwooActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         Intent intent;
         if(v == btn101){
-            intent = new Intent(this,MemoListActivity.class);
-            startActivity(intent);
+          //  intent = new Intent(this,MemoListActivity.class);
+           // startActivity(intent);
 
         } else if(v == btn102){
-            intent = new Intent(this,BookMemoListActivity.class);
-            startActivity(intent);
+           // intent = new Intent(this,BookMemoListActivity.class);
+           // startActivity(intent);
 
         }else if(v == btn103){
             intent = new Intent(this,MemoRegisterActivity.class);

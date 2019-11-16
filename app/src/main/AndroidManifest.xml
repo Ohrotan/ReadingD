@@ -9,9 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MemoListActivity"></activity>
         <activity android:name=".MemoRegisterActivity" />
-        <activity android:name=".BookMemoListActivity" />
         <activity android:name=".TestSeulwooActivity" />
         <activity android:name=".TestRanActivity" />
         <activity android:name=".BookEditActivity" />
