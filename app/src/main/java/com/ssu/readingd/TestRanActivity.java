@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Rating;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,8 +59,7 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
 
             builder.setNegativeButton("취소",null);
 
-
-            dialog = builder.create();
+             dialog = builder.create();
             dialog.show();
             return;
         }else if(v == btn2){
