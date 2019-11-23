@@ -171,6 +171,7 @@
                 android:layout_height="match_parent"
                 android:layout_span="1"
                 android:gravity="center"
+                android:onClick="clickCalendar"
                 android:text="2019.10.10"
                 android:textAlignment="center"
                 android:textSize="18sp" />
@@ -188,6 +189,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="다 읽은 날짜"
+
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -199,6 +201,7 @@
                 android:layout_span="1"
                 android:gravity="center"
                 android:text="2019.10.31"
+                android:onClick="clickCalendar"
                 android:textAlignment="center"
                 android:textSize="18sp" />
         </TableRow>
