@@ -52,34 +52,42 @@ public class activity_test_HyeSeon extends AppCompatActivity implements View.OnC
         Intent intent;
 
         if(v == BtnMemoListActivity){
+            //메모리스트 액티비티
             intent = new Intent(this, MemoListActivity.class);
             startActivity(intent);
         }
         else if(v == BtnBookMemoListActivity){
+            //책 메모리스트 액티비티
             intent = new Intent(this, BookMemoListActivity.class);
             startActivity(intent);
         }
         else if(v == BtnMemoSearchResultActivity){
+            //메모 검색결과 액티비티
             intent = new Intent(this, MemoSearchResultActivity.class);
             startActivity(intent);
         }
         else if(v == BtnBookShelfActivity){
+            //책장 메인 액티비티
             intent = new Intent(this, BookShelfActivity.class);
             startActivity(intent);
         }
         else if(v == BtnLoginActivity){
+            //로그인 화면 액티비티
             intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
         else if(v == BtnMemberRegisterActivity){
+            //회원가입 액티비티
             intent = new Intent(this, MemberRegisterActivity.class);
             startActivity(intent);
         }
         else if(v == BtnCommunityActivity){
+            //담벼락 메인 액티비티
             intent = new Intent(this, CommunityActivity.class);
             startActivity(intent);
         }
         else if(v == BtnCommunitySearchResultActivity){
+            //담벼락 책 검색결과 액티비티
             intent = new Intent(this, CommunitySearchResultActivity.class);
             startActivity(intent);
         }
@@ -99,7 +107,7 @@ public class activity_test_HyeSeon extends AppCompatActivity implements View.OnC
             //책 삭제 확인 팝업
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("책 삭제");
-            builder.setMessage("책 삭제");
+            builder.setMessage("정말 삭제하시겠습니까?");
             builder.setPositiveButton("OK", null);
             builder.setNegativeButton("NO", null);
 
