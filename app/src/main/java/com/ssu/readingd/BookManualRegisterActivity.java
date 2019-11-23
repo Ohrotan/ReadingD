@@ -16,12 +16,16 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 /* 작성자: 조란
 최초 작성일: 2019.11.11
 파일내용: 책 정보 직접 입력 화면*/
-public class BookManualRegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class BookManualRegisterActivity extends BookRegisterActivity {
+    EditText read_p_etv;
+    EditText whole_p_etv;
+    Spinner state_spinner;
+    TextView start_date_tv;
+    TextView end_date_tv;
+    RatingBar ratingBar;
 
     ImageView book_cover_img;
     EditText name_etv;
@@ -29,13 +33,6 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
     EditText trans_etv;
     EditText publisher_etv;
     EditText pub_date_etv;
-
-    EditText read_p_etv;
-    EditText whole_p_etv;
-    Spinner state_spinner;
-    TextView start_date_tv;
-    TextView end_date_tv;
-    RatingBar ratingBar;
 
     Button cancel_btn;
     Button save_btn;
@@ -48,9 +45,9 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
     int day;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("책 등록");
         setContentView(R.layout.activity_book_manual_register);
 
         c = Calendar.getInstance();
@@ -58,13 +55,13 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
 
-
         book_cover_img = findViewById(R.id.book_cover_img);
         name_etv = findViewById(R.id.name_etv);
         author_etv = findViewById(R.id.author_etv);
         trans_etv = findViewById(R.id.trans_etv);
         publisher_etv = findViewById(R.id.publisher_etv);
         pub_date_etv = findViewById(R.id.pub_date_etv);
+
 
         read_p_etv = findViewById(R.id.read_p_etv);
         whole_p_etv = findViewById(R.id.whole_p_etv);
@@ -96,16 +93,10 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
 
         start_date_tv.setText(year + "." + (month + 1) + "." + day);
         end_date_tv.setText(year + "." + (month + 1) + "." + day);
+
     }
-
     public void clickCalendar(View v) {
-        final TextView dateTv;
-        if (v == start_date_tv) {
-            dateTv = start_date_tv;
-        } else {
-            dateTv = end_date_tv;
-        }
-
+        final TextView dateTv =(TextView)v;
 
         DatePickerDialog dateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -126,4 +117,6 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
             Toast.makeText(this, "저장", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }
