@@ -139,13 +139,28 @@ public class activity_test_HyeSeon extends AppCompatActivity implements View.OnC
         }
         else if(v == BtnBookShelfDeleteLayout){
             //책 삭제 확인 팝업
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("책 삭제");
-            builder.setMessage("정말 삭제하시겠습니까?");
-            builder.setPositiveButton("OK", null);
-            builder.setNegativeButton("NO", null);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_book_delete);
 
-            alertDialog = builder.create();
+            Button cancelBtn = alertDialog.findViewById(R.id.bookDeleteCancelBtn);
+            Button delBtn = alertDialog.findViewById(R.id.bookDeleteBtn);
+
+            cancelBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view)
+                {
+                    alertDialog.dismiss();
+                }
+            });
+
+            delBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(activity_test_HyeSeon.this, "책 삭제", Toast.LENGTH_SHORT).show();
+                    alertDialog.dismiss();
+                }
+            });
+
             alertDialog.show();
         }
 
