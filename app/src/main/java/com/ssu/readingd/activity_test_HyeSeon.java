@@ -3,10 +3,19 @@ package com.ssu.readingd;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import java.util.zip.Inflater;
 
 public class activity_test_HyeSeon extends AppCompatActivity implements View.OnClickListener{
 
@@ -24,7 +33,9 @@ public class activity_test_HyeSeon extends AppCompatActivity implements View.OnC
     Button BtnCommunitySearch;
     Button BtnCommunitySearchResultActivity;
 
-    AlertDialog alertDialog;
+
+
+    Dialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +56,17 @@ public class activity_test_HyeSeon extends AppCompatActivity implements View.OnC
         BtnCommunitySearch = (Button)findViewById(R.id.BtnCommunitySearch);
         BtnCommunitySearchResultActivity = (Button)findViewById(R.id.BtnCommunitySearchResultActivity);
 
+
+
     }
 
     @Override
     public void onClick(View v) {
         Intent intent;
+
+        alertDialog = new Dialog(activity_test_HyeSeon.this);
+
+
 
         if(v == BtnMemoListActivity){
             //메모리스트 액티비티
@@ -93,14 +110,31 @@ public class activity_test_HyeSeon extends AppCompatActivity implements View.OnC
         }
         else if(v == BtnMemoSearchLayout){
             //메모 검색 레이아웃
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("메모 검색");
-            builder.setMessage("메모 검색");
-            builder.setPositiveButton("OK", null);
-            builder.setNegativeButton("NO", null);
 
-            alertDialog = builder.create();
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.memo_search_layout);
+
+            Button cancelBtn = alertDialog.findViewById(R.id.searchCancelBtn);
+            Button searchBtn = alertDialog.findViewById(R.id.searchBtn);
+
+            cancelBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view)
+                {
+                    alertDialog.dismiss();
+                }
+            });
+
+            searchBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(activity_test_HyeSeon.this, "검색", Toast.LENGTH_SHORT).show();
+                    alertDialog.dismiss();
+                }
+            });
+
             alertDialog.show();
+
 
         }
         else if(v == BtnBookShelfDeleteLayout){
@@ -114,26 +148,58 @@ public class activity_test_HyeSeon extends AppCompatActivity implements View.OnC
             alertDialog = builder.create();
             alertDialog.show();
         }
+
         else if(v == BtnFindPasswordLayout){
             //비밀번호 찾기 레이아웃
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("비밀번호 찾기");
-            builder.setMessage("비밀번호 찾기");
-            builder.setPositiveButton("OK", null);
-            builder.setNegativeButton("NO", null);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_find_password);
 
-            alertDialog = builder.create();
+            Button cancelBtn = alertDialog.findViewById(R.id.findPWCancelBtn);
+            Button findBtn = alertDialog.findViewById(R.id.findBtn);
+
+            cancelBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view)
+                {
+                    alertDialog.dismiss();
+                }
+            });
+
+            findBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(activity_test_HyeSeon.this, "비밀번호 찾기", Toast.LENGTH_SHORT).show();
+                    alertDialog.dismiss();
+                }
+            });
+
             alertDialog.show();
         }
+
         else if(v == BtnMemberOutLayout){
             //회원탈퇴 레이아웃
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("회원탈퇴");
-            builder.setMessage("회원탈퇴");
-            builder.setPositiveButton("OK", null);
-            builder.setNegativeButton("NO", null);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_member_out);
 
-            alertDialog = builder.create();
+            Button cancelBtn = alertDialog.findViewById(R.id.outCancelBtn);
+            Button outBtn = alertDialog.findViewById(R.id.outBtn);
+
+            cancelBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view)
+                {
+                    alertDialog.dismiss();
+                }
+            });
+
+            outBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(activity_test_HyeSeon.this, "회원탈퇴", Toast.LENGTH_SHORT).show();
+                    alertDialog.dismiss();
+                }
+            });
+
             alertDialog.show();
         }
         else if(v== BtnCommunitySearch){
