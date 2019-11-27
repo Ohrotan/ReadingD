@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="8"
     tools:context=".BookShelfActivity"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/topLayout"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="8"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_margin="30dp">
 
         <LinearLayout
             android:layout_weight="6"
@@ -77,53 +77,13 @@
         </Spinner>
     </LinearLayout>
 
-    <TableLayout
-        android:id="@+id/book_table"
+    <GridView
+        android:id="@+id/gridView"
         android:layout_width="match_parent"
-        android:layout_weight="7"
-        android:layout_height="0dp">
-
-        <TableRow
-            android:id="@+id/firstRow"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:height="0dp">
-
-        </TableRow>
-
-        <View
-            style="@style/Divider"
-            android:background="#B9585858" />
-
-        <TableRow
-            android:id="@+id/secondRow"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:height="0dp"
-            android:gravity="center">
-
-        </TableRow>
-
-        <View
-            style="@style/Divider"
-            android:background="#B9585858" />
-
-        <TableRow
-            android:id="@+id/thirdRow"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:height="0dp"
-            android:gravity="center">
-
-        </TableRow>
-
-        <View
-            style="@style/Divider"
-            android:background="#B9585858" />
-
-    </TableLayout>
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/topLayout"
+        android:numColumns="3" />
 
 
-
-
-</LinearLayout>
+</RelativeLayout>
