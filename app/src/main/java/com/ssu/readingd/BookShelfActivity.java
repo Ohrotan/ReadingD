@@ -2,9 +2,13 @@ package com.ssu.readingd;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TableRow;
@@ -14,9 +18,7 @@ public class BookShelfActivity extends AppCompatActivity {
 
     Spinner sortSpinner;
     ImageButton imageButton;
-    TableRow firstRow;
-    TableRow secondRow;
-    TableRow thirdRow;
+    GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +27,36 @@ public class BookShelfActivity extends AppCompatActivity {
 
         sortSpinner = (Spinner)findViewById(R.id.sortBookSpinner);
         imageButton = (ImageButton)findViewById(R.id.imageButton);
-        firstRow = (TableRow)findViewById(R.id.firstRow);
-        secondRow = (TableRow)findViewById(R.id.secondRow);
-        thirdRow = (TableRow)findViewById(R.id.thirdRow);
+        gridView = findViewById(R.id.gridView);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int displayWidth = size.x;
+        int displayHeight = size.y;
+
+
+        BookShelfAdapter gridAdapter = new BookShelfAdapter(this, displayWidth);
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_2));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+        gridAdapter.addItem(new BookItem(R.drawable.book_1));
+
+
+
+
+        gridView.setAdapter(gridAdapter);
+
+
+
 
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -40,6 +69,8 @@ public class BookShelfActivity extends AppCompatActivity {
 
             }
         });
+
+
 
 
     }
