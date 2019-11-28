@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+/* 메모 수정 */
+
 public class MemoEditActivity extends AppCompatActivity {
 
     @Override
