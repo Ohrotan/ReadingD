@@ -1,4 +1,4 @@
-package com.ssu.readingd;
+package com.ssu.readingd.util;
 
 import android.util.Log;
 
