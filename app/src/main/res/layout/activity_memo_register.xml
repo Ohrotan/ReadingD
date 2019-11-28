@@ -64,7 +64,7 @@
             android:id = "@+id/cur_page_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "244"
+            android:text = "0"
             android:layout_marginRight="30dp"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -72,7 +72,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/round_shape_gray"
@@ -86,26 +86,58 @@
         >
 
         <ImageSwitcher
+            android:layout_alignParentTop="true"
             android:id="@+id/image_switcher"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:background="#ffffff">
-
         </ImageSwitcher>
+
+        <ImageButton
+            android:id="@+id/next_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:layout_alignRight="@id/image_switcher"
+            android:layout_alignBottom="@id/image_switcher"
+            android:src="@drawable/nextbtn"
+        ></ImageButton>
+
+        <ImageButton
+            android:id="@+id/prev_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:layout_alignLeft="@id/image_switcher"
+            android:layout_alignBottom="@id/image_switcher"
+            android:src="@drawable/prevbtn"
+            ></ImageButton>
+
+        <ImageButton
+            android:id="@+id/imagedelete_btn"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:layout_alignRight="@id/image_switcher"
+            android:layout_alignTop="@id/image_switcher"
+            android:src="@drawable/imagedeletebtn"
+            ></ImageButton>
+
 
 
         <EditText
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/image_switcher"
             android:id="@+id/memo_edit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:scrollbars  = "vertical"
-
             android:text= "eeeeeeeeeee\neee\nn\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\f"
             ></EditText>
 
 
+    </RelativeLayout>
 
-    </LinearLayout>
     <LinearLayout
 
         android:layout_width="match_parent"
