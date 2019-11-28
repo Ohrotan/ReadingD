@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ssu.readingd.util.BookAPITask;
+import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,6 +29,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class TestRanActivity extends AppCompatActivity implements View.OnClickListener {
+
     Button btn1;
     Button btn2;
     Button btn3;
@@ -44,9 +50,14 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
     private String REQUEST_URL = SEARCH_URL + API_KEY + CATEGORY + KEYWORD;
 
     private TextView tv;
+    private ImageView img_v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //img 받아오기
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         REQUEST_URL = "http://www.nl.go.kr/app/nl/search/openApi/search.jsp?key=c594fa83326be40164ae013ab0a14ad8\n" +
                 "&category=[단행자료:dan]&kwd=[테스트]";
@@ -60,6 +71,7 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
         btn5 = findViewById(R.id.button5);
         btn6 = findViewById(R.id.button6);
         tv = findViewById(R.id.tv);
+        img_v =findViewById(R.id.img_v);
 
     }
 
@@ -112,6 +124,9 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
             getJSON();
             BookAPITask rest = new BookAPITask("http://www.nl.go.kr/app/nl/search/openApi/search.jsp?key=c594fa83326be40164ae013ab0a14ad8\n" +
                     "&category=[단행자료:dan]&kwd=[테스트]");
+            String url = "https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg";
+          //  url = "https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/%EC%A0%9C%EB%AA%A9%20%EC%97%86%EC%9D%8C.png";
+            ImageViewFromURL.setImageView(this,img_v,url);
 
         }
 
