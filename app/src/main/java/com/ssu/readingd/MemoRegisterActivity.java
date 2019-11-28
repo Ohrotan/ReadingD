@@ -10,9 +10,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 import android.content.Context;
@@ -25,9 +28,14 @@ import android.widget.ImageView;
 public class MemoRegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageSwitcher imageSwitcher;
-    Button btnPrev,btnNext;
-    int imageIds[] = {R.drawable.book_1, R.drawable.book_2};
-    int count = imageIds.length;
+    ImageButton btnPrev,btnNext, btnDelete;
+    ImageView btnAddPhoto;
+    SeekBar seekBar;
+    TextView tvcurpage;
+
+    int pagenumber;
+    int imageIds[] = new int[10];
+    int count = 0;
     int currentIndex = 0;
 
 
@@ -37,8 +45,14 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_memo_register);
 
         final ImageSwitcher imageSwitcher = findViewById(R.id.image_switcher);
-        btnPrev = (Button)findViewById(R.id.cancel_btn);
-        btnNext = findViewById(R.id.save_btn);
+        btnPrev =findViewById(R.id.prev_btn);
+        btnNext = findViewById(R.id.next_btn);
+        btnDelete = findViewById(R.id.imagedelete_btn);
+        btnAddPhoto = findViewById(R.id.addphoto_bt);
+        imageIds[count++] = R.drawable.book_1;
+        imageIds[count++] = R.drawable.book_2;
+        imageIds[count++] = R.drawable.bg1;
+
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory(){
             public View makeView(){
 
@@ -52,25 +66,74 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         Animation out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
         imageSwitcher.setInAnimation(in);
         imageSwitcher.setOutAnimation(out);
+        imageSwitcher.setImageResource(imageIds[currentIndex]);
 
         btnPrev.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View v){
-                currentIndex++;
-                if(currentIndex>=count)
-                    currentIndex=0;
+                currentIndex--;
+                if(currentIndex<=0)
+                    currentIndex=count;
                 imageSwitcher.setImageResource(imageIds[currentIndex]);
             }
         });
         btnNext.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View v){
-                currentIndex--;
-                if(currentIndex<=0)
-                    currentIndex=count-1;
+                currentIndex++;
+                if(currentIndex>count-1)
+                    currentIndex=0;
                 imageSwitcher.setImageResource(imageIds[currentIndex]);
             }
         });
+        btnDelete.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v){
+
+                for(int i = currentIndex; i < count; i++){
+                    imageIds[i] = imageIds[i+1];
+                }
+                imageIds[--count] = 0;
+                if(currentIndex >= count-1)
+                    currentIndex--;
+                imageSwitcher.setImageResource(imageIds[currentIndex]);
+            }
+        });
+        btnAddPhoto.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v){
+                imageIds[count++] = R.drawable.book_add;
+                currentIndex = count-1;
+                imageSwitcher.setImageResource(imageIds[currentIndex]);
+            }
+        });
+
+        seekBar = findViewById(R.id.page_seekbar);
+        tvcurpage = findViewById(R.id.cur_page_tv);
+        pagenumber = 0;
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                pagenumber = seekBar.getProgress();
+                update();
+            }
+
+            public void update(){
+                tvcurpage.setText(new StringBuilder().append(pagenumber));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                pagenumber = seekBar.getProgress();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                pagenumber = seekBar.getProgress();
+            }
+        });
+
 
     }
 
