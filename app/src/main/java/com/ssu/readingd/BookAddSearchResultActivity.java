@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.ssu.readingd.dto.BookSimpleDTO;
+import com.ssu.readingd.adapter.BookResultListAdapter;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 /* 작성자: 조란
@@ -19,7 +22,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
     ListView book_search_result_list;
     Button select_btn;
 
-    BookResultListItem selecBook;
+    BookSimpleDTO selecBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                 }
                 lastView = view;
                 view.setBackgroundColor(getColor(R.color.colorGray));
-                selecBook = (BookResultListItem) parent.getAdapter().getItem(position);
+                selecBook = (BookSimpleDTO) parent.getAdapter().getItem(position);
             }
         });
 
@@ -59,12 +62,34 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
         img[3] = findViewById(R.id.tab_share);
         img[4] = findViewById(R.id.tab_setting);
 
-        if (v == img[0]) {
+        if(v==img[0]){
             Intent intent = new Intent(this, FlashbackActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             overridePendingTransition(0, 0);
+        }else if(v==img[1]){
+            Intent intent = new Intent(this, MemoListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
         }
+        else if(v==img[2]){
+            Intent intent = new Intent(this, BookShelfActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }else if(v==img[3]){
+            Intent intent = new Intent(this, CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }else if(v==img[4]){
+            Intent intent = new Intent(this, SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }
+
 
     }
 

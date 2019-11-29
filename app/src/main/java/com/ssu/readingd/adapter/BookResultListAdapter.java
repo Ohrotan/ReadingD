@@ -1,4 +1,4 @@
-package com.ssu.readingd;
+package com.ssu.readingd.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,11 +8,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ssu.readingd.dto.BookSimpleDTO;
+import com.ssu.readingd.R;
+
 import java.util.ArrayList;
 
 public class BookResultListAdapter extends BaseAdapter {
     Context context;
-    ArrayList<BookResultListItem> list;
+    ArrayList<BookSimpleDTO> list;
     ViewHolder viewholder;
 
     public BookResultListAdapter() {
@@ -23,18 +26,26 @@ public class BookResultListAdapter extends BaseAdapter {
         super();
         this.context = context;
         list = new ArrayList<>();
-        list.add(new BookResultListItem("book-1", R.drawable.book_1, "끌림", "이병률", "", "달", "2005.07.01"));
-        list.add(new BookResultListItem("book-2", R.drawable.book_2, "총,균,쇠", "제레드 다이아몬드", "김진준", "문학사상사", "1998.08.08"));
-        list.add(new BookResultListItem("book-3", R.drawable.book_1, "끌림", "이병률", "", "달", "2005.07.01"));
-        list.add(new BookResultListItem("book-4", R.drawable.book_2, "총,균,쇠", "제레드 다이아몬드", "김진준", "문학사상사", "1998.08.08"));
-        list.add(new BookResultListItem("book-5", R.drawable.book_1, "끌림", "이병률", "", "달", "2005.07.01"));
-        list.add(new BookResultListItem("book-6", R.drawable.book_2, "총,균,쇠", "제레드 다이아몬드", "김진준", "문학사상사", "1998.08.08"));
-        list.add(new BookResultListItem("book-7", R.drawable.book_1, "끌림", "이병률", "", "달", "2005.07.01"));
-        list.add(new BookResultListItem("book-8", R.drawable.book_2, "총,균,쇠", "제레드 다이아몬드", "김진준", "문학사상사", "1998.08.08"));
+        list.add(new BookSimpleDTO("book-1", null, "끌림", "이병률", "", "달", "2005.07.01"));
+        list.add(new BookSimpleDTO("book-2", null, "총,균,쇠", "제레드 다이아몬드", "김진준", "문학사상사", "1998.08.08"));
+        list.add(new BookSimpleDTO("book-3", null, "끌림", "이병률", "", "달", "2005.07.01"));
+        list.add(new BookSimpleDTO("book-4", null, "총,균,쇠", "제레드 다이아몬드", "김진준", "문학사상사", "1998.08.08"));
+        list.add(new BookSimpleDTO("book-5", null, "끌림", "이병률", "", "달", "2005.07.01"));
+        list.add(new BookSimpleDTO("book-6", null, "총,균,쇠", "제레드 다이아몬드", "김진준", "문학사상사", "1998.08.08"));
+        list.add(new BookSimpleDTO("book-7", null, "끌림", "이병률", "", "달", "2005.07.01"));
+        list.add(new BookSimpleDTO("book-8", null, "총,균,쇠", "제레드 다이아몬드", "김진준", "문학사상사", "1998.08.08"));
     }
 
-    public BookResultListAdapter(Context context, ArrayList<BookResultListItem> list) {
+    public BookResultListAdapter(Context context, ArrayList<BookSimpleDTO> list) {
         this.context = context;
+        this.list = list;
+    }
+
+    public ArrayList<BookSimpleDTO> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<BookSimpleDTO> list) {
         this.list = list;
     }
 
@@ -69,11 +80,11 @@ public class BookResultListAdapter extends BaseAdapter {
             viewholder = (ViewHolder) convertView.getTag();
         }
 
-        viewholder.img.setImageResource(list.get(position).getBookImg());
+       // viewholder.img.setImageResource(list.get(position).getImg());
         viewholder.name.setText(list.get(position).getBookName());
         viewholder.authors.setText(list.get(position).getAuthor() + " 지음, " + list.get(position).getTranslator() + " 옮김");
         viewholder.publisher.setText(list.get(position).getPublisher());
-        viewholder.date.setText(list.get(position).getDate());
+        viewholder.date.setText(list.get(position).getPubDate());
 
         return convertView;
     }

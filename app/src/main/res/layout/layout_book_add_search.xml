@@ -7,16 +7,15 @@
     android:padding="30dp">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="책 추가하기"
         android:textColor="#000"
-        android:textSize="25dp"
-        android:gravity="center"/>
+        android:textSize="25dp" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/api_search_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
