@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.ssu.readingd.util.BookAPITask;
 import com.ssu.readingd.util.DBUtil;
-import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -40,15 +39,22 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
 
     AlertDialog dialog;
 
-    private static final String TAG = "imagesearchexample";
+    private static final String TAG = "api call";
     public static final int LOAD_SUCCESS = 101;
     ProgressDialog progressDialog;
 
-    private String SEARCH_URL = "http://www.nl.go.kr/app/nl/search/openApi/search.jsp";
-    private String API_KEY = "?key=c594fa83326be40164ae013ab0a14ad8";
-    private String CATEGORY = "&category=";
-    private String KEYWORD = "&kwd=";
-    private String REQUEST_URL = SEARCH_URL + API_KEY + CATEGORY + KEYWORD;
+    private final String SEARCH_URL = "http://seoji.nl.go.kr/landingPage/SearchApi.do";
+    private final String API_KEY = "?cert_key=c594fa83326be40164ae013ab0a14ad8";
+    private final String RESULT_STYLE = "&result_style=json";
+    private String PAGE_NO = "&page_no=1";
+    private String PAGE_SIZE = "&page_size=1";
+    private String ISBN = "&isbn=";
+    private String TITLE = "&title=";
+    private String PUBLISHER = "&publisher=";
+    private String AUTHOR = "&author=이병률";
+    private String SORT = "&sort=";
+    private String REQUEST_URL = SEARCH_URL + API_KEY + RESULT_STYLE + PAGE_NO + PAGE_SIZE + ISBN + TITLE +
+            PUBLISHER + AUTHOR + SORT;
 
     private TextView tv;
     private ImageView img_v;
@@ -60,8 +66,6 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        REQUEST_URL = "http://www.nl.go.kr/app/nl/search/openApi/search.jsp?key=c594fa83326be40164ae013ab0a14ad8\n" +
-                "&category=[단행자료:dan]&kwd=[테스트]";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_ran);
 
@@ -72,7 +76,7 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
         btn5 = findViewById(R.id.button5);
         btn6 = findViewById(R.id.button6);
         tv = findViewById(R.id.tv);
-        img_v =findViewById(R.id.img_v);
+        img_v = findViewById(R.id.img_v);
 
     }
 
@@ -122,14 +126,14 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
             progressDialog.show();
             tv = new TextView(this);
 
-          //  getJSON();
+              getJSON();
             BookAPITask rest = new BookAPITask("http://www.nl.go.kr/app/nl/search/openApi/search.jsp?key=c594fa83326be40164ae013ab0a14ad8\n" +
                     "&category=[단행자료:dan]&kwd=[테스트]");
             String url = "https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg";
-          //  url = "https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/%EC%A0%9C%EB%AA%A9%20%EC%97%86%EC%9D%8C.png";
-           // ImageViewFromURL.setImageView(this,img_v,url);
+            url = "https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/%EC%A0%9C%EB%AA%A9%20%EC%97%86%EC%9D%8C.png";
+            // ImageViewFromURL.setImageView(this,img_v,url);
 
-            DBUtil.addUser("ygj02054","123");
+          //  DBUtil.addUser("ygj02054", "123");
 
         }
 
@@ -160,7 +164,7 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
                         String jsonString = (String) msg.obj;
                         Log.v(TAG, jsonString);
                         mainactivity.tv.setText(jsonString);
-                        Toast.makeText(mainactivity,jsonString,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mainactivity, jsonString, Toast.LENGTH_SHORT).show();
 
                         break;
                 }
