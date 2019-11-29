@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:layout_marginBottom="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/more_round_shape_gray"
+        android:padding="40dp"
+        android:layout_marginBottom="30dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:id="@+id/BookTitleCm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="책 제목"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" - "
+                    android:layout_marginLeft="30dp"/>
+
+                <TextView
+                    android:id="@+id/BookWriterCm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="저자"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" / " />
+
+                <TextView
+                    android:id="@+id/BookPageCm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="214"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="p"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" / " />
+
+                <TextView
+                    android:id="@+id/BookDateCm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2019.11.28"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/emailCm"
+                android:layout_below="@id/linearLayout"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="hshs@ssu.ac.kr"/>
+
+
+
+
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/communityPicture"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:srcCompat="@drawable/book_1" />
+
+        <TextView
+            android:id="@+id/communityContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="10dp"
+            android:text="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
