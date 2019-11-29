@@ -49,9 +49,6 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         btnNext = findViewById(R.id.next_btn);
         btnDelete = findViewById(R.id.imagedelete_btn);
         btnAddPhoto = findViewById(R.id.addphoto_bt);
-        imageIds[count++] = R.drawable.book_1;
-        imageIds[count++] = R.drawable.book_2;
-        imageIds[count++] = R.drawable.bg1;
 
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory(){
             public View makeView(){
@@ -102,7 +99,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         btnAddPhoto.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View v){
-                imageIds[count++] = R.drawable.book_add;
+                imageIds[count++] = R.drawable.memoimgadd;
                 currentIndex = count-1;
                 imageSwitcher.setImageResource(imageIds[currentIndex]);
             }
