@@ -28,7 +28,10 @@ public class FlashbackActivity extends AppCompatActivity {
         img[4] = findViewById(R.id.tab_setting);
 
         if(v==img[0]){
-
+            Intent intent = new Intent(this, FlashbackActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
         }else if(v==img[1]){
             Intent intent = new Intent(this, MemoListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

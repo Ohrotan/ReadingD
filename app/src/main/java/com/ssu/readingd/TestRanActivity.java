@@ -87,14 +87,18 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            View bookAddPopup = inflater.inflate(R.layout.layout_book_add_search, null);
+            final View bookAddPopup = inflater.inflate(R.layout.layout_book_add_search, null);
             builder.setView(bookAddPopup);
             builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
+                    TextView keyword = bookAddPopup.findViewById(R.id.api_search_tv);
+                    keyword.getText();
                     Toast.makeText(TestRanActivity.this,
                             "책 제목으로 검색 이동", Toast.LENGTH_SHORT).show();
                     //제목이나 저자로 책검색 이동
+
 
                 }
             });

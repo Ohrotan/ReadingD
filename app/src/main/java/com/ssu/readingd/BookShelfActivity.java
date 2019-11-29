@@ -6,13 +6,14 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TableRow;
 import android.widget.Toast;
+
+import com.ssu.readingd.dto.BookItem;
+import com.ssu.readingd.adapter.BookShelfAdapter;
 
 public class BookShelfActivity extends AppCompatActivity {
 
