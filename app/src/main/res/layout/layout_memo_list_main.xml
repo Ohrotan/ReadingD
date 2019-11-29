@@ -92,9 +92,11 @@
         <ImageView
             android:id="@+id/communityPicture"
             android:layout_width="match_parent"
+
             android:layout_height="200dp"
             app:srcCompat="@drawable/book_1"
            />
+
 
         <TextView
             android:id="@+id/communityContent"
