@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ssu.readingd.util.BookAPITask;
+import com.ssu.readingd.util.DBUtil;
 import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.io.BufferedReader;
@@ -121,12 +122,14 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
             progressDialog.show();
             tv = new TextView(this);
 
-            getJSON();
+          //  getJSON();
             BookAPITask rest = new BookAPITask("http://www.nl.go.kr/app/nl/search/openApi/search.jsp?key=c594fa83326be40164ae013ab0a14ad8\n" +
                     "&category=[단행자료:dan]&kwd=[테스트]");
             String url = "https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg";
           //  url = "https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/%EC%A0%9C%EB%AA%A9%20%EC%97%86%EC%9D%8C.png";
-            ImageViewFromURL.setImageView(this,img_v,url);
+           // ImageViewFromURL.setImageView(this,img_v,url);
+
+            DBUtil.addUser("ygj02054","123");
 
         }
 
