@@ -93,9 +93,10 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
                 public void onClick(DialogInterface dialog, int which) {
 
                     TextView keyword = bookAddPopup.findViewById(R.id.api_search_tv);
-                    keyword.getText();
-                    Toast.makeText(TestRanActivity.this,
-                            "책 제목으로 검색 이동", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(TestRanActivity.this, BookAddSearchResultActivity.class);
+                    intent.putExtra("keyword", keyword.getText());
+
                     startActivity(new Intent(TestRanActivity.this, BookAddSearchResultActivity.class));
                     //제목이나 저자로 책검색 이동
 
