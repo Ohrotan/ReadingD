@@ -5,12 +5,12 @@ import com.ssu.readingd.custom_enum.BookStatus;
 public class BookDTO extends BookSimpleDTO {
 
     int r_page;
-    int w_page;
     Enum<BookStatus> status;
     String start_date;
     String end_date;
     float rating;
     String user_id;
+
 
     public BookDTO() {
         super();
@@ -21,18 +21,31 @@ public class BookDTO extends BookSimpleDTO {
     }
 
     public BookDTO(String id, String img, String book_name, String author, String translator,
-                   String publisher, String pub_date) {
-        super(id, img, book_name, author, translator, publisher, pub_date);
+                   String publisher, String pub_date, String isbn, int w_page) {
+        super(id, img, book_name, author, translator, publisher, pub_date, isbn, w_page);
     }
 
+    public BookDTO(BookSimpleDTO simple) {
+        super(simple);
+    }
 
-    public BookDTO(String id, String img, String book_name, String author, String translator,
-                   String publisher, String pub_date, int r_page, int w_page, Enum<BookStatus> status,
+    public BookDTO(BookSimpleDTO simple, int r_page, Enum<BookStatus> status,
                    String start_date, String end_date, float rating, String user_id) {
-        super(id, img, book_name, author, translator, publisher, pub_date);
+        super(simple);
         this.status = status;
         this.r_page = r_page;
-        this.w_page = w_page;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.rating = rating;
+        this.user_id = user_id;
+    }
+
+    public BookDTO(String id, String img, String book_name, String author, String translator,
+                   String publisher, String pub_date, String isbn, int w_page, int r_page, Enum<BookStatus> status,
+                   String start_date, String end_date, float rating, String user_id) {
+        super(id, img, book_name, author, translator, publisher, pub_date, isbn, w_page);
+        this.status = status;
+        this.r_page = r_page;
         this.start_date = start_date;
         this.end_date = end_date;
         this.rating = rating;
@@ -45,14 +58,6 @@ public class BookDTO extends BookSimpleDTO {
 
     public void setRPage(int r_page) {
         this.r_page = r_page;
-    }
-
-    public int getWPage() {
-        return w_page;
-    }
-
-    public void setWPage(int w_page) {
-        this.w_page = w_page;
     }
 
     public Enum<BookStatus> getStatus() {

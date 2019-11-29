@@ -14,6 +14,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ssu.readingd.custom_enum.BookStatus;
+import com.ssu.readingd.dto.BookDTO;
+import com.ssu.readingd.dto.BookSimpleDTO;
+import com.ssu.readingd.util.DBUtil;
+import com.ssu.readingd.util.ImageViewFromURL;
+
 import java.util.Calendar;
 
 /* 작성자: 조란
@@ -43,6 +49,7 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
     int year;
     int month;
     int day;
+    BookDTO result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +69,6 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
         publisher_etv = findViewById(R.id.publisher_etv);
         pub_date_etv = findViewById(R.id.pub_date_etv);
 
-
         read_p_etv = findViewById(R.id.read_p_etv);
         whole_p_etv = findViewById(R.id.whole_p_etv);
         state_spinner = findViewById(R.id.state_spinner);
@@ -70,6 +76,34 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
         end_date_tv = findViewById(R.id.end_date_etv);
         ratingBar = findViewById(R.id.ratingBar);
 
+        BookSimpleDTO selecBook = getIntent().getParcelableExtra("book");
+        result = new BookDTO(selecBook);
+        ImageViewFromURL.setImageView(this, book_cover_img, selecBook.getImg());
+        if (selecBook.getBookName() != null && !selecBook.getBookName().trim().equals("")) {
+            name_etv.setText(selecBook.getBookName());
+            name_etv.setEnabled(false);
+        }
+
+        if (selecBook.getAuthor() != null && !selecBook.getAuthor().trim().equals("")) {
+            author_etv.setText(selecBook.getAuthor());
+            author_etv.setEnabled(false);
+        }
+        if (selecBook.getTranslator() != null && !selecBook.getTranslator().trim().equals("")) {
+            trans_etv.setText(selecBook.getTranslator());
+            trans_etv.setEnabled(false);
+        }
+        if (selecBook.getPublisher() != null && !selecBook.getPublisher().trim().equals("")) {
+            publisher_etv.setText(selecBook.getPublisher());
+            publisher_etv.setEnabled(false);
+        }
+        if (selecBook.getPubDate() != null && !selecBook.getPubDate().trim().equals("")) {
+            pub_date_etv.setText(selecBook.getPubDate());
+            pub_date_etv.setEnabled(false);
+        }
+        if (selecBook.getWPage() != 0) {
+            whole_p_etv.setText(selecBook.getWPage() + "");
+            whole_p_etv.setEnabled(false);
+        }
         cancel_btn = findViewById(R.id.cancel_btn);
         save_btn = findViewById(R.id.save_btn);
 
@@ -81,13 +115,18 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(BookManualRegisterActivity.this, state[i] + "가 선택되었습니다.",
-                        Toast.LENGTH_SHORT).show();
-
+                if (i == 0) {
+                    result.setStatus(BookStatus.FUTURE);
+                } else if (i == 1) {
+                    result.setStatus(BookStatus.NOW);
+                } else if (i == 2) {
+                    result.setStatus(BookStatus.PAST);
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                result.setStatus(BookStatus.NOW);
             }
         });
 
@@ -95,8 +134,9 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
         end_date_tv.setText(year + "." + (month + 1) + "." + day);
 
     }
+
     public void clickCalendar(View v) {
-        final TextView dateTv =(TextView)v;
+        final TextView dateTv = (TextView) v;
 
         DatePickerDialog dateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -114,7 +154,20 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
         if (v == cancel_btn) {
             onBackPressed();
         } else if (v == save_btn) {
-            Toast.makeText(this, "저장", Toast.LENGTH_SHORT).show();
+            BookDTO result = new BookDTO((BookSimpleDTO) getIntent().getParcelableExtra("book"));
+            result.setUserId("user id");
+            if (!read_p_etv.getText().toString().equals("")) {
+                result.setRPage(Integer.parseInt(read_p_etv.getText().toString()));
+            }
+
+            result.setStartDate(start_date_tv.getText().toString());
+            result.setEndDate(end_date_tv.getText().toString());
+            result.setRating(ratingBar.getRating());
+
+            Toast.makeText(this, result.toString() + " \n저장", Toast.LENGTH_SHORT).show();
+
+
+
         }
     }
 

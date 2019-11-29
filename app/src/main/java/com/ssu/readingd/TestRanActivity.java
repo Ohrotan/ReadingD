@@ -4,25 +4,16 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ssu.readingd.util.BookAPITask;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.ssu.readingd.util.ImageViewFromURL;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -92,12 +83,12 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    TextView keyword = bookAddPopup.findViewById(R.id.api_search_tv);
+                    EditText keyword = bookAddPopup.findViewById(R.id.api_search_etv);
 
                     Intent intent = new Intent(TestRanActivity.this, BookAddSearchResultActivity.class);
-                    intent.putExtra("keyword", keyword.getText());
+                    intent.putExtra("keyword", keyword.getText().toString());
 
-                    startActivity(new Intent(TestRanActivity.this, BookAddSearchResultActivity.class));
+                    startActivity(intent);
                     //제목이나 저자로 책검색 이동
 
 
@@ -131,12 +122,12 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
             progressDialog.show();
             tv = new TextView(this);
 
-            getJSON();
+           // getJSON();
             BookAPITask rest = new BookAPITask("http://www.nl.go.kr/app/nl/search/openApi/search.jsp?key=c594fa83326be40164ae013ab0a14ad8\n" +
                     "&category=[단행자료:dan]&kwd=[테스트]");
             String url = "https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg";
             url = "https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/%EC%A0%9C%EB%AA%A9%20%EC%97%86%EC%9D%8C.png";
-            // ImageViewFromURL.setImageView(this,img_v,url);
+             ImageViewFromURL.setImageView(this,img_v,url);
 
             //  DBUtil.addUser("ygj02054", "123");
 
@@ -144,100 +135,5 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-
-    private final MyHandler mHandler = new MyHandler(this);
-
-
-    private static class MyHandler extends Handler {
-        private final WeakReference<TestRanActivity> weakReference;
-
-        public MyHandler(TestRanActivity mainactivity) {
-            weakReference = new WeakReference<TestRanActivity>(mainactivity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            TestRanActivity mainactivity = weakReference.get();
-
-            if (mainactivity != null) {
-                switch (msg.what) {
-
-                    case LOAD_SUCCESS:
-                        mainactivity.progressDialog.dismiss();
-
-                        String jsonString = (String) msg.obj;
-                        Log.v(TAG, jsonString);
-                        mainactivity.tv.setText(jsonString);
-                        Toast.makeText(mainactivity, jsonString, Toast.LENGTH_SHORT).show();
-
-                        break;
-                }
-            }
-        }
-    }
-
-    public void getJSON() {
-
-        Thread thread = new Thread(new Runnable() {
-
-            public void run() {
-
-                String result;
-
-                try {
-
-                    Log.d(TAG, REQUEST_URL);
-                    URL url = new URL(REQUEST_URL);
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-
-                    httpURLConnection.setReadTimeout(3000);
-                    httpURLConnection.setConnectTimeout(3000);
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
-                    httpURLConnection.setRequestMethod("GET");
-                    httpURLConnection.setUseCaches(false);
-                    httpURLConnection.connect();
-
-                    int responseStatusCode = httpURLConnection.getResponseCode();
-
-                    InputStream inputStream;
-                    if (responseStatusCode == HttpURLConnection.HTTP_OK) {
-
-                        inputStream = httpURLConnection.getInputStream();
-                    } else {
-                        inputStream = httpURLConnection.getErrorStream();
-
-                    }
-
-
-                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-
-
-                    while ((line = bufferedReader.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    bufferedReader.close();
-                    httpURLConnection.disconnect();
-
-                    result = sb.toString().trim();
-
-                } catch (Exception e) {
-                    result = e.toString();
-                }
-
-                Message message = mHandler.obtainMessage(LOAD_SUCCESS, result);
-                mHandler.sendMessage(message);
-            }
-
-        });
-        thread.start();
-    }
 
 }
