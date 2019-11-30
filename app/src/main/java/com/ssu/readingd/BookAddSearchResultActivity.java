@@ -1,14 +1,33 @@
 package com.ssu.readingd;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.ssu.readingd.adapter.BookResultListAdapter;
+import com.ssu.readingd.dto.BookSimpleDTO;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,22 +35,52 @@ import androidx.appcompat.app.AppCompatActivity;
 최초 작성일: 2019.11.11
 파일 내용: 책 바코드나 제목으로 검색했을 때 결과 화면 */
 public class BookAddSearchResultActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "api call";
+    public static final int LOAD_SUCCESS = 101;
+    ProgressDialog progressDialog;
+
+    private final String SEARCH_URL = "http://seoji.nl.go.kr/landingPage/SearchApi.do";
+    private final String API_KEY = "?cert_key=c594fa83326be40164ae013ab0a14ad8";
+    private final String RESULT_STYLE = "&result_style=json";
+    private String PAGE_NO = "&page_no=1";
+    private String PAGE_SIZE = "&page_size=10";
+    private String ISBN = "&isbn=";
+    private String TITLE = "&title=";
+    private String PUBLISHER = "&publisher=";
+    private String AUTHOR = "&author=";
+    private String SORT = "&sort=";
+    private String REQUEST_URL = SEARCH_URL + API_KEY + RESULT_STYLE + PAGE_NO + PAGE_SIZE + ISBN + TITLE +
+            PUBLISHER + AUTHOR + SORT;
+
+    final ArrayList<BookSimpleDTO> resultList = new ArrayList<>();
+
+
+    TextView search_title_tv;
     ListView book_search_result_list;
     Button select_btn;
 
-    BookResultListItem selecBook;
+    BookSimpleDTO selecBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle("도서 검색 결과");
         setContentView(R.layout.activity_book_add_search_result);
+        search_title_tv = findViewById(R.id.search_title_tv);
+        String keyword = getIntent().getStringExtra("keyword");
+        search_title_tv.setText("'" + keyword + "' " + search_title_tv.getText());
+
 
         select_btn = findViewById(R.id.select_btn);
 
+        TITLE = TITLE + keyword;
+        REQUEST_URL = SEARCH_URL + API_KEY + RESULT_STYLE + PAGE_NO + PAGE_SIZE + ISBN + TITLE +
+                PUBLISHER + AUTHOR + SORT;
+        getJSON();
+
         book_search_result_list = findViewById(R.id.book_search_result_list);
 
-        book_search_result_list.setAdapter(new BookResultListAdapter(this));
+        book_search_result_list.setAdapter(new BookResultListAdapter(this, resultList));
 
 
         book_search_result_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -45,7 +94,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                 }
                 lastView = view;
                 view.setBackgroundColor(getColor(R.color.colorGray));
-                selecBook = (BookResultListItem) parent.getAdapter().getItem(position);
+                selecBook = (BookSimpleDTO) parent.getAdapter().getItem(position);
             }
         });
 
@@ -60,16 +109,149 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
         img[4] = findViewById(R.id.tab_setting);
 
         if (v == img[0]) {
-            startActivity(new Intent(this, FlashbackActivity.class));
+            Intent intent = new Intent(this, FlashbackActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[1]) {
+            Intent intent = new Intent(this, MemoListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[2]) {
+            Intent intent = new Intent(this, BookShelfActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[3]) {
+            Intent intent = new Intent(this, CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[4]) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
             overridePendingTransition(0, 0);
         }
+
 
     }
 
     @Override
     public void onClick(View v) {
-        if(v==select_btn){
-            Toast.makeText(this,selecBook.toString(),Toast.LENGTH_SHORT).show();
+        if (v == select_btn) {
+
+            if (selecBook != null) {
+                Intent intent = new Intent(this, BookManualRegisterActivity.class);
+                intent.putExtra("book", selecBook);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "책을 선택해주세요.", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
+
+
+    private final MyHandler mHandler = new MyHandler(this);
+
+
+    private static class MyHandler extends Handler {
+        private final WeakReference<BookAddSearchResultActivity> weakReference;
+
+        public MyHandler(BookAddSearchResultActivity mainactivity) {
+            weakReference = new WeakReference<BookAddSearchResultActivity>(mainactivity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            BookAddSearchResultActivity mainactivity = weakReference.get();
+
+            if (mainactivity != null) {
+                switch (msg.what) {
+
+                    case LOAD_SUCCESS:
+                        // mainactivity.progressDialog.dismiss();
+
+                        String jsonString = (String) msg.obj;
+                        Log.v(TAG, jsonString);
+                        JsonParser jp = new JsonParser();
+                        JsonElement je = jp.parse(jsonString);
+                        JsonArray ja = je.getAsJsonObject().getAsJsonArray("docs");
+                        for (int i = 0; i < ja.size(); i++) {
+                            mainactivity.resultList.add(BookSimpleDTO.parse(ja.get(i).getAsJsonObject()));
+                        }
+                        // Toast.makeText(mainactivity, jsonString, Toast.LENGTH_SHORT).show();
+
+                        break;
+                }
+            }
+        }
+    }
+
+    public void getJSON() {
+
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+
+                String result;
+
+                try {
+
+                    Log.d(TAG, REQUEST_URL);
+                    URL url = new URL(REQUEST_URL);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                    httpURLConnection.setReadTimeout(3000);
+                    httpURLConnection.setConnectTimeout(3000);
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    httpURLConnection.setRequestMethod("GET");
+                    httpURLConnection.setUseCaches(false);
+                    httpURLConnection.connect();
+
+                    int responseStatusCode = httpURLConnection.getResponseCode();
+
+                    InputStream inputStream;
+                    if (responseStatusCode == HttpURLConnection.HTTP_OK) {
+
+                        inputStream = httpURLConnection.getInputStream();
+                    } else {
+                        inputStream = httpURLConnection.getErrorStream();
+
+                    }
+
+
+                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+
+
+                    while ((line = bufferedReader.readLine()) != null) {
+                        sb.append(line);
+                    }
+
+                    bufferedReader.close();
+                    httpURLConnection.disconnect();
+
+                    result = sb.toString().trim();
+
+                } catch (Exception e) {
+                    result = e.toString();
+                }
+
+                Message message = mHandler.obtainMessage(LOAD_SUCCESS, result);
+                mHandler.sendMessage(message);
+            }
+
+        });
+        thread.start();
+    }
+
 }

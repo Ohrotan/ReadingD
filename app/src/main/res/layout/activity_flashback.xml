@@ -66,6 +66,15 @@
                         android:textSize="16dp" />
                 </LinearLayout>
 
+                <ImageSwitcher
+                    android:layout_alignParentTop="true"
+                    android:id="@+id/image_switcher"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_margin="20dp"
+                    android:background="#ffffff">
+                </ImageSwitcher>
+
                 <TextView
                     android:id="@+id/memo_tv"
                     android:layout_width="match_parent"

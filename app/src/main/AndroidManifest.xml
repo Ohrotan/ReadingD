@@ -16,14 +16,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MemoEditActivity"
-            android:screenOrientation = "portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan"/>
+        <activity android:name=".SettingActivity"></activity>
+        <activity
+            android:name=".MemoEditActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity android:name=".CommunitySearchResultActivity" />
         <activity android:name=".CommunityActivity" />
-        <activity android:name=".MemberRegisterActivity"
-            android:screenOrientation = "portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan"/>
+        <activity
+            android:name=".MemberRegisterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".BookShelfActivity" />
         <activity android:name=".MemoSearchResultActivity" />
