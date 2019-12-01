@@ -23,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ssu.readingd.dto.BookDTO;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -60,6 +61,22 @@ public class DBUtil {
                 }
             }
         });
+    }
+
+    public static void addBook(String userID, BookDTO book) {
+        db.collection("books").add(book)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.v(TAG, "book data add : " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "book data add fail");
+                    }
+                });
     }
 
     public static void addData() {

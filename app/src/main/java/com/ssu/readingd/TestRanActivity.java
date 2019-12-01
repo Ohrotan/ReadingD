@@ -3,6 +3,7 @@ package com.ssu.readingd;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ssu.readingd.util.BarcodeScanningProcessor;
 import com.ssu.readingd.util.BookAPITask;
+import com.ssu.readingd.util.GraphicOverlay;
 import com.ssu.readingd.util.ImageViewFromURL;
 
 import androidx.appcompat.app.AlertDialog;
@@ -116,7 +119,7 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         } else if (v == btn6) {
             //디비 테스트
-
+/*
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage("Please wait.....");
             progressDialog.show();
@@ -128,9 +131,11 @@ public class TestRanActivity extends AppCompatActivity implements View.OnClickLi
             String url = "https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg";
             url = "https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/%EC%A0%9C%EB%AA%A9%20%EC%97%86%EC%9D%8C.png";
              ImageViewFromURL.setImageView(this,img_v,url);
-
+*/
             //  DBUtil.addUser("ygj02054", "123");
 
+            BarcodeScanningProcessor a =new BarcodeScanningProcessor();
+            //a.process(new Bitmap(),new GraphicOverlay());
         }
 
     }

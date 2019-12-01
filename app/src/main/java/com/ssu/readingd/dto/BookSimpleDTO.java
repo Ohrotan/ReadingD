@@ -184,7 +184,7 @@ public class BookSimpleDTO implements Parcelable {
             date = jo.get("PUBLISH_PREDATE").toString();
 
             if (date.length() > 8) {
-                date = date.substring(1, 5) + "-" + date.substring(5, 7) + "-" + date.substring(7, 9);
+                date = date.substring(1, 5) + "." + date.substring(5, 7) + "." + date.substring(7, 9);
             } else {
                 date = null;
             }
