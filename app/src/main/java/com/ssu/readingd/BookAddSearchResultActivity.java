@@ -28,6 +28,7 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,7 +44,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
     private final String API_KEY = "?cert_key=c594fa83326be40164ae013ab0a14ad8";
     private final String RESULT_STYLE = "&result_style=json";
     private String PAGE_NO = "&page_no=1";
-    private String PAGE_SIZE = "&page_size=10";
+    private String PAGE_SIZE = "&page_size=100";
     private String ISBN = "&isbn=";
     private String TITLE = "&title=";
     private String PUBLISHER = "&publisher=";
@@ -56,9 +57,10 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
 
 
     TextView search_title_tv;
+    TextView result_count_tv;
     ListView book_search_result_list;
     Button select_btn;
-
+    String keyword;
     BookSimpleDTO selecBook;
 
     @Override
@@ -67,17 +69,15 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
         getSupportActionBar().setTitle("도서 검색 결과");
         setContentView(R.layout.activity_book_add_search_result);
         search_title_tv = findViewById(R.id.search_title_tv);
-        String keyword = getIntent().getStringExtra("keyword");
+        keyword = getIntent().getStringExtra("keyword");
         search_title_tv.setText("'" + keyword + "' " + search_title_tv.getText());
-
+        result_count_tv = findViewById(R.id.result_count_tv);
 
         select_btn = findViewById(R.id.select_btn);
 
         TITLE = TITLE + keyword;
-        REQUEST_URL = SEARCH_URL + API_KEY + RESULT_STYLE + PAGE_NO + PAGE_SIZE + ISBN + TITLE +
-                PUBLISHER + AUTHOR + SORT;
+        setREQUEST_URL();
         getJSON();
-
         book_search_result_list = findViewById(R.id.book_search_result_list);
 
         book_search_result_list.setAdapter(new BookResultListAdapter(this, resultList));
@@ -153,11 +153,46 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
         }
     }
 
+    public void setREQUEST_URL() {
+        REQUEST_URL = SEARCH_URL + API_KEY + RESULT_STYLE + PAGE_NO + PAGE_SIZE + ISBN + TITLE +
+                PUBLISHER + AUTHOR + SORT;
+    }
+
+    public void setPAGE_NO(String num) {
+        PAGE_NO = "&page_no=" + num;
+    }
+
+    public void setPAGE_SIZE(String num) {
+        PAGE_SIZE = "&page_size=" + num;
+    }
+
+    public void sortResult() {
+        ArrayList<BookSimpleDTO> first = new ArrayList<>();
+        ArrayList<BookSimpleDTO> second = new ArrayList<>();
+        Iterator<BookSimpleDTO> iterator = resultList.iterator();
+        BookSimpleDTO dto;
+        while (iterator.hasNext()) {
+            dto = iterator.next();
+            if (dto.getBookName().equals(keyword) || dto.getBookName().trim().equals(keyword.trim())) {
+                iterator.remove();
+                first.add(dto);
+            } else if (dto.getBookName().startsWith(keyword) ||
+                    dto.getBookName().trim().startsWith(keyword.trim())) {
+                iterator.remove();
+                second.add(dto);
+
+            }
+        }
+
+        resultList.addAll(0, second);
+        resultList.addAll(0, first);
+    }
+
 
     private final MyHandler mHandler = new MyHandler(this);
 
 
-    private static class MyHandler extends Handler {
+    static class MyHandler extends Handler {
         private final WeakReference<BookAddSearchResultActivity> weakReference;
 
         public MyHandler(BookAddSearchResultActivity mainactivity) {
@@ -179,9 +214,24 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                         Log.v(TAG, jsonString);
                         JsonParser jp = new JsonParser();
                         JsonElement je = jp.parse(jsonString);
-                        JsonArray ja = je.getAsJsonObject().getAsJsonArray("docs");
-                        for (int i = 0; i < ja.size(); i++) {
-                            mainactivity.resultList.add(BookSimpleDTO.parse(ja.get(i).getAsJsonObject()));
+                        String count = je.getAsJsonObject().get("TOTAL_COUNT").getAsString();
+                        if (false) {
+                            //!count.equals(mainactivity.PAGE_SIZE.substring(11)) ||
+                            //!"999".equals(mainactivity.PAGE_SIZE.substring(11))) {
+                            if (Integer.parseInt(count) >= 1000) {
+                                mainactivity.setPAGE_SIZE("999");
+                            } else {
+                                mainactivity.setPAGE_SIZE(count);
+                            }
+                            mainactivity.setREQUEST_URL();
+                            mainactivity.getJSON();
+                        } else {
+                            mainactivity.result_count_tv.setText(50 + " 건");
+                            JsonArray ja = je.getAsJsonObject().getAsJsonArray("docs");
+                            for (int i = 0; i < ja.size(); i++) {
+                                mainactivity.resultList.add(BookSimpleDTO.parse(ja.get(i).getAsJsonObject()));
+                            }
+                            mainactivity.sortResult();
                         }
                         // Toast.makeText(mainactivity, jsonString, Toast.LENGTH_SHORT).show();
 
@@ -189,6 +239,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                 }
             }
         }
+
     }
 
     public void getJSON() {

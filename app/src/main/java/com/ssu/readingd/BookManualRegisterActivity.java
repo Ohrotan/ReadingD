@@ -14,7 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ssu.readingd.custom_enum.BookStatus;
+import com.ssu.readingd.custom_enum.BookState;
 import com.ssu.readingd.dto.BookDTO;
 import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.util.DBUtil;
@@ -116,17 +116,17 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
-                    result.setStatus(BookStatus.FUTURE);
+                    result.setState(BookState.FUTURE);
                 } else if (i == 1) {
-                    result.setStatus(BookStatus.NOW);
+                    result.setState(BookState.NOW);
                 } else if (i == 2) {
-                    result.setStatus(BookStatus.PAST);
+                    result.setState(BookState.PAST);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                result.setStatus(BookStatus.NOW);
+                result.setState(BookState.NOW);
             }
         });
 
@@ -155,17 +155,18 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
             onBackPressed();
         } else if (v == save_btn) {
             BookDTO result = new BookDTO((BookSimpleDTO) getIntent().getParcelableExtra("book"));
-            result.setUserId("user id");
+            result.setUserId("admin");
             if (!read_p_etv.getText().toString().equals("")) {
                 result.setRPage(Integer.parseInt(read_p_etv.getText().toString()));
             }
-
+            //result.setState(state_spinner.getI);
             result.setStartDate(start_date_tv.getText().toString());
             result.setEndDate(end_date_tv.getText().toString());
             result.setRating(ratingBar.getRating());
-
+            result.setReg_date(year + "." + (month + 1) + "." + day);
             Toast.makeText(this, result.toString() + " \n저장", Toast.LENGTH_SHORT).show();
 
+            DBUtil.addBook("admin", result);
 
 
         }
