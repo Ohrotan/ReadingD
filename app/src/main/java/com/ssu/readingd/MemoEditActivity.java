@@ -36,7 +36,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_register);
 
-        final ImageSwitcher imageSwitcher = findViewById(R.id.image_switcher);
+        final ImageSwitcher imageSwitcher = findViewById(R.id.fimage_switcher);
         btnPrev =findViewById(R.id.prev_btn);
         btnNext = findViewById(R.id.next_btn);
         btnDelete = findViewById(R.id.imagedelete_btn);
