@@ -13,6 +13,7 @@ import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookResultListAdapter extends BaseAdapter {
     Activity activity;
@@ -29,9 +30,9 @@ public class BookResultListAdapter extends BaseAdapter {
         list = new ArrayList<>();
     }
 
-    public BookResultListAdapter(Activity activity, ArrayList<BookSimpleDTO> list) {
+    public BookResultListAdapter(Activity activity, List<BookSimpleDTO> list) {
         this.activity = activity;
-        this.list = list;
+        this.list = (ArrayList<BookSimpleDTO>)list;
     }
 
     public ArrayList<BookSimpleDTO> getList() {
