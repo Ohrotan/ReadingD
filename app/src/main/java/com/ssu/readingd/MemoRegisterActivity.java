@@ -6,15 +6,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -32,6 +35,8 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
     ImageView btnAddPhoto;
     SeekBar seekBar;
     TextView tvcurpage;
+    EditText memo_text;
+    Switch community_switch;
 
     int pagenumber;
     int imageIds[] = new int[10];
@@ -49,6 +54,8 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         btnNext = findViewById(R.id.next_btn);
         btnDelete = findViewById(R.id.imagedelete_btn);
         btnAddPhoto = findViewById(R.id.addphoto_bt);
+        memo_text = findViewById(R.id.memo_edit);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory(){
             public View makeView(){
