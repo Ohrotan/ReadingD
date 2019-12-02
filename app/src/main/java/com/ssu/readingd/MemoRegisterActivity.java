@@ -12,6 +12,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
@@ -19,11 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
-import android.content.Context;
-import android.widget.Gallery;
-import android.widget.ImageView;
 
 /* 작성자: 박슬우
 최초 작성일: 2019.11.16
@@ -49,7 +47,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_register);
 
-        final ImageSwitcher imageSwitcher = findViewById(R.id.image_switcher);
+        final ImageSwitcher imageSwitcher = findViewById(R.id.fimage_switcher);
         btnPrev =findViewById(R.id.prev_btn);
         btnNext = findViewById(R.id.next_btn);
         btnDelete = findViewById(R.id.imagedelete_btn);

@@ -87,7 +87,7 @@
 
         <ImageSwitcher
             android:layout_alignParentTop="true"
-            android:id="@+id/image_switcher"
+            android:id="@+id/fimage_switcher"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:background="#ffffff">
@@ -98,8 +98,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="fitXY"
-            android:layout_alignRight="@id/image_switcher"
-            android:layout_alignBottom="@id/image_switcher"
+            android:layout_alignRight="@id/fimage_switcher"
+            android:layout_alignBottom="@id/fimage_switcher"
             android:src="@drawable/nextbtn"
         ></ImageButton>
 
@@ -108,8 +108,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="fitXY"
-            android:layout_alignLeft="@id/image_switcher"
-            android:layout_alignBottom="@id/image_switcher"
+            android:layout_alignLeft="@id/fimage_switcher"
+            android:layout_alignBottom="@id/fimage_switcher"
             android:src="@drawable/prevbtn"
             ></ImageButton>
 
@@ -118,8 +118,8 @@
             android:layout_width="45dp"
             android:layout_height="40dp"
             android:scaleType="fitXY"
-            android:layout_alignRight="@id/image_switcher"
-            android:layout_alignTop="@id/image_switcher"
+            android:layout_alignRight="@id/fimage_switcher"
+            android:layout_alignTop="@id/fimage_switcher"
             android:src="@drawable/imagedeletebtn"
             ></ImageButton>
 
@@ -127,7 +127,7 @@
 
         <EditText
             android:layout_alignParentBottom="true"
-            android:layout_below="@id/image_switcher"
+            android:layout_below="@id/fimage_switcher"
             android:id="@+id/memo_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

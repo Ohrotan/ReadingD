@@ -1,6 +1,4 @@
-package com.ssu.readingd;
-
-import android.widget.ImageView;
+package com.ssu.readingd.dto;
 
 public class BookItem {
     private int image;

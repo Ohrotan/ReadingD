@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera2" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -16,14 +18,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MemoEditActivity"
-            android:screenOrientation = "portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan"/>
+        <activity android:name=".SettingActivity"></activity>
+        <activity
+            android:name=".MemoEditActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity android:name=".CommunitySearchResultActivity" />
         <activity android:name=".CommunityActivity" />
-        <activity android:name=".MemberRegisterActivity"
-            android:screenOrientation = "portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan"/>
+        <activity
+            android:name=".MemberRegisterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".BookShelfActivity" />
         <activity android:name=".MemoSearchResultActivity" />
@@ -34,10 +39,20 @@
         <activity android:name=".TestSeulwooActivity" />
         <activity android:name=".TestRanActivity" />
         <activity android:name=".BookEditActivity" />
-        <activity android:name=".BookManualRegisterActivity" />
+        <activity android:name=".BookManualRegisterActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".BookRegisterActivity" />
         <activity android:name=".BookAddSearchResultActivity" />
         <activity android:name=".FlashbackActivity" />
+        <activity
+            android:name=".util.LivePreviewActivity"
+            android:exported="true"></activity>
+
+        <activity
+            android:name=".util.StillImageActivity"
+            android:exported="true"></activity>
+        <activity android:name=".util.ChooserActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
