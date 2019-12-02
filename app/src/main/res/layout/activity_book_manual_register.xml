@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="책 제목"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:paddingLeft="10dp" />
 
             <EditText
@@ -40,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="글쓴이"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:paddingLeft="10dp" />
 
             <EditText
@@ -49,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="옮긴이"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:paddingLeft="10dp" />
 
             <EditText
@@ -58,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="출판사"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:paddingLeft="10dp" />
 
             <EditText
@@ -263,4 +273,6 @@
             android:textSize="16sp"
             android:onClick="onClick"/>
     </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

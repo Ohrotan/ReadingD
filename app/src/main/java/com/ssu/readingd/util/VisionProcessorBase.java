@@ -20,6 +20,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+import com.ssu.readingd.common.BitmapUtils;
+import com.ssu.readingd.common.FrameMetadata;
+import com.ssu.readingd.common.GraphicOverlay;
+import com.ssu.readingd.common.VisionImageProcessor;
 
 import java.nio.ByteBuffer;
 

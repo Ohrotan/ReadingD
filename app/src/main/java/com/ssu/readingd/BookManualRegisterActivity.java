@@ -1,7 +1,9 @@
 package com.ssu.readingd;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,10 +24,12 @@ import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.util.Calendar;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 /* 작성자: 조란
 최초 작성일: 2019.11.11
 파일내용: 책 정보 직접 입력 화면*/
-public class BookManualRegisterActivity extends BookRegisterActivity {
+public class BookManualRegisterActivity extends AppCompatActivity implements View.OnClickListener {
     EditText read_p_etv;
     EditText whole_p_etv;
     Spinner state_spinner;
@@ -49,12 +53,24 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
     int year;
     int month;
     int day;
+
+    BookSimpleDTO selecBook;
     BookDTO result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("책 등록");
+        if (getIntent().getStringExtra("mode") != null && getIntent().getStringExtra("mode").equals("edit")) {
+            getSupportActionBar().setTitle("책 수정");
+            // selecBook = getIntent().getParcelableExtra("book");
+            result = new BookDTO("", "", "book name", "author", "translator",
+                    "publisher", "pub_date", "isbn", 100, 3, BookState.FUTURE,
+                    "2019.10.10", "2019.12.01", 5, "", "");
+        } else {
+            getSupportActionBar().setTitle("책 등록");
+            selecBook = getIntent().getParcelableExtra("book");
+            result = new BookDTO(selecBook);
+        }
         setContentView(R.layout.activity_book_manual_register);
 
         c = Calendar.getInstance();
@@ -76,34 +92,54 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
         end_date_tv = findViewById(R.id.end_date_etv);
         ratingBar = findViewById(R.id.ratingBar);
 
-        BookSimpleDTO selecBook = getIntent().getParcelableExtra("book");
-        result = new BookDTO(selecBook);
-        ImageViewFromURL.setImageView(this, book_cover_img, selecBook.getImg());
-        if (selecBook.getBookName() != null && !selecBook.getBookName().trim().equals("")) {
-            name_etv.setText(selecBook.getBookName());
+
+        start_date_tv.setText(year + "." + (month + 1) + "." + day);
+        end_date_tv.setText(year + "." + (month + 1) + "." + day);
+
+        ImageViewFromURL.setImageView(this, book_cover_img, result.getImg());
+        if (result.getBook_name() != null && !result.getBook_name().trim().equals("")) {
+            name_etv.setText(result.getBook_name());
             name_etv.setEnabled(false);
         }
 
-        if (selecBook.getAuthor() != null && !selecBook.getAuthor().trim().equals("")) {
-            author_etv.setText(selecBook.getAuthor());
+        if (result.getAuthor() != null && !result.getAuthor().trim().equals("")) {
+            author_etv.setText(result.getAuthor());
             author_etv.setEnabled(false);
         }
-        if (selecBook.getTranslator() != null && !selecBook.getTranslator().trim().equals("")) {
-            trans_etv.setText(selecBook.getTranslator());
+        if (result.getTranslator() != null && !result.getTranslator().trim().equals("")) {
+            trans_etv.setText(result.getTranslator());
             trans_etv.setEnabled(false);
         }
-        if (selecBook.getPublisher() != null && !selecBook.getPublisher().trim().equals("")) {
-            publisher_etv.setText(selecBook.getPublisher());
+        if (result.getPublisher() != null && !result.getPublisher().trim().equals("")) {
+            publisher_etv.setText(result.getPublisher());
             publisher_etv.setEnabled(false);
         }
-        if (selecBook.getPubDate() != null && !selecBook.getPubDate().trim().equals("")) {
-            pub_date_etv.setText(selecBook.getPubDate());
+        if (result.getPub_date() != null && !result.getPub_date().trim().equals("")) {
+            pub_date_etv.setText(result.getPub_date());
             pub_date_etv.setEnabled(false);
         }
-        if (selecBook.getWPage() != 0) {
-            whole_p_etv.setText(selecBook.getWPage() + "");
+        if (result.getW_page() != 0) {
+            whole_p_etv.setText(result.getW_page() + "");
             whole_p_etv.setEnabled(false);
         }
+
+        if (result.getR_page() != 0) {
+            read_p_etv.setText(result.getR_page() + "");
+        }
+        if (result.getState() != null) {
+            state_spinner.setSelection(result.getState().ordinal());
+            Log.v("enum", result.getState().ordinal() + "/" + result.getState().name());
+        }
+        if (result.getStart_date() != null && !result.getStart_date().trim().equals("")) {
+            start_date_tv.setText(result.getStart_date() + "");
+        }
+        if (result.getEnd_date() != null && !result.getEnd_date().trim().equals("")) {
+            end_date_tv.setText(result.getEnd_date() + "");
+        }
+        if (result.getRating() != 0) {
+            ratingBar.setRating(result.getRating());
+        }
+
         cancel_btn = findViewById(R.id.cancel_btn);
         save_btn = findViewById(R.id.save_btn);
 
@@ -130,8 +166,6 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
             }
         });
 
-        start_date_tv.setText(year + "." + (month + 1) + "." + day);
-        end_date_tv.setText(year + "." + (month + 1) + "." + day);
 
     }
 
@@ -154,20 +188,27 @@ public class BookManualRegisterActivity extends BookRegisterActivity {
         if (v == cancel_btn) {
             onBackPressed();
         } else if (v == save_btn) {
-            BookDTO result = new BookDTO((BookSimpleDTO) getIntent().getParcelableExtra("book"));
-            result.setUserId("admin");
+            // BookDTO result = new BookDTO((BookSimpleDTO) getIntent().getParcelableExtra("book"));
+            result.setUser_id("admin");
             if (!read_p_etv.getText().toString().equals("")) {
-                result.setRPage(Integer.parseInt(read_p_etv.getText().toString()));
+                result.setR_page(Integer.parseInt(read_p_etv.getText().toString()));
             }
-            //result.setState(state_spinner.getI);
-            result.setStartDate(start_date_tv.getText().toString());
-            result.setEndDate(end_date_tv.getText().toString());
+            //result.setState(state_spinner.getSe);
+            result.setStart_date(start_date_tv.getText().toString());
+            result.setEnd_date(end_date_tv.getText().toString());
             result.setRating(ratingBar.getRating());
-            result.setReg_date(year + "." + (month + 1) + "." + day);
+
             Toast.makeText(this, result.toString() + " \n저장", Toast.LENGTH_SHORT).show();
 
-            DBUtil.addBook("admin", result);
 
+            if (getIntent().getStringExtra("mode") != null
+                    && getIntent().getStringExtra("mode").equals("edit")) {
+                new DBUtil().updateBook(result.getId(), result);
+            } else {
+                result.setReg_date(year + "." + (month + 1) + "." + day);
+                new DBUtil().addBook("admin", result);
+                startActivity(new Intent(this, TestRanActivity.class));
+            }
 
         }
     }

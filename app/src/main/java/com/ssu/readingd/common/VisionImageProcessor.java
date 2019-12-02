@@ -1,5 +1,3 @@
-package com.ssu.readingd.util;
-
 // Copyright 2018 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +11,7 @@ package com.ssu.readingd.util;
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.ssu.readingd.common;
 
 import android.graphics.Bitmap;
 
@@ -20,24 +19,16 @@ import com.google.firebase.ml.common.FirebaseMLException;
 
 import java.nio.ByteBuffer;
 
-/**
- * An inferface to process the images with different ML Kit detectors and custom image models.
- */
+/** An inferface to process the images with different ML Kit detectors and custom image models. */
 public interface VisionImageProcessor {
 
-    /**
-     * Processes the images with the underlying machine learning models.
-     */
-    void process(ByteBuffer data, FrameMetadata frameMetadata, GraphicOverlay graphicOverlay)
-            throws FirebaseMLException;
+  /** Processes the images with the underlying machine learning models. */
+  void process(ByteBuffer data, FrameMetadata frameMetadata, GraphicOverlay graphicOverlay)
+      throws FirebaseMLException;
 
-    /**
-     * Processes the bitmap images.
-     */
-    void process(Bitmap bitmap, GraphicOverlay graphicOverlay);
+  /** Processes the bitmap images. */
+  void process(Bitmap bitmap, GraphicOverlay graphicOverlay);
 
-    /**
-     * Stops the underlying machine learning model and release resources.
-     */
-    void stop();
+  /** Stops the underlying machine learning model and release resources. */
+  void stop();
 }

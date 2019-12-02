@@ -1,4 +1,4 @@
-package com.ssu.readingd.util;
+package com.ssu.readingd.common;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -73,3 +73,4 @@ public class BitmapUtils {
         }
     }
 }
+

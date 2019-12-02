@@ -20,6 +20,10 @@ public class BookSimpleDTO implements Parcelable {
         super();
     }
 
+    public BookSimpleDTO(String book_name) {
+        super();
+        this.book_name = book_name;
+    }
     public BookSimpleDTO(String id, String img, String book_name) {
         super();
         this.id = id;
@@ -64,7 +68,6 @@ public class BookSimpleDTO implements Parcelable {
         this.w_page = simple.w_page;
     }
 
-
     public String getId() {
         return id;
     }
@@ -81,12 +84,12 @@ public class BookSimpleDTO implements Parcelable {
         this.img = img;
     }
 
-    public String getBookName() {
+    public String getBook_name() {
         return book_name;
     }
 
-    public void setBookName(String bookName) {
-        this.book_name = bookName;
+    public void setBook_name(String book_name) {
+        this.book_name = book_name;
     }
 
     public String getAuthor() {
@@ -113,11 +116,11 @@ public class BookSimpleDTO implements Parcelable {
         this.publisher = publisher;
     }
 
-    public String getPubDate() {
+    public String getPub_date() {
         return pub_date;
     }
 
-    public void setPubDate(String pub_date) {
+    public void setPub_date(String pub_date) {
         this.pub_date = pub_date;
     }
 
@@ -129,12 +132,16 @@ public class BookSimpleDTO implements Parcelable {
         this.isbn = isbn;
     }
 
-    public int getWPage() {
+    public int getW_page() {
         return w_page;
     }
 
-    public void setWPage(int w_page) {
+    public void setW_page(int w_page) {
         this.w_page = w_page;
+    }
+
+    public static Creator<BookSimpleDTO> getCREATOR() {
+        return CREATOR;
     }
 
     @Override
@@ -207,11 +214,11 @@ public class BookSimpleDTO implements Parcelable {
         }
 
 
-        dto.setBookName(title);
+        dto.setBook_name(title);
         dto.setAuthor(author);
         dto.setTranslator(translator);
         dto.setPublisher(publisher);
-        dto.setPubDate(date);
+        dto.setPub_date(date);
 
         String imgUrl = jo.get("TITLE_URL").toString();
         String[] temp = imgUrl.split("http");
@@ -225,7 +232,7 @@ public class BookSimpleDTO implements Parcelable {
         }
         dto.setImg(imgUrl);
         dto.setIsbn(isbn);
-        dto.setWPage(wpage);
+        dto.setW_page(wpage);
         //Log.v("api", dto.getBookName() + " ===> " + dto.getImg());
 
         return dto;

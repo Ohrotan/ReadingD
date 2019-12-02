@@ -1,12 +1,14 @@
-package com.ssu.readingd.util;
+package com.ssu.readingd.common;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import com.ssu.readingd.util.GraphicOverlay.Graphic;
 
-/** Draw camera image to background. */
-public class CameraImageGraphic extends Graphic {
+
+/**
+ * Draw camera image to background.
+ */
+public class CameraImageGraphic extends GraphicOverlay.Graphic {
 
     private final Bitmap bitmap;
 
@@ -20,3 +22,4 @@ public class CameraImageGraphic extends Graphic {
         canvas.drawBitmap(bitmap, null, new Rect(0, 0, canvas.getWidth(), canvas.getHeight()), null);
     }
 }
+
