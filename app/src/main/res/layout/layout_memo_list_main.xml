@@ -6,6 +6,7 @@
     android:layout_marginBottom="20dp">
 
     <LinearLayout
+        android:id="@+id/round_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -19,29 +20,34 @@
             android:orientation="horizontal"
             android:layout_marginBottom="20dp">
 
-            <TextView
-                android:id="@+id/BookTitleCm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="책 제목"
-                android:textSize="30dp"
-                android:textStyle="bold" />
-
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" - "
-                    android:layout_marginLeft="30dp"/>
+                    android:text="&quot;"
+                    android:textSize="18dp"/>
 
                 <TextView
-                    android:id="@+id/BookWriterCm"
+                    android:id="@+id/BookNameML"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:text="책제목"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:text="&quot; - &quot;" />
+
+                <TextView
+                    android:id="@+id/BookWriterML"
+                    android:textSize="18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="저자"/>
@@ -49,59 +55,69 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" / " />
+                    android:textSize="18dp"
+                    android:text="&quot; - "/>
 
                 <TextView
-                    android:id="@+id/BookPageCm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:text="page" />
+
+                <TextView
+                    android:id="@+id/BookPageML"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
                     android:text="214"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="p"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" / " />
-
-                <TextView
-                    android:id="@+id/BookDateCm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2019.11.28"/>
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/emailCm"
+                android:id="@+id/MemoDateML"
                 android:layout_below="@id/linearLayout"
-                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
+                android:textSize="18dp"
                 android:layout_height="wrap_content"
-                android:text="hshs@ssu.ac.kr"/>
-
-
+                android:text="2019.12.02 15:10"/>
 
 
 
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/communityPicture"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
-
-
         <TextView
-            android:id="@+id/communityContent"
+            android:id="@+id/contentML_short"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="10dp"
-            android:text="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하"/>
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:text="줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트"/>
+
+
+        <LinearLayout
+            android:id="@+id/memoExpandArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/pictureML"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+
+            <TextView
+                android:id="@+id/contentML_long"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="10dp"
+                android:text="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하"/>
+
+
+        </LinearLayout>
+
+
 
 
     </LinearLayout>
