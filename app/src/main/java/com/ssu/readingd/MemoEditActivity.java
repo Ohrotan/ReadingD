@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -24,6 +27,8 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     ImageView btnAddPhoto;
     SeekBar seekBar;
     TextView tvcurpage;
+    EditText memo_text;
+    Switch community_switch;
 
     int pagenumber;
     int imageIds[] = new int[10];
@@ -41,6 +46,8 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         btnNext = findViewById(R.id.next_btn);
         btnDelete = findViewById(R.id.imagedelete_btn);
         btnAddPhoto = findViewById(R.id.addphoto_bt);
+        memo_text = findViewById(R.id.memo_edit);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         imageIds[count++] = R.drawable.memoimg1;
         imageIds[count++] = R.drawable.memoimg2;
         imageIds[count++] = R.drawable.memoimg3;
