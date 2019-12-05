@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,23 +24,37 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.ssu.readingd.util.DBUtil;
+import com.ssu.readingd.dto.MemoDTO;
+
+import java.util.Map;
+
+
 /* 작성자: 박슬우
 최초 작성일: 2019.11.16
 파일 내용: 메모를 등록할 때 화면 */
 public class MemoRegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ImageSwitcher imageSwitcher;
-    ImageButton btnPrev,btnNext, btnDelete;
-    ImageView btnAddPhoto;
-    SeekBar seekBar;
-    TextView tvcurpage;
-    EditText memo_text;
-    Switch community_switch;
+//    MemoDTO result;
+    Map<String, Object> memo;
+    ImageView BtnAddphoto;
+    SeekBar Seekbar;
+    TextView TvCurpage;
 
-    int pagenumber;
-    int imageIds[] = new int[10];
-    int count = 0;
-    int currentIndex = 0;
+    private ImageSwitcher imageSwitcher;
+    ImageButton BtnPrev, BtnNext, BtnDelete;
+    EditText MemoEdit;
+    Switch ShareSwitch;
+    Button BtnCancel, BtnSave;
+
+    int r_page = 0;
+    int w_page = 300;
+    int[] Imgids = new int[10];
+    //String[] Imgids = new String[10];
+    int imgcnt = 0;
+    int imgIndex = 0;
+    boolean share = false;
 
 
     @Override
@@ -47,92 +62,108 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_register);
 
-        final ImageSwitcher imageSwitcher = findViewById(R.id.fimage_switcher);
-        btnPrev =findViewById(R.id.prev_btn);
-        btnNext = findViewById(R.id.next_btn);
-        btnDelete = findViewById(R.id.imagedelete_btn);
-        btnAddPhoto = findViewById(R.id.addphoto_bt);
-        memo_text = findViewById(R.id.memo_edit);
+        BtnAddphoto = findViewById(R.id.addphoto_bt);
+        Seekbar = findViewById(R.id.page_seekbar);
+        TvCurpage = findViewById(R.id.curpage_tv);
+        final ImageSwitcher imageSwitcher = findViewById(R.id.image_switcher);
+        BtnPrev = findViewById(R.id.prev_btn);
+        BtnNext = findViewById(R.id.next_btn);
+        BtnDelete = findViewById(R.id.imagedelete_btn);
+        MemoEdit = findViewById(R.id.memoedit_et);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        ShareSwitch = findViewById(R.id.share_switch);
+        BtnCancel = findViewById(R.id.cancel_btn);
+        BtnSave = findViewById(R.id.save_btn);
+        Imgids[0] = 0;
+
 
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory(){
             public View makeView(){
 
                 ImageView imageview = new ImageView(getApplicationContext());
-                imageview.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 imageview.setLayoutParams(new ImageSwitcher.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                 return imageview;
             }
         });
-        Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
-        Animation out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
-        imageSwitcher.setInAnimation(in);
-        imageSwitcher.setOutAnimation(out);
-        imageSwitcher.setImageResource(imageIds[currentIndex]);
 
-        btnPrev.setOnClickListener(new View.OnClickListener(){
+ //       Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
+ //       Animation out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
+ //       imageSwitcher.setInAnimation(in);
+//        imageSwitcher.setOutAnimation(out);
+        imageSwitcher.setImageResource(Imgids[imgIndex]);
 
+        BtnPrev.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                currentIndex--;
-                if(currentIndex<=0)
-                    currentIndex=count;
-                imageSwitcher.setImageResource(imageIds[currentIndex]);
+                if(imgIndex > 0)
+                    imgIndex--;
+
+                imageSwitcher.setImageResource(Imgids[imgIndex]);
             }
         });
-        btnNext.setOnClickListener(new View.OnClickListener(){
-
+        BtnNext.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                currentIndex++;
-                if(currentIndex>count-1)
-                    currentIndex=0;
-                imageSwitcher.setImageResource(imageIds[currentIndex]);
+                if(imgIndex < imgcnt -1)
+                    imgIndex++;
+
+                imageSwitcher.setImageResource(Imgids[imgIndex]);
             }
         });
-        btnDelete.setOnClickListener(new View.OnClickListener(){
 
+        BtnDelete.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                if(imgcnt != 0){
+                    for(int i = imgIndex; i < imgcnt; i++)
+                        Imgids[i] = Imgids[i+1];
 
-                for(int i = currentIndex; i < count; i++){
-                    imageIds[i] = imageIds[i+1];
+                    Imgids[--imgcnt] = 0;
+                    if(imgIndex > imgcnt-1)
+                        imgIndex--;
+
+                    imageSwitcher.setImageResource(Imgids[imgIndex]);
                 }
-                imageIds[--count] = 0;
-                if(currentIndex >= count-1)
-                    currentIndex--;
-                imageSwitcher.setImageResource(imageIds[currentIndex]);
             }
         });
-        btnAddPhoto.setOnClickListener(new View.OnClickListener(){
 
+        BtnAddphoto.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                imageIds[count++] = R.drawable.memoimgadd;
-                currentIndex = count-1;
-                imageSwitcher.setImageResource(imageIds[currentIndex]);
+                Imgids[imgcnt++] = R.drawable.memoimgadd;
+                imgIndex = imgcnt-1;
+                imageSwitcher.setImageResource(Imgids[imgIndex]);
             }
         });
 
-        seekBar = findViewById(R.id.page_seekbar);
-        tvcurpage = findViewById(R.id.cur_page_tv);
-        pagenumber = 0;
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        Seekbar.setMax(w_page);
+        Seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                pagenumber = seekBar.getProgress();
+                r_page = seekBar.getProgress();
                 update();
             }
 
             public void update(){
-                tvcurpage.setText(new StringBuilder().append(pagenumber));
+                TvCurpage.setText(new StringBuilder().append(r_page));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                pagenumber = seekBar.getProgress();
+                r_page = seekBar.getProgress();
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                pagenumber = seekBar.getProgress();
+                r_page = seekBar.getProgress();
+            }
+        });
+
+        ShareSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                    share = true;
+                else
+                    share = false;
             }
         });
 
