@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ssu.readingd.dto.BookDTO;
+import com.ssu.readingd.dto.MemoDTO;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -43,7 +44,13 @@ public class DBUtil {
 
     Map<String, Object> memo;
 
-    public Map<String, Object> getMemo() {
+    public Map<String, Object> getMemo(String id) {
+        DocumentReference docRef = db.collection("memos").document(id);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            }
+        });
         return memo;
     }
 
@@ -104,6 +111,40 @@ public class DBUtil {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.v(TAG, "book update fail");
+                    }
+                });
+    }
+
+    public void addMemo(String userID, MemoDTO memo) {
+        db.collection("memos").add(memo)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.v(TAG, "memo data add : " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "memo data add fail");
+                    }
+                });
+    }
+
+    public void updateMemo(String id, MemoDTO memo) {
+        db.collection("memos")
+                .document(id)
+                .set(memo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.v(TAG, "memo update success");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "memo update fail");
                     }
                 });
     }

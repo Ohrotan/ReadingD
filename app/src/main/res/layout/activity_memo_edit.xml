@@ -23,7 +23,7 @@
             android:paddingLeft="5dp"/>
 
         <TextView
-            android:id="@+id/memo_book_title_tv"
+            android:id="@+id/booktitle_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -61,7 +61,7 @@
             ></SeekBar>
 
         <TextView
-            android:id = "@+id/cur_page_tv"
+            android:id = "@+id/curpage_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text = "0"
@@ -87,7 +87,7 @@
 
         <ImageSwitcher
             android:layout_alignParentTop="true"
-            android:id="@+id/fimage_switcher"
+            android:id="@+id/image_switcher"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:background="#ffffff">
@@ -98,8 +98,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="fitXY"
-            android:layout_alignRight="@id/fimage_switcher"
-            android:layout_alignBottom="@id/fimage_switcher"
+            android:layout_alignRight="@id/image_switcher"
+            android:layout_alignBottom="@id/image_switcher"
             android:src="@drawable/nextbtn"
             ></ImageButton>
 
@@ -108,8 +108,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="fitXY"
-            android:layout_alignLeft="@id/fimage_switcher"
-            android:layout_alignBottom="@id/fimage_switcher"
+            android:layout_alignLeft="@id/image_switcher"
+            android:layout_alignBottom="@id/image_switcher"
             android:src="@drawable/prevbtn"
             ></ImageButton>
 
@@ -118,8 +118,8 @@
             android:layout_width="45dp"
             android:layout_height="40dp"
             android:scaleType="fitXY"
-            android:layout_alignRight="@id/fimage_switcher"
-            android:layout_alignTop="@id/fimage_switcher"
+            android:layout_alignRight="@id/image_switcher"
+            android:layout_alignTop="@id/image_switcher"
             android:src="@drawable/imagedeletebtn"
             ></ImageButton>
 
@@ -127,12 +127,11 @@
 
         <EditText
             android:layout_alignParentBottom="true"
-            android:layout_below="@id/fimage_switcher"
-            android:id="@+id/memo_edit"
+            android:layout_below="@id/image_switcher"
+            android:id="@+id/memoedit_et"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars  = "vertical"
-            android:text= "eeeeeeeeeee\neee\nn\n\n\nssssssssssss\n\n\n\nfff\n\n\n\n\n\n\n"
             ></EditText>
 
 
@@ -144,26 +143,24 @@
         android:layout_above="@id/cancel_save_layout"
         android:layout_marginLeft="130dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="담벼락에 올리기"
-            android:textSize="16sp"></TextView>
 
         <Switch
+            android:id = "@+id/share_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:text = "담벼락에 올리기"
+            android:textSize = "16sp"
             />
+
     </LinearLayout>
 
     <LinearLayout
 
-        android:id="@id/cancel_save_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
+        android:id="@+id/cancel_save_layout"
         android:layout_above="@+id/bottom_tab_layout">
 
         <Button
