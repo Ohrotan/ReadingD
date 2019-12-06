@@ -76,7 +76,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHo
         private TextView memoContent_short;
         private TextView memoContent_long;
         private ImageView memoImage;
-        private LinearLayout expandedArea;
+        //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
         private MemoListDTO data;
         private int position;
@@ -92,7 +92,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHo
             memoContent_short = itemView.findViewById(R.id.contentML_short);
             memoContent_long = itemView.findViewById(R.id.contentML_long);
             memoImage = itemView.findViewById(R.id.pictureML);
-            expandedArea = itemView.findViewById(R.id.memoExpandArea);
+            //expandedArea = itemView.findViewById(R.id.memoExpandArea);
             roundLayout = itemView.findViewById(R.id.round_layout);
 
         }
@@ -101,18 +101,12 @@ public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHo
             this.data = data;
             this.position = position;
 
-//            bookName.setText(data.getBookName()) ;
-//            bookWriter.setText(data.getAuthor()) ;
-//            bookPage.setText(data.getMemoPage()) ;
-//            bookDate.setText(data.getMemoRegDate()) ;
-//            memoContent.setText(data.getMemoContent());
-
-            bookName.setText("제목") ;
-            bookWriter.setText("작가") ;
-            bookPage.setText("페이지") ;
-            bookDate.setText("날짜") ;
-            memoContent_short.setText("내용");
-            memoContent_long.setText("내용32352342532535");
+            bookName.setText(data.getMemoBookName()) ;
+            bookWriter.setText(data.getMemoBookAuthor()) ;
+            bookPage.setText(String.valueOf((data.getMemoPage())));
+            bookDate.setText(data.getMemoRegDate()) ;
+            memoContent_short.setText(String.valueOf(data.getMemoContent()+ "short text"));
+            memoContent_long.setText(String.valueOf(data.getMemoContent()+"long text"));
 
 
             changeVisibility(selectedItems.get(position));
@@ -133,8 +127,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHo
                 // 클릭한 Item의 position을 저장
                 selectedItems.put(position, true);
 
-                //memoContent_short.setVisibility(View.GONE);
-                //memoContent_long.setVisibility(View.VISIBLE);
 
             }
             // 해당 포지션의 변화를 알림
@@ -162,12 +154,22 @@ public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHo
                     // value는 height 값
                     int value = (int) animation.getAnimatedValue();
                     // imageView의 높이 변경
-                    expandedArea.getLayoutParams().height = value;
-                    expandedArea.requestLayout();
+                    //expandedArea.getLayoutParams().height = value;
+                    //expandedArea.requestLayout();
+
+                    //memoContent_long.getLayoutParams().height = value;
+                    memoContent_long.requestLayout();
+
+                    memoImage.getLayoutParams().height = value;
+                    memoImage.requestLayout();
                     // imageView가 실제로 사라지게하는 부분
-                    expandedArea.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-                    memoContent_short.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
+
+                    //expandedArea.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                    memoContent_short.setVisibility(isExpanded ?  View.GONE :View.VISIBLE);
                     memoContent_long.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                    memoImage.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+
+
                 }
             });
 
