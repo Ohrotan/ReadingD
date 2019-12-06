@@ -8,10 +8,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,16 +37,15 @@ import androidx.appcompat.app.AppCompatActivity;
 /* 작성자: 조란
 최초 작성일: 2019.11.11
 파일 내용: 책 바코드나 제목으로 검색했을 때 결과 화면 */
-public class BookAddSearchResultActivity extends AppCompatActivity implements View.OnClickListener {
+public class BookAddSearchResultActivity extends AppCompatActivity implements View.OnClickListener, AbsListView.OnScrollListener {
     private static final String TAG = "api call";
     public static final int LOAD_SUCCESS = 101;
-    ProgressDialog progressDialog;
 
     private final String SEARCH_URL = "http://seoji.nl.go.kr/landingPage/SearchApi.do";
     private final String API_KEY = "?cert_key=c594fa83326be40164ae013ab0a14ad8";
     private final String RESULT_STYLE = "&result_style=json";
     private String PAGE_NO = "&page_no=1";
-    private String PAGE_SIZE = "&page_size=100";
+    private String PAGE_SIZE = "&page_size=30";
     private String ISBN = "&isbn=";
     private String TITLE = "&title=";
     private String PUBLISHER = "&publisher=";
@@ -62,6 +63,12 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
     Button select_btn;
     String keyword;
     BookSimpleDTO selecBook;
+    int cur_page =1;
+
+    private boolean lastItemVisibleFlag = false;
+    private boolean mLockListView = false;
+    private ProgressBar progressBar;
+    BookResultListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +85,12 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
         TITLE = TITLE + keyword;
         setREQUEST_URL();
         getJSON();
+        progressBar = new ProgressBar(this);
         book_search_result_list = findViewById(R.id.book_search_result_list);
 
-        book_search_result_list.setAdapter(new BookResultListAdapter(this, resultList));
+        book_search_result_list.setOnScrollListener(this);
+        adapter =new BookResultListAdapter(this, resultList);
+        book_search_result_list.setAdapter(adapter);
 
 
         book_search_result_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -191,6 +201,23 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
 
     private final MyHandler mHandler = new MyHandler(this);
 
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag && mLockListView == false) {
+
+            progressBar.setVisibility(View.VISIBLE);
+            setPAGE_NO(""+(++cur_page));
+            setREQUEST_URL();
+            getJSON();
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        Log.v("scroll",firstVisibleItem+"/"+visibleItemCount+"/"+totalItemCount);
+        lastItemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
+    }
+
 
     static class MyHandler extends Handler {
         private final WeakReference<BookAddSearchResultActivity> weakReference;
@@ -223,23 +250,16 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                             mainactivity.finish();
 
                         }
-                        if (false) {
-                            //!count.equals(mainactivity.PAGE_SIZE.substring(11)) ||
-                            //!"999".equals(mainactivity.PAGE_SIZE.substring(11))) {
-                            if (Integer.parseInt(count) >= 1000) {
-                                mainactivity.setPAGE_SIZE("999");
-                            } else {
-                                mainactivity.setPAGE_SIZE(count);
-                            }
-                            mainactivity.setREQUEST_URL();
-                            mainactivity.getJSON();
-                        } else {
+                        else {
                             mainactivity.result_count_tv.setText(count + " 건");
                             JsonArray ja = je.getAsJsonObject().getAsJsonArray("docs");
                             for (int i = 0; i < ja.size(); i++) {
                                 mainactivity.resultList.add(BookSimpleDTO.parse(ja.get(i).getAsJsonObject()));
                             }
                             mainactivity.sortResult();
+                            mainactivity.adapter.notifyDataSetChanged();
+                            mainactivity.progressBar.setVisibility(View.GONE);
+                            mainactivity.mLockListView = false;
                         }
                         // Toast.makeText(mainactivity, jsonString, Toast.LENGTH_SHORT).show();
 
@@ -251,7 +271,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
     }
 
     public void getJSON() {
-
+        mLockListView = true;
         Thread thread = new Thread(new Runnable() {
 
             public void run() {
