@@ -24,24 +24,103 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ssu.readingd.dto.BookDTO;
+import com.ssu.readingd.dto.MemoDTO;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 
 public class DBUtil {
     final static String TAG = "Database";
-    static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     // Create a storage reference from our app
-    static FirebaseStorage storage = FirebaseStorage.getInstance();
-    static StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+    Map<String, Object> memo;
+    MemoDTO memoDTO;
+
+    public MemoDTO getMemo(String id) {
+
+        DocumentReference docRef = db.collection("memos").document("90909");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()){
+                        Log.d(TAG, "DocumentSnapshot data" + document.getData());
+                        memoDTO = document.toObject(MemoDTO.class);
+                    }
+                    else{
+                        Log.d(TAG, "No such document");
+                    }
+                }
+                else{
+                    Log.d(TAG, "get failed with", task.getException());
+                }
+            }
+        });
+
+        try {
+            Thread.sleep(3000);
+        }catch(InterruptedException e){
+            System.out.println(e.getMessage());
+        }
+
+        return memoDTO;
+    }
+
+    public void addMemo(MemoDTO memo) {
+
+     //   db.collection("memos").document("90909").set(memo);
+        db.collection("memos").document().set(memo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.v(TAG, "memo update success");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "memo update fail");
+                    }
+                });
+
+        try {
+            Thread.sleep(1000);
+        }catch(InterruptedException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updateMemo(String id, MemoDTO memo) {
+        db.collection("memos")
+                .document(id)
+                .set(memo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.v(TAG, "memo update success");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "memo update fail");
+                    }
+                });
+    }
+
 
     //회원가입할 때랑 비밀번호 바꿀 때 둘다 이용할 수 있음.
-    public static void addUser(String id, String pwd) {
+    public void addUser(String id, String pwd) {
 
         // Create a new user with a first and last name
         Map<String, Object> user = new HashMap<>();
@@ -63,7 +142,7 @@ public class DBUtil {
         });
     }
 
-    public static void addBook(String userID, BookDTO book) {
+    public void addBook(String userID, BookDTO book) {
         db.collection("books").add(book)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -79,7 +158,25 @@ public class DBUtil {
                 });
     }
 
-    public static void addData() {
+    public void updateBook(String id, BookDTO book) {
+        db.collection("books")
+                .document(id)
+                .set(book)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.v(TAG, "book update success");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "book update fail");
+                    }
+                });
+    }
+
+    public void addData() {
 
         // Create a new user with a first and last name
         Map<String, Object> user = new HashMap<>();
@@ -103,7 +200,7 @@ public class DBUtil {
                 });
     }
 
-    public static void deleteData(final String collection, final String id) {
+    public void deleteData(final String collection, final String id) {
         db.collection(collection).document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -116,7 +213,7 @@ public class DBUtil {
         });
     }
 
-    public static void updateData(String collection, String id, Map<String, Object> data) {
+    public void updateData(String collection, String id, Map<String, Object> data) {
         Map<String, Object> data1 = new HashMap<>();
         data1.put("name", "San Francisco");
         // data1.put("state", "CA");
@@ -144,7 +241,7 @@ public class DBUtil {
     }
 
 
-    public static void getData(String collection, String id) {
+    public void getData(String collection, String id) {
         db.collection(collection).document(id)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -164,7 +261,30 @@ public class DBUtil {
                 });
     }
 
-    public static ArrayList<String> getDatas(String collection, String criteria, boolean order) {
+    public void getRandomMemo(String userId) {
+        db.collection("memos").whereEqualTo("user_id", userId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int total = task.getResult().size();
+                            Random r = new Random();
+                            int i = r.nextInt(total);
+                            memo = task.getResult().getDocuments().get(i).getData();
+                            if(memo==null){
+                                Log.v(TAG,"memo null");
+                            }else{
+                                Log.v(TAG,"memo"+memo.get("book_name"));
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting memo documents.", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public ArrayList<String> getDatas(String collection, String criteria, boolean order) {
         final ArrayList<String> a = new ArrayList<>();
         if (order) {
             db.collection(collection).orderBy(criteria, Query.Direction.DESCENDING)
@@ -200,7 +320,7 @@ public class DBUtil {
         return a;
     }
 
-    public static void uploadImage(Bitmap bitmap, String name) {
+    public void uploadImage(Bitmap bitmap, String name) {
 
         StorageReference imgRef = storageRef.child(name + ".jpg");
 
@@ -242,7 +362,7 @@ public class DBUtil {
     }
 
     //https://firebase.google.com/docs/storage/android/create-reference?authuser=0
-    public static void uploadImage(ImageView imageView, String name) {
+    public void uploadImage(ImageView imageView, String name) {
         imageView.setDrawingCacheEnabled(true);
         imageView.buildDrawingCache();
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
@@ -254,7 +374,7 @@ public class DBUtil {
     // ex)        ImageView img = new ImageView(this);
     //            img.setImageResource(R.drawable.pre_img);
     //            DBUtil.setImageViewFromDB(this, img, "coordi1");
-    public static void setImageViewFromDB(final Context con, final ImageView imageView, String name) {
+    public void setImageViewFromDB(final Context con, final ImageView imageView, String name) {
         StorageReference httpsReference = FirebaseStorage.getInstance()
                 .getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + name + ".jpg");
 

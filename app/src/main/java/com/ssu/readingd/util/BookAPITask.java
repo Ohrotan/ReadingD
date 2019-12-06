@@ -3,6 +3,10 @@ package com.ssu.readingd.util;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -11,17 +15,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
-
-public class BookAPITask extends AsyncTask<Integer, Void, JSONObject> {
+public class BookAPITask extends AsyncTask<Integer, Void, JsonObject> {
     protected String mURL;
 
     public BookAPITask(String url) {
         mURL = url;
     }
 
-    protected JSONObject doInBackground(Integer... params) {
+    protected JsonObject doInBackground(Integer... params) {
         String result = null;
 
         try {
@@ -38,15 +40,12 @@ public class BookAPITask extends AsyncTask<Integer, Void, JSONObject> {
             }
 
             result = builder.toString();
-            XmlToJson xmlToJson = new XmlToJson.Builder(result).build();
 
-            JSONObject jsonObject = xmlToJson.toJson();
-
-            String jsonString = xmlToJson.toString();
-            Log.v("REST_API","Success! "+jsonString);
-            return jsonObject;
-        }
-        catch (Exception e) {
+            JsonParser jp = new JsonParser();
+            JsonElement je = jp.parse(result);
+            Log.v("REST_API", "Success! " + result);
+            return je.getAsJsonObject();
+        } catch (Exception e) {
             // Error calling the rest api
             Log.e("REST_API", "GET method failed: " + e.getMessage());
             e.printStackTrace();

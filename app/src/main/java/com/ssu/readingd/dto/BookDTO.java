@@ -76,11 +76,11 @@ public class BookDTO extends BookSimpleDTO {
         this.reg_date = in.readString();
     }
 
-    public int getRPage() {
+    public int getR_page() {
         return r_page;
     }
 
-    public void setRPage(int r_page) {
+    public void setR_page(int r_page) {
         this.r_page = r_page;
     }
 
@@ -92,19 +92,19 @@ public class BookDTO extends BookSimpleDTO {
         this.state = state;
     }
 
-    public String getStartDate() {
+    public String getStart_date() {
         return start_date;
     }
 
-    public void setStartDate(String start_date) {
+    public void setStart_date(String start_date) {
         this.start_date = start_date;
     }
 
-    public String getEndDate() {
+    public String getEnd_date() {
         return end_date;
     }
 
-    public void setEndDate(String end_date) {
+    public void setEnd_date(String end_date) {
         this.end_date = end_date;
     }
 
@@ -116,11 +116,11 @@ public class BookDTO extends BookSimpleDTO {
         this.rating = rating;
     }
 
-    public String getUserId() {
+    public String getUser_id() {
         return user_id;
     }
 
-    public void setUserId(String user_id) {
+    public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
 
@@ -131,6 +131,8 @@ public class BookDTO extends BookSimpleDTO {
     public void setReg_date(String reg_date) {
         this.reg_date = reg_date;
     }
+
+
 
     @Override
     public String toString() {

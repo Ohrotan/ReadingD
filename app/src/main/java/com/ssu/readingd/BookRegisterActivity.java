@@ -41,7 +41,7 @@ public class BookRegisterActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("책 등록");
+
         setContentView(R.layout.activity_book_register);
 
         c = Calendar.getInstance();

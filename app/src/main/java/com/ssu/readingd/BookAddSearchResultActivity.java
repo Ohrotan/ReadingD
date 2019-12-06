@@ -173,11 +173,11 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
         BookSimpleDTO dto;
         while (iterator.hasNext()) {
             dto = iterator.next();
-            if (dto.getBookName().equals(keyword) || dto.getBookName().trim().equals(keyword.trim())) {
+            if (dto.getBook_name().equals(keyword) || dto.getBook_name().trim().equals(keyword.trim())) {
                 iterator.remove();
                 first.add(dto);
-            } else if (dto.getBookName().startsWith(keyword) ||
-                    dto.getBookName().trim().startsWith(keyword.trim())) {
+            } else if (dto.getBook_name().startsWith(keyword) ||
+                    dto.getBook_name().trim().startsWith(keyword.trim())) {
                 iterator.remove();
                 second.add(dto);
 
@@ -215,6 +215,14 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                         JsonParser jp = new JsonParser();
                         JsonElement je = jp.parse(jsonString);
                         String count = je.getAsJsonObject().get("TOTAL_COUNT").getAsString();
+                        if(count.equals("0")){
+                            Intent intent = new Intent(mainactivity, BookManualRegisterActivity.class);
+                            intent.putExtra("book",new BookSimpleDTO(mainactivity.keyword));
+                            mainactivity.startActivity(intent);
+                            mainactivity.overridePendingTransition(0,0);
+                            mainactivity.finish();
+
+                        }
                         if (false) {
                             //!count.equals(mainactivity.PAGE_SIZE.substring(11)) ||
                             //!"999".equals(mainactivity.PAGE_SIZE.substring(11))) {
@@ -226,7 +234,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                             mainactivity.setREQUEST_URL();
                             mainactivity.getJSON();
                         } else {
-                            mainactivity.result_count_tv.setText(50 + " 건");
+                            mainactivity.result_count_tv.setText(count + " 건");
                             JsonArray ja = je.getAsJsonObject().getAsJsonArray("docs");
                             for (int i = 0; i < ja.size(); i++) {
                                 mainactivity.resultList.add(BookSimpleDTO.parse(ja.get(i).getAsJsonObject()));

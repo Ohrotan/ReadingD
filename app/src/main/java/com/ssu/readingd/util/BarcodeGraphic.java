@@ -1,5 +1,3 @@
-package com.ssu.readingd.util;
-
 // Copyright 2018 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +11,7 @@ package com.ssu.readingd.util;
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.ssu.readingd.util;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,9 +19,13 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
+import com.ssu.readingd.common.GraphicOverlay;
+import com.ssu.readingd.common.GraphicOverlay.Graphic;
 
-/** Graphic instance for rendering Barcode position and content information in an overlay view. */
-public class BarcodeGraphic extends GraphicOverlay.Graphic {
+/**
+ * Graphic instance for rendering Barcode position and content information in an overlay view.
+ */
+public class BarcodeGraphic extends Graphic {
 
     private static final int TEXT_COLOR = Color.WHITE;
     private static final float TEXT_SIZE = 54.0f;

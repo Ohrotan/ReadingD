@@ -32,7 +32,7 @@ public class BookResultListAdapter extends BaseAdapter {
 
     public BookResultListAdapter(Activity activity, List<BookSimpleDTO> list) {
         this.activity = activity;
-        this.list = (ArrayList<BookSimpleDTO>)list;
+        this.list = (ArrayList<BookSimpleDTO>) list;
     }
 
     public ArrayList<BookSimpleDTO> getList() {
@@ -63,25 +63,23 @@ public class BookResultListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(activity).inflate(R.layout.layout_book_search_result_item, null);
             viewholder = new ViewHolder();
-            viewholder.img = convertView.findViewById(R.id.cover_img);
-            viewholder.name = convertView.findViewById(R.id.name_tv);
-            viewholder.authors = convertView.findViewById(R.id.authors_tv);
-            viewholder.publisher = convertView.findViewById(R.id.publisher_tv);
-            viewholder.date = convertView.findViewById(R.id.pub_date_tv);
-
-            convertView.setTag(viewholder);
-        } else {
-            viewholder = (ViewHolder) convertView.getTag();
         }
+        viewholder.img = convertView.findViewById(R.id.cover_img);
+        viewholder.name = convertView.findViewById(R.id.name_tv);
+        viewholder.authors = convertView.findViewById(R.id.authors_tv);
+        viewholder.publisher = convertView.findViewById(R.id.publisher_tv);
+        viewholder.date = convertView.findViewById(R.id.pub_date_tv);
 
         // viewholder.img.setImageResource(list.get(position).getImg());
         if (list.get(position).getImg() != null) {
             ImageViewFromURL.setImageView(activity, viewholder.img, list.get(position).getImg());
+        }else{
+            viewholder.img.setImageResource(R.drawable.default_book);
         }
-        viewholder.name.setText(list.get(position).getBookName());
+        viewholder.name.setText(list.get(position).getBook_name());
         viewholder.authors.setText(list.get(position).getAuthor() + " \n " + list.get(position).getTranslator() + " ");
         viewholder.publisher.setText(list.get(position).getPublisher());
-        viewholder.date.setText(list.get(position).getPubDate());
+        viewholder.date.setText(list.get(position).getPub_date());
 
         return convertView;
     }
