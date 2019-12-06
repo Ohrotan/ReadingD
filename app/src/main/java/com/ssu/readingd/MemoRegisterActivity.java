@@ -25,9 +25,17 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.ssu.readingd.util.DBUtil;
 import com.ssu.readingd.dto.MemoDTO;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 
@@ -36,8 +44,10 @@ import java.util.Map;
 파일 내용: 메모를 등록할 때 화면 */
 public class MemoRegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-//    MemoDTO result;
+    MemoDTO memoDTO;
     Map<String, Object> memo;
+    String book_name;
+    TextView TvBookname;
     ImageView BtnAddphoto;
     SeekBar Seekbar;
     TextView TvCurpage;
@@ -45,16 +55,28 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
     private ImageSwitcher imageSwitcher;
     ImageButton BtnPrev, BtnNext, BtnDelete;
     EditText MemoEdit;
+    String MemoText;
     Switch ShareSwitch;
     Button BtnCancel, BtnSave;
 
     int r_page = 0;
     int w_page = 300;
     int[] Imgids = new int[10];
-    //String[] Imgids = new String[10];
+    //String[] Imgids2 = new String[10];
+    List<String> Imgids2 = new ArrayList<String>();
     int imgcnt = 0;
     int imgIndex = 0;
     boolean share = false;
+
+    String user_id;
+    String book_id;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    // Create a storage reference from our app
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    DocumentReference docRef = db.collection("memos").document("90909");
+
 
 
     @Override
@@ -62,6 +84,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_register);
 
+        TvBookname = findViewById(R.id.booktitle_tv);
         BtnAddphoto = findViewById(R.id.addphoto_bt);
         Seekbar = findViewById(R.id.page_seekbar);
         TvCurpage = findViewById(R.id.curpage_tv);
@@ -75,6 +98,9 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         BtnCancel = findViewById(R.id.cancel_btn);
         BtnSave = findViewById(R.id.save_btn);
         Imgids[0] = 0;
+
+        book_name = "hiehie";
+        w_page = 233;
 
 
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory(){
@@ -187,6 +213,22 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
+        if(v==BtnCancel){
+            onBackPressed();
+        }
+        else if(v==BtnSave){
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            String reg_date = dateformat.format(cal.getTime());
+            MemoText = MemoEdit.toString();
+
+            user_id = "aaaabb2";
+            Imgids2.add("memoimg2");
+            Imgids2.add("memoimg3");
+
+            memoDTO = new MemoDTO(book_name, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
+            new DBUtil().addMemo(memoDTO);
+        }
     }
 
 }
