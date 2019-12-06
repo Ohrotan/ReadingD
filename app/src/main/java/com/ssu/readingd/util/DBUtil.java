@@ -43,20 +43,81 @@ public class DBUtil {
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     Map<String, Object> memo;
+    MemoDTO memoDTO;
 
-    public Map<String, Object> getMemo(String id) {
-        DocumentReference docRef = db.collection("memos").document(id);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+    public MemoDTO getMemo(String id) {
+
+        DocumentReference docRef = db.collection("memos").document("90909");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()){
+                        Log.d(TAG, "DocumentSnapshot data" + document.getData());
+                        memoDTO = document.toObject(MemoDTO.class);
+                    }
+                    else{
+                        Log.d(TAG, "No such document");
+                    }
+                }
+                else{
+                    Log.d(TAG, "get failed with", task.getException());
+                }
             }
         });
-        return memo;
+
+        try {
+            Thread.sleep(3000);
+        }catch(InterruptedException e){
+            System.out.println(e.getMessage());
+        }
+
+        return memoDTO;
     }
 
-    public void setMemo(Map<String, Object> memo) {
-        this.memo = memo;
+    public void addMemo(MemoDTO memo) {
+
+     //   db.collection("memos").document("90909").set(memo);
+        db.collection("memos").document().set(memo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.v(TAG, "memo update success");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "memo update fail");
+                    }
+                });
+
+        try {
+            Thread.sleep(1000);
+        }catch(InterruptedException e){
+            System.out.println(e.getMessage());
+        }
     }
+
+    public void updateMemo(String id, MemoDTO memo) {
+        db.collection("memos")
+                .document(id)
+                .set(memo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.v(TAG, "memo update success");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "memo update fail");
+                    }
+                });
+    }
+
 
     //회원가입할 때랑 비밀번호 바꿀 때 둘다 이용할 수 있음.
     public void addUser(String id, String pwd) {
@@ -111,40 +172,6 @@ public class DBUtil {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.v(TAG, "book update fail");
-                    }
-                });
-    }
-
-    public void addMemo(String userID, MemoDTO memo) {
-        db.collection("memos").add(memo)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.v(TAG, "memo data add : " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.v(TAG, "memo data add fail");
-                    }
-                });
-    }
-
-    public void updateMemo(String id, MemoDTO memo) {
-        db.collection("memos")
-                .document(id)
-                .set(memo)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.v(TAG, "memo update success");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.v(TAG, "memo update fail");
                     }
                 });
     }
