@@ -26,12 +26,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ssu.readingd.util.DBUtil;
@@ -77,6 +79,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     // Create a storage reference from our app
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    StorageReference pathRefernece;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,10 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
                 return imageview;
             }
         });
+
+        imgcnt = Imgids2.size();
+        imgIndex = 0;
+        pathRefernece = storageRef.child(Imgids2.get(imgIndex));
 
      //   Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
      //   Animation out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
@@ -227,7 +234,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             String reg_date = dateformat.format(cal.getTime());
-            MemoText = MemoEdit.toString();
+            MemoText = MemoEdit.getText().toString();
             memoDTO = new MemoDTO(book_name, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
             new DBUtil().updateMemo(memo_id, memoDTO);
         }
@@ -257,6 +264,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         MemoEdit.setText(MemoText);
         TvBookname.setText(book_name);
     }
+
 
 }
 
