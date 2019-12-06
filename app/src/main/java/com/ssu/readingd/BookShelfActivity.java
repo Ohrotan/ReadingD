@@ -1,7 +1,6 @@
 package com.ssu.readingd;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -9,11 +8,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.ssu.readingd.dto.BookItem;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.ssu.readingd.adapter.BookShelfAdapter;
+import com.ssu.readingd.dto.BookItem;
 
 public class BookShelfActivity extends AppCompatActivity {
 
@@ -73,6 +75,21 @@ public class BookShelfActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    public void clickTab(View v) {
+        ImageView[] img = new ImageView[5];
+        img[0] = findViewById(R.id.tab_flash_back);
+        img[1] = findViewById(R.id.tab_memo);
+        img[2] = findViewById(R.id.tab_book);
+        img[3] = findViewById(R.id.tab_share);
+        img[4] = findViewById(R.id.tab_setting);
+
+        if (v == img[0]) {
+            startActivity(new Intent(this, FlashbackActivity.class));
+            overridePendingTransition(0, 0);
+        }
 
     }
 
