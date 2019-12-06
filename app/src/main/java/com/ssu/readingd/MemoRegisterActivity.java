@@ -220,7 +220,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             String reg_date = dateformat.format(cal.getTime());
-            MemoText = MemoEdit.toString();
+            MemoText = MemoEdit.getText().toString();
 
             user_id = "aaaabb2";
             Imgids2.add("memoimg2");
