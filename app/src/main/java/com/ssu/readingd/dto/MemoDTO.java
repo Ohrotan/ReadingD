@@ -56,7 +56,7 @@ public class MemoDTO{
     public String getBook_name(){
         return book_name;
     }
-    public List<String> getImgs(){
+    public List<String> getImg(){
         return img;
     }
     public String getMemo_text(){
@@ -80,7 +80,7 @@ public class MemoDTO{
     public void setBook_name(String book_name){
         this.book_name = book_name;
     }
-    public void setImgs(List<String> img){
+    public void setImg(List<String> img){
         this.img = img;
     }
     public void setMemo_text(String memo_text){
