@@ -101,6 +101,7 @@
             android:layout_alignRight="@id/image_switcher"
             android:layout_alignBottom="@id/image_switcher"
             android:src="@drawable/nextbtn"
+            android:background="#ffffff"
             ></ImageButton>
 
         <ImageButton
@@ -111,16 +112,18 @@
             android:layout_alignLeft="@id/image_switcher"
             android:layout_alignBottom="@id/image_switcher"
             android:src="@drawable/prevbtn"
+            android:background="#ffffff"
             ></ImageButton>
 
         <ImageButton
             android:id="@+id/imagedelete_btn"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="fitXY"
             android:layout_alignRight="@id/image_switcher"
             android:layout_alignTop="@id/image_switcher"
             android:src="@drawable/imagedeletebtn"
+            android:background="#ffffff"
             ></ImageButton>
 
 

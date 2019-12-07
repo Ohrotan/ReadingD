@@ -54,7 +54,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     String book_name;
     TextView TvBookname;
     String user_id;
-    String memo_id = "Ra5tPhktsfNJ5NG0U3Wy";
+    String memo_id = "McRGKlAF4hHQ55POQs0X";
     ImageView BtnAddphoto;
     SeekBar Seekbar;
     TextView TvCurpage;
@@ -242,7 +242,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
 
     public void ReadMemo(MemoDTO memoDTO){
         this.book_name = memoDTO.getBook_name();
-        this.Imgids2 = memoDTO.getImgs();
+        this.Imgids2 = memoDTO.getImg();
         this.MemoText = memoDTO.getMemo_text();
         this.r_page = memoDTO.getR_page();
         this.share = memoDTO.getShare();

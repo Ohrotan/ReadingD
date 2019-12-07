@@ -25,7 +25,7 @@
                 android:id="@+id/button102"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="책 별 메모리스트"
+                android:text="메모 삭제 팝업"
                 android:onClick="onClick"/>
         </TableRow>
 

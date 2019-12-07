@@ -101,6 +101,9 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
 
         book_name = "hiehie";
         w_page = 233;
+        user_id = "aaaabb2";
+        Imgids2.add("memoimg2");
+        Imgids2.add("memoimg3");
 
 
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory(){
@@ -221,10 +224,6 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             String reg_date = dateformat.format(cal.getTime());
             MemoText = MemoEdit.getText().toString();
-
-            user_id = "aaaabb2";
-            Imgids2.add("memoimg2");
-            Imgids2.add("memoimg3");
 
             memoDTO = new MemoDTO(book_name, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
             new DBUtil().addMemo(memoDTO);
