@@ -1,21 +1,14 @@
 package com.ssu.readingd.dto;
 
 
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.gson.JsonObject;
-
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class MemoDTO{
 
     String book_name;
-    //String[] img;
+    String book_author;
     List<String> img;
     String memo_text;
     int r_page;
@@ -39,9 +32,22 @@ public class MemoDTO{
         this.w_page = w_page;
     }
 
+    public MemoDTO(String book_name,String book_author, List<String> img, String memo_text, int r_page, String reg_date, boolean share, String user_id, int w_page){
+        this.book_name = book_name;
+        this.book_author = book_author;
+        this.img = img;
+        this.memo_text = memo_text;
+        this.r_page = r_page;
+        this.reg_date = reg_date;
+        this.share = share;
+        this.user_id = user_id;
+        this.w_page = w_page;
+    }
+
     public HashMap<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("book_name", book_name);
+        result.put("book_author", book_author);
         result.put("img", img);
         result.put("memo_text", memo_text);
         result.put("r_page", r_page);
@@ -101,5 +107,8 @@ public class MemoDTO{
     public void setW_page(int w_page){
         this.w_page = w_page;
     }
+    public String getBook_author() { return book_author; }
+    public void setBook_author(String book_author) { this.book_author = book_author; }
+
 
 }

@@ -1,16 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MemoSearchResultActivity">
 
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/memo_search_result_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="메모 검색 결과"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="@color/colorLightGray"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/addMemoBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:onClick="AddMemo"
+            android:layout_margin="10dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/plus" />
+
+        <TextView
+            android:id="@+id/search_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_centerInParent="true"
+            android:text="모든 메모"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/topLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_vertical"
+        android:layout_below="@id/memo_search_result_title"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:background="@drawable/text_border"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/memoListSearchText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="0dp"
+                    android:layout_weight="5"
+                    android:background="@null"
+                    android:ems="8"
+                    android:padding="5dp"
+                    android:selectAllOnFocus="false"
+                    android:text="" />
+
+                <ImageButton
+                    android:id="@+id/memoListBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="0dp"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/button_border"
+                    android:maxWidth="35dp"
+                    android:maxHeight="35dp"
+                    android:padding="5dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@android:drawable/ic_search_category_default" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <Spinner
+            android:id="@+id/sortMemoSpinner"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="2"
+            android:entries="@array/sort_book"
+            android:padding="5dp">
+
+        </Spinner>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topLayout2" />
+
+    <LinearLayout
+        android:id="@+id/bottom_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/white"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/tab_flash_back"
+            app:srcCompat="@drawable/flash_back_b"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:tag="cur" />
+
+        <ImageView
+            android:id="@+id/tab_memo"
+            app:srcCompat="@drawable/memo_c"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp" />
+
+
+        <ImageView
+            android:id="@+id/tab_book"
+            app:srcCompat="@drawable/book_b"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp" />
+
+
+        <ImageView
+            android:id="@+id/tab_share"
+            app:srcCompat="@drawable/share_b"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp" />
+
+
+        <ImageView
+            android:id="@+id/tab_setting"
+            app:srcCompat="@drawable/setting_b"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp" />
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

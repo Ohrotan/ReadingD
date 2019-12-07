@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ public class BookShelfActivity extends AppCompatActivity {
 
     Spinner sortSpinner;
     ImageButton imageButton;
+    EditText bookSearchText;
     GridView gridView;
 
     @Override
@@ -29,7 +31,8 @@ public class BookShelfActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_shelf);
 
         sortSpinner = (Spinner)findViewById(R.id.sortBookSpinner);
-        imageButton = (ImageButton)findViewById(R.id.imageButton);
+        imageButton = (ImageButton)findViewById(R.id.shelfSearchBtn);
+        bookSearchText = (EditText)findViewById(R.id.shelfSearchText);
         gridView = findViewById(R.id.gridView);
 
         Display display = getWindowManager().getDefaultDisplay();

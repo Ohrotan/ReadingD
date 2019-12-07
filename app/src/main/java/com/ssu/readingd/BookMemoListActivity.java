@@ -13,18 +13,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ssu.readingd.adapter.MemoListAdapter;
-import com.ssu.readingd.dto.MemoListDTO;
+import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class BookMemoListActivity extends AppCompatActivity {
+public class BookMemoListActivity extends AppCompatActivity implements View.OnClickListener{
 
     MemoListAdapter adapter;
     RecyclerView recyclerView;
     Spinner sortMemoSpinner;
     ImageButton memoBtn;
     EditText memoListSearchText;
+    ImageButton addMemoBtn;
+    ImageButton bookEditBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,11 @@ public class BookMemoListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         memoBtn = (ImageButton)findViewById(R.id.memoListBtn);
         memoListSearchText = (EditText)findViewById(R.id.memoListSearchText);
+        addMemoBtn = (ImageButton)findViewById(R.id.addMemoBtn);
+        bookEditBtn = (ImageButton)findViewById(R.id.book_edit_btn);
+
+        addMemoBtn.setOnClickListener(this);
+        bookEditBtn.setOnClickListener(this);
 
         init();
 
@@ -56,11 +63,12 @@ public class BookMemoListActivity extends AppCompatActivity {
 
     }
 
+
     public void init(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MemoListAdapter(this);
+        adapter = new MemoListAdapter(this,0);
         recyclerView.setAdapter(adapter);
 
         List<String> title = Arrays.asList("제목1", "제목2", "제목3", "제목4", "제목5");
@@ -72,12 +80,12 @@ public class BookMemoListActivity extends AppCompatActivity {
 
         for (int i = 0; i < title.size(); i++) {
 
-            MemoListDTO data = new MemoListDTO();
-            data.setMemoBookName(title.get(i));
-            data.setMemoRegDate(date.get(i));
-            data.setMemoPage(page.get(i));
-            data.setMemoImages(image.get(i));
-            data.setMemoContent(memo.get(i));
+            MemoDTO data = new MemoDTO();
+            data.setBook_name(title.get(i));
+            data.setReg_date(date.get(i));
+            data.setR_page(page.get(i));
+            //data.set(image.get(i));
+            data.setMemo_text(memo.get(i));
 
             adapter.addItem(data);
         }
@@ -85,4 +93,16 @@ public class BookMemoListActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onClick(View v) {
+        if(v==addMemoBtn){
+            Intent intent = new Intent(this, MemoRegisterActivity.class);
+            startActivity(intent);
+        }
+        else if(v == bookEditBtn){
+            Intent intent = new Intent(this, BookEditActivity.class);
+            startActivity(intent);
+        }
+    }
 }

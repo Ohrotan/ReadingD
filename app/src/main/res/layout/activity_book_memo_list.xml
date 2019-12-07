@@ -6,13 +6,56 @@
     android:layout_height="match_parent"
     tools:context=".BookMemoListActivity">
 
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorLightGray"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/addMemoBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/plus" />
+
+        <TextView
+            android:id="@+id/book_name_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_centerInParent="true"
+            android:text="책 제목1"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/book_edit_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/book_with_pencil" />
+
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/topLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_below="@id/title"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
+
         android:layout_marginBottom="30dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -21,18 +64,19 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:gravity="right"
-            android:weightSum="5">
+            android:layout_weight="6">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="3"
+                android:gravity="right"
                 android:background="@drawable/text_border"
-                android:orientation="horizontal"
-                android:weightSum="6">
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/memoListSearchText"
@@ -68,10 +112,10 @@
 
         <Spinner
             android:id="@+id/sortMemoSpinner"
-            android:layout_width="0dp"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_weight="2"
             android:entries="@array/sort_book"
             android:padding="5dp">

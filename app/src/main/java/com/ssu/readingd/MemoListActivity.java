@@ -13,18 +13,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ssu.readingd.adapter.MemoListAdapter;
-import com.ssu.readingd.dto.MemoListDTO;
+import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class MemoListActivity extends AppCompatActivity {
+public class MemoListActivity extends AppCompatActivity  {
 
     MemoListAdapter adapter;
     RecyclerView recyclerView;
     Spinner sortMemoSpinner;
     ImageButton memoBtn;
     EditText memoListSearchText;
+    ImageButton addMemoTitleBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +36,21 @@ public class MemoListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         memoBtn = (ImageButton)findViewById(R.id.memoListBtn);
         memoListSearchText = (EditText)findViewById(R.id.memoListSearchText);
+        addMemoTitleBtn = (ImageButton)findViewById(R.id.addMemoBtn);
 
         init();
 
 
 
     }
+
+    public void AddMemo(View v){
+
+        Intent intent = new Intent(this, MemoRegisterActivity.class);
+        startActivity(intent);
+
+    }
+
 
     public void clickTab(View v) {
         ImageView[] img = new ImageView[5];
@@ -62,24 +72,23 @@ public class MemoListActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MemoListAdapter(this);
+        adapter = new MemoListAdapter(this,0);
         recyclerView.setAdapter(adapter);
 
         List<String> title = Arrays.asList("제목1", "제목2", "제목3", "제목4", "제목5");
         List<String> date = Arrays.asList("1111", "1112", "1113", "1114", "1115");
         List<Integer> page = Arrays.asList(222,433,333,1111,222);
-        List<String> image = Arrays.asList("이미지1", "이미지2", "이미지3", "이미지4", "이미지5");
+        //List<String> image = Arrays.asList("이미지1", "이미지2", "이미지3", "이미지4", "이미지5");
         List<String> memo = Arrays.asList("내용내용내용내용내용내용1","내용내용내용내용내용내용2","내용내용내용내용내용내용내용내용3","내용내용내용내용내용내용내용내용내용내용내용내용4","내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용5");
 
 
         for (int i = 0; i < title.size(); i++) {
 
-            MemoListDTO data = new MemoListDTO();
-            data.setMemoBookName(title.get(i));
-            data.setMemoRegDate(date.get(i));
-            data.setMemoPage(page.get(i));
-            data.setMemoImages(image.get(i));
-            data.setMemoContent(memo.get(i));
+            MemoDTO data = new MemoDTO();
+            data.setBook_name(title.get(i));
+            data.setReg_date(date.get(i));
+            data.setR_page(page.get(i));
+            data.setMemo_text(memo.get(i));
 
             adapter.addItem(data);
         }
