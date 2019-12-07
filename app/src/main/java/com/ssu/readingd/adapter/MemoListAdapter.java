@@ -13,14 +13,14 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ssu.readingd.R;
-import com.ssu.readingd.dto.MemoListDTO;
+import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.ArrayList;
 
 public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHolder> {
 
 
-    private ArrayList<MemoListDTO> mData = new ArrayList<>();
+    private ArrayList<MemoDTO> mData = new ArrayList<>();
 
     private Context context;
 
@@ -29,7 +29,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHo
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
 
 
-    public void addItem(MemoListDTO data) {
+    public void addItem(MemoDTO data) {
         // 외부에서 item을 추가시킬 함수입니다.
         mData.add(data);
     }
@@ -78,7 +78,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHo
         private ImageView memoImage;
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
-        private MemoListDTO data;
+        private MemoDTO data;
         private int position;
 
         ViewHolder(View itemView) {
@@ -97,16 +97,16 @@ public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHo
 
         }
 
-        void onBind(MemoListDTO data, int position) {
+        void onBind(MemoDTO data, int position) {
             this.data = data;
             this.position = position;
 
-            bookName.setText(data.getMemoBookName()) ;
-            bookWriter.setText(data.getMemoBookAuthor()) ;
-            bookPage.setText(String.valueOf((data.getMemoPage())));
-            bookDate.setText(data.getMemoRegDate()) ;
-            memoContent_short.setText(String.valueOf(data.getMemoContent()+ "short text"));
-            memoContent_long.setText(String.valueOf(data.getMemoContent()+"long text"));
+            bookName.setText(data.getBook_name()) ;
+            bookWriter.setText(data.getBook_author()) ;
+            bookPage.setText(String.valueOf((data.getR_page())));
+            bookDate.setText(data.getReg_date()) ;
+            memoContent_short.setText(String.valueOf(data.getMemo_text()+ "short text"));
+            memoContent_long.setText(String.valueOf(data.getMemo_text()+"long text"));
 
 
             changeVisibility(selectedItems.get(position));
@@ -181,7 +181,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHo
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음.
-    public MemoListAdapter(Context context, ArrayList<MemoListDTO> list) {
+    public MemoListAdapter(Context context, ArrayList<MemoDTO> list) {
         mData = list;
         this.context = context;
     }

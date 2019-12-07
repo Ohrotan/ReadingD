@@ -40,55 +40,66 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="저자"
-                    android:textSize="18dp" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="/"
-                    android:textSize="18dp" />
+                    android:text=" / "
+                    android:textSize="16dp" />
 
+
+                <TextView
+                    android:id="@+id/memoSearchResultPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="214"
+                    android:textSize="16dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="p"
-                    android:textSize="18dp" />
+                    android:textSize="16dp" />
 
                 <TextView
-                    android:id="@+id/BookPageML"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="214"
-                    android:textSize="18dp" />
+                    android:text=" / "
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/memoSearchResultDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2019.12.02"
+                    android:textSize="16dp" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/MemoDateML"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linearLayout"
-                android:text="2019.12.02 15:10"
-                android:textSize="18dp" />
+
 
 
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/pictureML"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
         <TextView
-            android:id="@+id/contentML_short"
+            android:id="@+id/contentMSR_short"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="3"
+            android:maxLines="1"
             android:text="줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트" />
 
 
         <TextView
-            android:id="@+id/contentML_long"
+            android:id="@+id/contentMSR_long"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:layout_marginBottom="10dp"
             android:text="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하" />
 
