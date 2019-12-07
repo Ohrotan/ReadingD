@@ -142,8 +142,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             this.data = data;
             this.position = position;
 
-            Glide.with()
-
 
 
             bookName.setText(data.getBook_name()) ;
