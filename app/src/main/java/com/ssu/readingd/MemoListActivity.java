@@ -18,13 +18,14 @@ import com.ssu.readingd.dto.MemoDTO;
 import java.util.Arrays;
 import java.util.List;
 
-public class MemoListActivity extends AppCompatActivity {
+public class MemoListActivity extends AppCompatActivity  {
 
     MemoListAdapter adapter;
     RecyclerView recyclerView;
     Spinner sortMemoSpinner;
     ImageButton memoBtn;
     EditText memoListSearchText;
+    ImageButton addMemoTitleBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +36,21 @@ public class MemoListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         memoBtn = (ImageButton)findViewById(R.id.memoListBtn);
         memoListSearchText = (EditText)findViewById(R.id.memoListSearchText);
+        addMemoTitleBtn = (ImageButton)findViewById(R.id.addMemoBtn);
 
         init();
 
 
 
     }
+
+    public void AddMemo(View v){
+
+        Intent intent = new Intent(this, MemoRegisterActivity.class);
+        startActivity(intent);
+
+    }
+
 
     public void clickTab(View v) {
         ImageView[] img = new ImageView[5];
@@ -62,7 +72,7 @@ public class MemoListActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MemoListAdapter(this);
+        adapter = new MemoListAdapter(this,0);
         recyclerView.setAdapter(adapter);
 
         List<String> title = Arrays.asList("제목1", "제목2", "제목3", "제목4", "제목5");

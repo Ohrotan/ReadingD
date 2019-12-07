@@ -7,8 +7,58 @@
     tools:context=".BookShelfActivity"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorLightGray"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/addMemoBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/plus" />
+
+
+
+        <Spinner
+            android:id="@+id/bookKindSpinner"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:textColor="@color/colorGray"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:padding="0dp"
+            android:entries="@array/book_kind"/>
+
+
+
+        <ImageButton
+            android:id="@+id/deleteBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:padding="4dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/rubbish_bin" />
+
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/topLayout"
+        android:layout_below="@id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

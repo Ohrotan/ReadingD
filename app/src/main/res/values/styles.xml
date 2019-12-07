@@ -39,4 +39,10 @@
     <style name="dropdown_style">
         <item name="android:background">@drawable/dropdown_shape</item>
     </style>
+
+    <style name="NoTitle" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
 </resources>

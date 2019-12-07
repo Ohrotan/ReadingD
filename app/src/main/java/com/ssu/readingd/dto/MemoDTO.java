@@ -8,10 +8,6 @@ import java.util.List;
 public class MemoDTO{
 
     String book_name;
-
-
-
-    //String[] img;
     String book_author;
     List<String> img;
     String memo_text;
@@ -23,6 +19,17 @@ public class MemoDTO{
 
     public MemoDTO(){
         super();
+    }
+
+    public MemoDTO(String book_name, List<String> img, String memo_text, int r_page, String reg_date, boolean share, String user_id, int w_page){
+        this.book_name = book_name;
+        this.img = img;
+        this.memo_text = memo_text;
+        this.r_page = r_page;
+        this.reg_date = reg_date;
+        this.share = share;
+        this.user_id = user_id;
+        this.w_page = w_page;
     }
 
     public MemoDTO(String book_name,String book_author, List<String> img, String memo_text, int r_page, String reg_date, boolean share, String user_id, int w_page){
