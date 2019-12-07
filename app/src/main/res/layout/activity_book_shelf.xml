@@ -159,7 +159,7 @@
 
         <ImageView
             android:id="@+id/tab_memo"
-            app:srcCompat="@drawable/memo_c"
+            app:srcCompat="@drawable/memo_b"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -170,7 +170,7 @@
 
         <ImageView
             android:id="@+id/tab_book"
-            app:srcCompat="@drawable/book_b"
+            app:srcCompat="@drawable/book_c"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

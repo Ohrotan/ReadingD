@@ -1,10 +1,13 @@
 package com.ssu.readingd;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
-import android.os.Bundle;
-import android.widget.ListView;
 
 public class CommunityActivity extends AppCompatActivity {
 
@@ -30,6 +33,21 @@ public class CommunityActivity extends AppCompatActivity {
         // 두 번째 아이템 추가.
 
 
+
+    }
+
+    public void clickTab(View v) {
+        ImageView[] img = new ImageView[5];
+        img[0] = findViewById(R.id.tab_flash_back);
+        img[1] = findViewById(R.id.tab_memo);
+        img[2] = findViewById(R.id.tab_book);
+        img[3] = findViewById(R.id.tab_share);
+        img[4] = findViewById(R.id.tab_setting);
+
+        if (v == img[0]) {
+            startActivity(new Intent(this, FlashbackActivity.class));
+            overridePendingTransition(0, 0);
+        }
 
     }
 }
