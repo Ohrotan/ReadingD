@@ -3,8 +3,11 @@ package com.ssu.readingd;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +31,7 @@ import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -100,7 +104,6 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         BtnCancel = findViewById(R.id.cancel_btn);
         BtnSave = findViewById(R.id.save_btn);
 
-        Imgids[0] = 0;
 
         DocumentReference docRef = db.collection("memos").document(memo_id);
         Task<DocumentSnapshot> task = docRef.get();
@@ -122,20 +125,23 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
 
         imgcnt = Imgids2.size();
         imgIndex = 0;
-        pathRefernece = storageRef.child(Imgids2.get(imgIndex));
+        setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
+
+
 
      //   Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
      //   Animation out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
      //   imageSwitcher.setInAnimation(in);
      //   imageSwitcher.setOutAnimation(out);
-        imageSwitcher.setImageResource(Imgids[imgIndex]);
+     //   imageSwitcher.setImageResource(Imgids[imgIndex]);
 
         BtnPrev.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 if(imgIndex > 0)
                     imgIndex--;
 
-                imageSwitcher.setImageResource(Imgids[imgIndex]);
+                setImageSwitcher(getApplicationContext(),imageSwitcher, imgIndex);
+               // imageSwitcher.setImageResource(Imgids[imgIndex]);
             }
         });
         BtnNext.setOnClickListener(new View.OnClickListener(){
@@ -143,30 +149,36 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
                 if(imgIndex < imgcnt -1)
                     imgIndex++;
 
-                imageSwitcher.setImageResource(Imgids[imgIndex]);
+                setImageSwitcher(getApplicationContext(),imageSwitcher, imgIndex);
+                //imageSwitcher.setImageResource(Imgids[imgIndex]);
             }
         });
 
         BtnDelete.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if(imgcnt != 0){
-                    for(int i = imgIndex; i < imgcnt; i++)
-                        Imgids[i] = Imgids[i+1];
+                if(imgcnt>0) {
+                    Imgids2.remove(imgIndex);
+                    imgcnt--;
 
-                    Imgids[--imgcnt] = 0;
-                    if(imgIndex > imgcnt-1)
+                    if (imgIndex > imgcnt - 1)
                         imgIndex--;
 
-                    imageSwitcher.setImageResource(Imgids[imgIndex]);
+                    setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
+                    //imageSwitcher.setImageResource(Imgids[imgIndex]);
                 }
             }
         });
 
         BtnAddphoto.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Imgids[imgcnt++] = R.drawable.memoimgadd;
+                Imgids2.add("memoimgadd");
+                imgcnt++;
+                //Imgids2.set(imgcnt++, "memoimgadd");
+                //Imgids[imgcnt++] = R.drawable.memoimgadd;
                 imgIndex = imgcnt-1;
-                imageSwitcher.setImageResource(Imgids[imgIndex]);
+
+                setImageSwitcher(getApplicationContext(),imageSwitcher, imgIndex);
+                //imageSwitcher.setImageResource(Imgids[imgIndex]);
             }
         });
 
@@ -265,6 +277,19 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         TvBookname.setText(book_name);
     }
 
+    public void setImageSwitcher(final Context con, ImageSwitcher imageSwitcher, int imgIndex){
+        String imgname = "default_image.jpg";
+        if(imgcnt != 0)
+            imgname = Imgids2.get(imgIndex);
+        if(!imgname.contains("jpg"))
+            imgname = imgname+".PNG";
+        StorageReference httpsReference = FirebaseStorage.getInstance()
+                .getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + imgname);
 
+        Task<Uri> uritask = httpsReference.getDownloadUrl();
+        while(!uritask.isSuccessful()){;}
+        Uri uri = uritask.getResult();
+        Glide.with(con).load(uri).into((ImageView)imageSwitcher.getCurrentView());
+    }
 }
 
