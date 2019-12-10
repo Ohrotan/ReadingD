@@ -118,6 +118,24 @@ public class DBUtil {
                 });
     }
 
+    public void DeleteMemo(String id){
+        db.collection("memos")
+                .document(id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.v(TAG, "memo delete success");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "memo delete fail");
+                    }
+                });
+    }
+
 
     //회원가입할 때랑 비밀번호 바꿀 때 둘다 이용할 수 있음.
     public void addUser(String id, String pwd) {
