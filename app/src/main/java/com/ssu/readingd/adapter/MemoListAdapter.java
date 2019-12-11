@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.ssu.readingd.R;
 import com.ssu.readingd.dto.MemoDTO;
 
@@ -66,6 +67,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         final MemoDTO model = mData.get(position);
+        Glide.with(holder.itemView);
 
         switch(adapter_type) {
             case memo_list_main:
@@ -139,6 +141,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         void onBind(MemoDTO data, int position) {
             this.data = data;
             this.position = position;
+
+
 
             bookName.setText(data.getBook_name()) ;
             bookWriter.setText(data.getBook_author()) ;

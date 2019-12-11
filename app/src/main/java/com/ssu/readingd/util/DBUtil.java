@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,8 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import androidx.annotation.NonNull;
-
 public class DBUtil {
     final static String TAG = "Database";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -44,6 +44,7 @@ public class DBUtil {
 
     Map<String, Object> memo;
     MemoDTO memoDTO;
+    boolean findUser= false;
 
     public MemoDTO getMemo(String id) {
 
@@ -158,6 +159,35 @@ public class DBUtil {
                 }
             }
         });
+    }
+
+    public boolean findUser(String id){
+
+
+        DocumentReference docRef = db.collection("users").document(id);
+        findUser = false;
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("hs_test", "DocumentSnapshot data: " + document.getData());
+                        findUser = true;
+                    } else {
+                        Log.d("hs_test", "No such document");
+                     //   findUser = false;
+                    }
+                } else {
+                    Log.d("hs_test", "get failed with ", task.getException());
+               //     findUser = false;
+                }
+            }
+        });
+
+        return findUser;
+
     }
 
     public void addBook(String userID, BookDTO book) {
