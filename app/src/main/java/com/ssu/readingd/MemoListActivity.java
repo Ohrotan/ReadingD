@@ -2,21 +2,28 @@ package com.ssu.readingd;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.StorageReference;
 import com.ssu.readingd.adapter.MemoListAdapter;
 import com.ssu.readingd.dto.MemoDTO;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 public class MemoListActivity extends AppCompatActivity  {
 
@@ -26,6 +33,11 @@ public class MemoListActivity extends AppCompatActivity  {
     ImageButton memoBtn;
     EditText memoListSearchText;
     ImageButton addMemoTitleBtn;
+    FirebaseFirestore db;
+    StorageReference storageRef;
+
+    ArrayList<MemoDTO> arrayList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,29 +81,71 @@ public class MemoListActivity extends AppCompatActivity  {
 
 
     public void init(){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MemoListAdapter(this,0);
+        arrayList = new ArrayList<>();
+        adapter = new MemoListAdapter(this,arrayList,0);
         recyclerView.setAdapter(adapter);
 
-        List<String> title = Arrays.asList("제목1", "제목2", "제목3", "제목4", "제목5");
-        List<String> date = Arrays.asList("1111", "1112", "1113", "1114", "1115");
-        List<Integer> page = Arrays.asList(222,433,333,1111,222);
-        //List<String> image = Arrays.asList("이미지1", "이미지2", "이미지3", "이미지4", "이미지5");
-        List<String> memo = Arrays.asList("내용내용내용내용내용내용1","내용내용내용내용내용내용2","내용내용내용내용내용내용내용내용3","내용내용내용내용내용내용내용내용내용내용내용내용4","내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용5");
+//        List<String> title = Arrays.asList("제목1", "제목2", "제목3", "제목4", "제목5");
+//        List<String> date = Arrays.asList("1111", "1112", "1113", "1114", "1115");
+//        List<Integer> page = Arrays.asList(222,433,333,1111,222);
+//        //List<String> image = Arrays.asList("이미지1", "이미지2", "이미지3", "이미지4", "이미지5");
+//        List<String> memo = Arrays.asList("내용내용내용내용내용내용1","내용내용내용내용내용내용2","내용내용내용내용내용내용내용내용3","내용내용내용내용내용내용내용내용내용내용내용내용4","내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용5");
+//
+//
+//        for (int i = 0; i < title.size(); i++) {
+//
+//            MemoDTO data = new MemoDTO();
+//            data.setBook_name(title.get(i));
+//            data.setReg_date(date.get(i));
+//            data.setR_page(page.get(i));
+//            data.setMemo_text(memo.get(i));
+//
+//            adapter.addItem(data);
+//        }
 
 
-        for (int i = 0; i < title.size(); i++) {
+        db = FirebaseFirestore.getInstance();
+        db.collection("memos")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
-            MemoDTO data = new MemoDTO();
-            data.setBook_name(title.get(i));
-            data.setReg_date(date.get(i));
-            data.setR_page(page.get(i));
-            data.setMemo_text(memo.get(i));
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
 
-            adapter.addItem(data);
-        }
+                        if (e != null) {
+                            Log.d("hs_test", "Listen failed.", e);
+                            return;
+                        }
+
+                        int count = value.size();
+                        arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                        for (QueryDocumentSnapshot doc : value) {
+                            if (doc.get("book_name") != null) {
+                                Log.d("hs_test", "읽기 성공", e);
+
+                                arrayList.add(new MemoDTO(doc.getString("book_name")));
+
+//                                arrayList.add(new MemoDTO(doc.getString("book_name"),doc.getString("book_author"), doc.getString("memo_text"),
+//                                        Integer.parseInt(doc.getString("r_page")), doc.getString("reg_date"), doc.getBoolean("share"), doc.getString("user_id"),
+//                                        Integer.parseInt(doc.getString("w_page"))));
+
+                            }
+                            Log.d("hs_test", "읽기 성공222", e);
+                        }
+                        //어답터 갱신
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+
+
+
+
+
+
 
 
     }
