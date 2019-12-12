@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:layout_centerInParent="true"
-            android:text="모든 메모"
+            android:text="메모 검색결과"
             android:textSize="20sp"
             android:textStyle="bold" />
 
