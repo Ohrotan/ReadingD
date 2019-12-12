@@ -21,6 +21,10 @@ public class MemoDTO{
         super();
     }
 
+    public MemoDTO(String book_name){
+        this.book_name = book_name;
+    }
+
     public MemoDTO(String book_name, List<String> img, String memo_text, int r_page, String reg_date, boolean share, String user_id, int w_page){
         this.book_name = book_name;
         this.img = img;
@@ -36,6 +40,17 @@ public class MemoDTO{
         this.book_name = book_name;
         this.book_author = book_author;
         this.img = img;
+        this.memo_text = memo_text;
+        this.r_page = r_page;
+        this.reg_date = reg_date;
+        this.share = share;
+        this.user_id = user_id;
+        this.w_page = w_page;
+    }
+
+    public MemoDTO(String book_name,String book_author, String memo_text, int r_page, String reg_date, boolean share, String user_id, int w_page){
+        this.book_name = book_name;
+        this.book_author = book_author;
         this.memo_text = memo_text;
         this.r_page = r_page;
         this.reg_date = reg_date;
