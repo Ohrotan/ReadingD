@@ -16,6 +16,18 @@
         <item>전체</item>
     </string-array>
 
+    <string-array name="memo_edit">
+        <item>수정</item>
+        <item>삭제</item>
+
+    </string-array>
+
+    <string-array name="sort_memo">
+        <item>최신순</item>
+        <item>오래된순</item>
+        <item>책이름순</item>
+    </string-array>
+
 
     <!-- firebase barcode-->
 

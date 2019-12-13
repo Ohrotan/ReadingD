@@ -1,11 +1,12 @@
 package com.ssu.readingd.dto;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class MemoDTO{
+public class MemoDTO implements Serializable {
 
     String book_name;
     String book_author;
@@ -16,6 +17,11 @@ public class MemoDTO{
     boolean share;
     String user_id;
     int w_page;
+    private String doc_id;
+
+
+
+
 
     public MemoDTO(){
         super();
@@ -124,6 +130,8 @@ public class MemoDTO{
     }
     public String getBook_author() { return book_author; }
     public void setBook_author(String book_author) { this.book_author = book_author; }
+    public void setDoc_id(String doc_id) { this.doc_id = doc_id; }
+    public String getDoc_id() { return doc_id; }
 
 
 }

@@ -62,16 +62,16 @@
         android:gravity="center"
         android:weightSum="5">
 
-        <TextView
+        <Button
             android:id="@+id/startDate"
-            android:layout_weight="2.25"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2.25"
             android:background="@drawable/round_shape_gray"
-            android:padding="10dp"
             android:gravity="center"
-            android:textSize="17dp"
-            android:text="2019.11.26"/>
+            android:padding="10dp"
+            android:text="2019.11.26"
+            android:textSize="17dp" />
 
         <TextView
             android:layout_weight="0.5"
@@ -83,16 +83,16 @@
             android:gravity="center"
             android:text="~"/>
 
-        <TextView
+        <Button
             android:id="@+id/endDate"
-            android:layout_weight="2.25"
             android:layout_width="0dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
+            android:layout_weight="2.25"
             android:background="@drawable/round_shape_gray"
+            android:gravity="center"
             android:padding="10dp"
-            android:textSize="17dp"
-            android:text="2019.12.25"/>
+            android:text="2019.12.25"
+            android:textSize="17dp" />
 
 
     </LinearLayout>

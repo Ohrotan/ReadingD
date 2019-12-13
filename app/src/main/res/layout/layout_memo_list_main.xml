@@ -80,6 +80,18 @@
                 android:text="2019.12.02 15:10"
                 android:textSize="18dp" />
 
+            <Spinner
+                android:id="@+id/memoEditSpinner"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:stateListAnimator="@null"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="@drawable/more"
+                android:entries="@array/memo_edit"/>
+
 
         </RelativeLayout>
 
