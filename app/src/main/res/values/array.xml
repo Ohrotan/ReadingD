@@ -28,6 +28,11 @@
         <item>책이름순</item>
     </string-array>
 
+    <string-array name="sort_book_memo">
+        <item>최신순</item>
+        <item>오래된순</item>
+    </string-array>
+
 
     <!-- firebase barcode-->
 
