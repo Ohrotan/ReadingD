@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
@@ -41,7 +40,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
     RecyclerView recyclerView;
     Spinner sortMemoSpinner;
     ImageButton memoBtn;
-    EditText memoListSearchText;
+    Button memoSearchBtn;
     ImageButton addMemoTitleBtn;
     FirebaseFirestore db;
     StorageReference storageRef;
@@ -54,13 +53,13 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
     int toYear;
     int toMonth;
     int toDate;
+    final Calendar cal = Calendar.getInstance();
+    Dialog alertDialog;
 
 
     ArrayList<MemoDTO> arrayList;
 
-    final Calendar cal = Calendar.getInstance();
 
-    Dialog alertDialog;
 
 
     @Override
@@ -74,12 +73,12 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         sortMemoSpinner = (Spinner)findViewById(R.id.sortMemoSpinner);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         memoBtn = (ImageButton)findViewById(R.id.memoListBtn);
-        memoListSearchText = (EditText)findViewById(R.id.memoListSearchText);
+        memoSearchBtn = (Button)findViewById(R.id.memoSearchBtn);
         addMemoTitleBtn = (ImageButton)findViewById(R.id.addMemoBtn);
         searchBox = (LinearLayout)findViewById(R.id.searchBox);
         memoEditSpinner = findViewById(R.id.memoEditSpinner);
 
-        memoListSearchText.setOnClickListener(this);
+        memoSearchBtn.setOnClickListener(this);
         searchBox.setOnClickListener(this);
         memoBtn.setOnClickListener(this);
 
@@ -88,9 +87,6 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         //List<String> imgs = new ArrayList<>();
         //MemoDTO m = new MemoDTO("책이름", "b", imgs, "내용", 231, "2019.12.13",false,"admin",5555);
         //new DBUtil().addMemo(m);
-
-
-
 
 
     }
@@ -127,25 +123,6 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         adapter = new MemoListAdapter(this,arrayList,0);
         recyclerView.setAdapter(adapter);
 
-//        List<String> title = Arrays.asList("제목1", "제목2", "제목3", "제목4", "제목5");
-//        List<String> date = Arrays.asList("1111", "1112", "1113", "1114", "1115");
-//        List<Integer> page = Arrays.asList(222,433,333,1111,222);
-//        //List<String> image = Arrays.asList("이미지1", "이미지2", "이미지3", "이미지4", "이미지5");
-//        List<String> memo = Arrays.asList("내용내용내용내용내용내용1","내용내용내용내용내용내용2","내용내용내용내용내용내용내용내용3","내용내용내용내용내용내용내용내용내용내용내용내용4","내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용5");
-//
-//
-//        for (int i = 0; i < title.size(); i++) {
-//
-//            MemoDTO data = new MemoDTO();
-//            data.setBook_name(title.get(i));
-//            data.setReg_date(date.get(i));
-//            data.setR_page(page.get(i));
-//            data.setMemo_text(memo.get(i));
-//
-//            adapter.addItem(data);
-//        }
-
-
         sortMemoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -176,7 +153,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                 }
                 else if(position == 1){
                     //오래된순
-                    db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING)
+                    db.collection("memos")
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -191,7 +168,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                         if (doc.get("book_name") != null) {
                                             Log.d("hs_test", "읽기 성공", e);
                                             MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                            arrayList.add(memoDTO);
+                                            arrayList.add(0, memoDTO);
                                         }
                                         Log.d("hs_test", "읽기 성공222", e);
                                     }
@@ -246,15 +223,8 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-
-
-
     @Override
     public void onClick(View v) {
-
-
-        if(v== searchBox || v==memoListSearchText || v==memoBtn){
-
             View dialogView = getLayoutInflater().inflate(R.layout.memo_search_layout, null);
 
             Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
@@ -269,12 +239,6 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
             builder.setView(dialogView);
 
 
-            //alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            //alertDialog.setContentView(R.layout.memo_search_layout);
-
-
-
-
             cancelBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view)
@@ -282,7 +246,6 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                     alertDialog.dismiss();
                 }
             });
-
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -302,6 +265,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                     intent.putExtra("toYear",toYear);
                     intent.putExtra("toMonth",toMonth);
                     intent.putExtra("toDate",toDate);
+                    intent.putExtra("Activity", "MemoListActivity");
 
                     startActivity(intent);
 
@@ -347,13 +311,8 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
             startDate.setOnClickListener(btnListener);
             endDate.setOnClickListener(btnListener);
 
-
             alertDialog = builder.create();
             alertDialog.show();
-        }
-
-
-
 
     }
 
