@@ -109,7 +109,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_weight="2"
-            android:entries="@array/sort_book"
+            android:entries="@array/sort_memo"
             android:padding="5dp">
 
         </Spinner>

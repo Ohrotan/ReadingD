@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
@@ -44,6 +46,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
     FirebaseFirestore db;
     StorageReference storageRef;
     LinearLayout searchBox;
+    Spinner memoEditSpinner;
 
     int fromYear;
     int fromMonth;
@@ -56,6 +59,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
     ArrayList<MemoDTO> arrayList;
 
     final Calendar cal = Calendar.getInstance();
+
     Dialog alertDialog;
 
 
@@ -64,6 +68,8 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_list);
 
+        db = FirebaseFirestore.getInstance();
+
         //alertDialog = new Dialog(MemoListActivity.this);
         sortMemoSpinner = (Spinner)findViewById(R.id.sortMemoSpinner);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
@@ -71,12 +77,19 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         memoListSearchText = (EditText)findViewById(R.id.memoListSearchText);
         addMemoTitleBtn = (ImageButton)findViewById(R.id.addMemoBtn);
         searchBox = (LinearLayout)findViewById(R.id.searchBox);
+        memoEditSpinner = findViewById(R.id.memoEditSpinner);
 
         memoListSearchText.setOnClickListener(this);
         searchBox.setOnClickListener(this);
         memoBtn.setOnClickListener(this);
 
         init();
+
+        //List<String> imgs = new ArrayList<>();
+        //MemoDTO m = new MemoDTO("책이름", "b", imgs, "내용", 231, "2019.12.13",false,"admin",5555);
+        //new DBUtil().addMemo(m);
+
+
 
 
 
@@ -133,35 +146,95 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 //        }
 
 
-        db = FirebaseFirestore.getInstance();
-        db.collection("memos")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+        sortMemoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0){
+                    //최신순 정렬
+                    db.collection("memos")
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value,
+                                                    @Nullable FirebaseFirestoreException e) {
+                                    if (e != null) {
+                                        Log.d("hs_test", "Listen failed.", e);
+                                        return;
+                                    }
+                                    int count = value.size();
+                                    arrayList.clear();
+                                    for (QueryDocumentSnapshot doc : value) {
+                                        if (doc.get("book_name") != null) {
+                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            arrayList.add(memoDTO);
 
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
+                                        }
+                                    }
+                                    //어답터 갱신
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                }
+                else if(position == 1){
+                    //오래된순
+                    db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING)
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value,
+                                                    @Nullable FirebaseFirestoreException e) {
+                                    if (e != null) {
+                                        Log.d("hs_test", "Listen failed.", e);
+                                        return;
+                                    }
+                                    int count = value.size();
+                                    arrayList.clear();
+                                    for (QueryDocumentSnapshot doc : value) {
+                                        if (doc.get("book_name") != null) {
+                                            Log.d("hs_test", "읽기 성공", e);
+                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            arrayList.add(memoDTO);
+                                        }
+                                        Log.d("hs_test", "읽기 성공222", e);
+                                    }
+                                    //어답터 갱신
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
 
-                        if (e != null) {
-                            Log.d("hs_test", "Listen failed.", e);
-                            return;
-                        }
+                }
+                else{
+                    //책이름순
+                    db.collection("memos").orderBy("book_name")
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
-                        int count = value.size();
-                        arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                        for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get("book_name") != null) {
-                                Log.d("hs_test", "읽기 성공", e);
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value,
+                                                    @Nullable FirebaseFirestoreException e) {
+                                    if (e != null) {
+                                        Log.d("hs_test", "Listen failed.", e);
+                                        return;
+                                    }
+                                    int count = value.size();
+                                    arrayList.clear();
+                                    for (QueryDocumentSnapshot doc : value) {
+                                        if (doc.get("book_name") != null) {
+                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            arrayList.add(memoDTO);
+                                        }
+                                                                            }
+                                    //어답터 갱신
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
 
-                                MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                arrayList.add(memoDTO);
+                }
 
-                            }
-                            Log.d("hs_test", "읽기 성공222", e);
-                        }
-                        //어답터 갱신
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
 

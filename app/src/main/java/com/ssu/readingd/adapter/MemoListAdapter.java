@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.ssu.readingd.R;
 import com.ssu.readingd.dto.MemoDTO;
 
@@ -29,6 +31,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private int prePosition = -1;
 
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public int adapter_type;
 
@@ -117,6 +121,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView memoContent_short;
         private TextView memoContent_long;
         private ImageView memoImage;
+        private Spinner memoEditSpn;
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
         private MemoDTO data;
@@ -135,6 +140,9 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             memoImage = itemView.findViewById(R.id.pictureML);
             //expandedArea = itemView.findViewById(R.id.memoExpandArea);
             roundLayout = itemView.findViewById(R.id.round_layout);
+            memoEditSpn = itemView.findViewById(R.id.memoEditSpinner);
+
+
 
         }
 
@@ -142,6 +150,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             this.data = data;
             this.position = position;
 
+            final MemoDTO memoDTO = data;
 
 
             bookName.setText(data.getBook_name()) ;
@@ -155,6 +164,9 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             changeVisibility(selectedItems.get(position));
 
             roundLayout.setOnClickListener(this);
+
+
+
         }
 
         @Override
