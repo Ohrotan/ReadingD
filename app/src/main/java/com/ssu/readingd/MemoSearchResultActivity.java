@@ -79,6 +79,7 @@ public class MemoSearchResultActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference memoRef = db.collection("memos");
 
+
         arrayList = new ArrayList<>();
 
 
@@ -98,85 +99,274 @@ public class MemoSearchResultActivity extends AppCompatActivity {
         int toMonth = intent.getIntExtra("toMonth", 0);
         int toDate = intent.getIntExtra("toDate", 0);
 
+        if(!book_name.equals("") && author.equals("") && content.equals("")){
+            db.collection("memos").whereEqualTo("book_name",book_name)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
-        if(book_name != null ){
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
 
-            if(author == null && content == null){
-                db.collection("memos").whereEqualTo("book_name",book_name)
-                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot value,
-                                                @Nullable FirebaseFirestoreException e) {
-
-                                if (e != null) {
-                                    Log.d("hs_test", "Listen failed.", e);
-                                    return;
-                                }
-
-                                int count = value.size();
-                                arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                                for (QueryDocumentSnapshot doc : value) {
-                                    if (doc.get("book_name") != null) {
-                                        Log.d("hs_test", "메모 검색 성공", e);
-
-                                        MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                        arrayList.add(memoDTO);
-
-
-                                    }
-                                    Log.d("hs_test", "메모 검색 성공222", e);
-                                }
-                                //어답터 갱신
-                                adapter.notifyDataSetChanged();
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
                             }
-                        });
-            }
-            else if(author != null && content == null){
-                Log.d("hs_test", "2번째if문");
 
-                db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author", author)
-                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            int count = value.size();
+                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    Log.d("hs_test", "메모 검색 성공", e);
 
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot value,
-                                                @Nullable FirebaseFirestoreException e) {
+                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                    arrayList.add(memoDTO);
 
-                                if (e != null) {
-                                    Log.d("hs_test", "Listen failed.", e);
-                                    return;
+
                                 }
-
-                                int count = value.size();
-                                arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                                for (QueryDocumentSnapshot doc : value) {
-                                    if (doc.get("book_name") != null) {
-                                        Log.d("hs_test", "제목,작가 검색 성공", e);
-
-                                        MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                        arrayList.add(memoDTO);
-
-
-                                    }
-                                    Log.d("hs_test", "제목,작가 검색 성공222", e);
-                                }
-                                //어답터 갱신
-                                adapter.notifyDataSetChanged();
+                                Log.d("hs_test", "메모 검색 성공222", e);
                             }
-                        });
-            }
+                            //어답터 갱신
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+        }
+        else if(book_name.equals("") && !author.equals("") && content.equals("")){
+            Log.d("hs_test", "author 만 검색한 경우");
+            db.collection("memos").whereEqualTo("book_author",author)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
+                            }
+
+                            int count = value.size();
+                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    Log.d("hs_test", "메모 검색 성공", e);
+
+                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                    arrayList.add(memoDTO);
 
 
-
+                                }
+                                Log.d("hs_test", "메모 검색 성공222", e);
+                            }
+                            //어답터 갱신
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
 
         }
-        else if(book_name != null && author != null && content == null){
+        else if(book_name.equals("") && author.equals("") && !content.equals("")){
+            Log.d("hs_test", "author 만 검색한 경우");
+            db.collection("memos").whereEqualTo("content",content)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
+                            }
+
+                            int count = value.size();
+                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    Log.d("hs_test", "메모 검색 성공", e);
+
+                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                    arrayList.add(memoDTO);
 
 
-
-
+                                }
+                                Log.d("hs_test", "메모 검색 성공222", e);
+                            }
+                            //어답터 갱신
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
 
         }
+        else if( !book_name.equals("") && !author.equals("") && content.equals("")){
+            Log.d("hs_test", "author 만 검색한 경우");
+            db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
+                            }
+
+                            int count = value.size();
+                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    Log.d("hs_test", "메모 검색 성공", e);
+
+                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                    arrayList.add(memoDTO);
+
+
+                                }
+                                Log.d("hs_test", "메모 검색 성공222", e);
+                            }
+                            //어답터 갱신
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
+        }
+        else if( !book_name.equals("") && author.equals("") && !content.equals("")){
+            Log.d("hs_test", "author 만 검색한 경우");
+            db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
+                            }
+
+                            int count = value.size();
+                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    Log.d("hs_test", "메모 검색 성공", e);
+
+                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                    arrayList.add(memoDTO);
+
+
+                                }
+                                Log.d("hs_test", "메모 검색 성공222", e);
+                            }
+                            //어답터 갱신
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
+        }
+
+        else if( book_name.equals("") && !author.equals("") && !content.equals("")){
+            Log.d("hs_test", "author 만 검색한 경우");
+            db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("content",content)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
+                            }
+
+                            int count = value.size();
+                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    Log.d("hs_test", "메모 검색 성공", e);
+
+                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                    arrayList.add(memoDTO);
+
+
+                                }
+                                Log.d("hs_test", "메모 검색 성공222", e);
+                            }
+                            //어답터 갱신
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
+        }
+
+        else if( !book_name.equals("") && !author.equals("") && !content.equals("")){
+            Log.d("hs_test", "author 만 검색한 경우");
+            db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
+                            }
+
+                            int count = value.size();
+                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    Log.d("hs_test", "메모 검색 성공", e);
+
+                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                    arrayList.add(memoDTO);
+
+
+                                }
+                                Log.d("hs_test", "메모 검색 성공222", e);
+                            }
+                            //어답터 갱신
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
+        }
+
+        else if( book_name.equals("") && author.equals("") && content.equals("")){
+            Log.d("hs_test", "author 만 검색한 경우");
+            db.collection("memos")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
+                            }
+
+                            int count = value.size();
+                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    Log.d("hs_test", "메모 검색 성공", e);
+
+                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                    arrayList.add(memoDTO);
+
+
+                                }
+                                Log.d("hs_test", "메모 검색 성공222", e);
+                            }
+                            //어답터 갱신
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
+        }
+
+
+
 
 
 
