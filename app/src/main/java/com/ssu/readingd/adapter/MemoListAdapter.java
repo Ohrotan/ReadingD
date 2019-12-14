@@ -35,10 +35,9 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public int adapter_type;
-
-    final int memo_list_main = 0;
-    final int memo_search_result = 1;
-    final int community_main = 2;
+    final int memo_list_main = 0; // adapter_type = 0이면 layout_memo_list_main 레이아웃 뷰홀더 사용
+    final int memo_search_result = 1; // adapter_type = 1이면 layout_memo_search_result 레이아웃 뷰홀더 사용
+    final int community_main = 2; // adapter_type = 2이면 layout_community 레이아웃 뷰홀더 사용
 
 
     public void addItem(MemoDTO data) {
@@ -59,6 +58,10 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case memo_search_result:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_memo_search_result, parent, false);
                 return new ViewHolder_SearchResult(view);
+
+            case community_main:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_community, parent, false);
+                return new ViewHolder_Community(view);
 
         }
 
@@ -83,6 +86,11 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ViewHolder_SearchResult vh_r = (ViewHolder_SearchResult) holder;
                 vh_r.onBind(model, position);
                 break;
+
+            case community_main:
+                ViewHolder_Community vh_c = (ViewHolder_Community) holder;
+                vh_c.onBind(model, position);
+                break;
         }
 
 
@@ -103,8 +111,14 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if ( adapter_type == memo_list_main ) {
             return 0;
-        } else {
+        } else if ( adapter_type == memo_search_result) {
             return 1;
+        }
+        else if( adapter_type == community_main){
+            return 2;
+        }
+        else{
+            return 0;
         }
 
 
@@ -346,6 +360,75 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             // Animation start
             va.start();
         }
+
+
+    }
+
+    public class ViewHolder_Community extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView imageView;
+        TextView BookNameView;
+        TextView BookWriterView;
+        TextView BookPageView;
+        TextView BookDateView;
+        TextView EmailView;
+        TextView contentView;
+
+        //private LinearLayout expandedArea;
+        private LinearLayout roundLayout;
+        private MemoDTO data;
+        private int position;
+
+        ViewHolder_Community(View itemView) {
+            super(itemView) ;
+
+            roundLayout = itemView.findViewById(R.id.round_layout);
+            imageView = itemView.findViewById(R.id.communityPicture);
+            BookNameView = itemView.findViewById(R.id.BookTitleCm);
+            BookWriterView = itemView.findViewById(R.id.BookWriterCm);
+            BookPageView = itemView.findViewById(R.id.BookPageCm) ;
+            BookDateView = itemView.findViewById(R.id.BookDateCm) ;
+            EmailView = itemView.findViewById(R.id.emailCm) ;
+            contentView = itemView.findViewById(R.id.communityContent) ;
+
+        }
+
+        void onBind(MemoDTO data, int position) {
+            this.data = data;
+            this.position = position;
+
+            BookNameView.setText(data.getBook_name()) ;
+            BookWriterView.setText(data.getBook_author()) ;
+            BookPageView.setText(String.valueOf((data.getR_page())));
+            BookDateView.setText(data.getReg_date()) ;
+            contentView.setText(data.getMemo_text());
+
+            //changeVisibility(selectedItems.get(position));
+            //roundLayout.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            if (selectedItems.get(position)) {
+                // 펼쳐진 Item을 클릭 시
+                selectedItems.delete(position);
+
+            } else {
+                // 직전의 클릭됐던 Item의 클릭상태를 지움
+                selectedItems.delete(prePosition);
+                // 클릭한 Item의 position을 저장
+                selectedItems.put(position, true);
+
+
+            }
+            // 해당 포지션의 변화를 알림
+            if (prePosition != -1) notifyItemChanged(prePosition);
+            notifyItemChanged(position);
+            // 클릭된 position 저장
+            prePosition = position;
+
+        }
+
 
 
     }

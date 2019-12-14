@@ -19,6 +19,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssu.readingd.adapter.MemoListAdapter;
@@ -26,7 +27,7 @@ import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.ArrayList;
 
-public class MemoSearchResultActivity extends AppCompatActivity {
+public class MemoSearchResultActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     MemoListAdapter adapter;
     RecyclerView recyclerView;
@@ -73,108 +74,29 @@ public class MemoSearchResultActivity extends AppCompatActivity {
         activity = intent.getStringExtra("Activity");
 
 
+        sortMemoSpinner.setOnItemSelectedListener(this);
+        
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(activity == "BookMemoListActivity"){
-            BookMemoSearchResult();
+            BookMemoSearchResult(position);
+        }
+        else if(activity == "MemoListActivity"){
+            MemoListSearchResult(position);
         }
         else{
-            MemoListSearchResult();
+            CommunitySearchResult(position);
         }
+    }
 
-        MemoListSearchResult();
-
-        sortMemoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0){
-                    //최신순 정렬
-                    db.collection("memos")
-                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot value,
-                                                    @Nullable FirebaseFirestoreException e) {
-                                    if (e != null) {
-                                        Log.d("hs_test", "Listen failed.", e);
-                                        return;
-                                    }
-                                    int count = value.size();
-                                    arrayList.clear();
-                                    for (QueryDocumentSnapshot doc : value) {
-                                        if (doc.get("book_name") != null) {
-                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                            arrayList.add(memoDTO);
-
-                                        }
-                                    }
-                                    //어답터 갱신
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                }
-                else if(position == 1){
-                    //오래된순
-                    db.collection("memos")
-                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot value,
-                                                    @Nullable FirebaseFirestoreException e) {
-                                    if (e != null) {
-                                        Log.d("hs_test", "Listen failed.", e);
-                                        return;
-                                    }
-                                    int count = value.size();
-                                    arrayList.clear();
-                                    for (QueryDocumentSnapshot doc : value) {
-                                        if (doc.get("book_name") != null) {
-                                            Log.d("hs_test", "읽기 성공", e);
-                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                            arrayList.add(0, memoDTO);
-                                        }
-                                        Log.d("hs_test", "읽기 성공222", e);
-                                    }
-                                    //어답터 갱신
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-
-                }
-                else{
-                    //책이름순
-                    db.collection("memos").orderBy("book_name")
-                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot value,
-                                                    @Nullable FirebaseFirestoreException e) {
-                                    if (e != null) {
-                                        Log.d("hs_test", "Listen failed.", e);
-                                        return;
-                                    }
-                                    int count = value.size();
-                                    arrayList.clear();
-                                    for (QueryDocumentSnapshot doc : value) {
-                                        if (doc.get("book_name") != null) {
-                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                            arrayList.add(memoDTO);
-                                        }
-                                    }
-                                    //어답터 갱신
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
 
     public void clickTab(View v) {
         ImageView[] img = new ImageView[5];
@@ -198,329 +120,192 @@ public class MemoSearchResultActivity extends AppCompatActivity {
 
     }
 
-    public void MemoListSearchResult(){
+    public void MemoListSearchResult(int position){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference memoRef = db.collection("memos");
-
+        Query query = db.collection("memos").whereEqualTo("book_name",book_name);
 
         arrayList = new ArrayList<>();
-
-
-
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new MemoListAdapter(this,arrayList,1);
         recyclerView.setAdapter(adapter);
 
-
-
-
         if(!book_name.equals("") && author.equals("") && content.equals("")){
-            db.collection("memos").whereEqualTo("book_name",book_name)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
+            query = db.collection("memos").whereEqualTo("book_name",book_name);
         }
         else if(book_name.equals("") && !author.equals("") && content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos").whereEqualTo("book_author",author)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-
+            query = db.collection("memos").whereEqualTo("book_author",author);
         }
         else if(book_name.equals("") && author.equals("") && !content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos").whereEqualTo("content",content)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-
+            query = db.collection("memos").whereEqualTo("content",content);
         }
         else if( !book_name.equals("") && !author.equals("") && content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author);
         }
         else if( !book_name.equals("") && author.equals("") && !content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author);
         }
 
         else if( book_name.equals("") && !author.equals("") && !content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("content",content)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-
+            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("content",content);
         }
 
         else if( !book_name.equals("") && !author.equals("") && !content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content);
         }
 
         else if( book_name.equals("") && author.equals("") && content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos")
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
+            // 책제목, 작가, 내용 없을 때 -> 전체메모 보여주기
+            if(position == 0){
+                //최신순
+                memoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot value,
+                                                @Nullable FirebaseFirestoreException e) {
+                                if (e != null) {
+                                    Log.d("hs_test", "Listen failed.", e);
+                                    return;
                                 }
-                                Log.d("hs_test", "메모 검색 성공222", e);
+                                int count = value.size();
+                                arrayList.clear();
+                                for (QueryDocumentSnapshot doc : value) {
+                                    if (doc.get("book_name") != null) {
+                                        MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                        arrayList.add(memoDTO);
+                                    }
+                                }
+                                //어답터 갱신
+                                adapter.notifyDataSetChanged();
                             }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
+                        });
+            }
+            else if(position == 1){
+                //오래된순
+                memoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.d("hs_test", "Listen failed.", e);
+                            return;
                         }
-                    });
-
+                        int count = value.size();
+                        arrayList.clear();
+                        for (QueryDocumentSnapshot doc : value) {
+                            if (doc.get("book_name") != null) {
+                                MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                arrayList.add(0, memoDTO);
+                            }
+                        }
+                        //어답터 갱신
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+            else {
+                memoRef.orderBy("Book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.d("hs_test", "Listen failed.", e);
+                            return;
+                        }
+                        int count = value.size();
+                        arrayList.clear();
+                        for (QueryDocumentSnapshot doc : value) {
+                            if (doc.get("book_name") != null) {
+                                MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                arrayList.add(memoDTO);
+                            }
+                        }
+                        //어답터 갱신
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
         }
 
-
-
-
-
-
-
-
-
-
-        /*
-        List<String> title = Arrays.asList("제목1", "제목2", "제목3", "제목4", "제목5");
-        List<String> author = Arrays.asList("저자1", "저자2", "저자3", "저자4", "저자5");
-        List<String> date = Arrays.asList("1111", "1112", "1113", "1114", "1115");
-        List<Integer> page = Arrays.asList(222,433,333,1111,222);
-        //List<String> image = Arrays.asList("이미지1", "이미지2", "이미지3", "이미지4", "이미지5");
-        List<String> memo = Arrays.asList("내용내용내용내용내용내용1","내용내용내용내용내용내용2","내용내용내용내용내용내용내용내용3","내용내용내용내용내용내용내용내용내용내용내용내용4","내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용5");
-
-
-        for (int i = 0; i < title.size(); i++) {
-
-            MemoDTO data = new MemoDTO();
-            data.setBook_author(author.get(i));
-            data.setBook_name(title.get(i));
-            data.setReg_date(date.get(i));
-            data.setR_page(page.get(i));
-            data.setMemo_text(memo.get(i));
-
-            adapter.addItem(data);
+        if(position == 0){
+            //최신순
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.d("hs_test", "Listen failed.", e);
+                        return;
+                    }
+                    int count = value.size();
+                    arrayList.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("book_name") != null) {
+                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                            arrayList.add(memoDTO);
+                        }
+                    }
+                    //어답터 갱신
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+        else if(position == 1){
+            //오래된순
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.d("hs_test", "Listen failed.", e);
+                        return;
+                    }
+                    int count = value.size();
+                    arrayList.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("book_name") != null) {
+                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                            arrayList.add(0, memoDTO);
+                        }
+                    }
+                    //어답터 갱신
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+        else {
+            query.orderBy("Book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.d("hs_test", "Listen failed.", e);
+                        return;
+                    }
+                    int count = value.size();
+                    arrayList.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("book_name") != null) {
+                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                            arrayList.add(memoDTO);
+                        }
+                    }
+                    //어답터 갱신
+                    adapter.notifyDataSetChanged();
+                }
+            });
         }
 
-        */
 
 
     }
 
-    public void BookMemoSearchResult(){
+    public void BookMemoSearchResult(int position){
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference memoRef = db.collection("memos");
+        Query query = db.collection("memos").whereEqualTo("book_name",book_name);
 
         arrayList = new ArrayList<>();
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -529,139 +314,197 @@ public class MemoSearchResultActivity extends AppCompatActivity {
 
 
         if(!author.equals("") && content.equals("")){
-            db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author);
         }
         else if( author.equals("") && !content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("memo_text",content)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("memo_text",content);
         }
 
         else if( !author.equals("") && !content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("memo_text",content)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("memo_text",content);
+        }
+        else{
+            // 작가, 메모내용 없을 때
+        }
 
+        if(position == 0){
+            //최신순 정렬
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.d("hs_test", "Listen failed.", e);
+                        return;
+                    }
+                    int count = value.size();
+                    arrayList.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("book_name") != null) {
+                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                            arrayList.add(memoDTO);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+        else if(position == 1){
+            //오래된순 정렬
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.d("hs_test", "Listen failed.", e);
+                        return;
+                    }
+                    int count = value.size();
+                    arrayList.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("book_name") != null) {
+                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                            arrayList.add(0, memoDTO);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+        else if(position == 2){
+            //책제목순 정렬
+            query.orderBy("book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.d("hs_test", "Listen failed.", e);
+                        return;
+                    }
+                    int count = value.size();
+                    arrayList.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("book_name") != null) {
+                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                            arrayList.add(memoDTO);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+
+    }
+
+
+    public void CommunitySearchResult(int position) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference memoRef = db.collection("memos");
+        Query query = db.collection("memos").whereEqualTo("share",true);
+
+        arrayList = new ArrayList<>();
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new MemoListAdapter(this,arrayList,2);
+        recyclerView.setAdapter(adapter);
+
+        if(!book_name.equals("") && author.equals("") && content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("share",true);
+        }
+        else if(book_name.equals("") && !author.equals("") && content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("share",true);
+        }
+        else if(book_name.equals("") && author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("content",content).whereEqualTo("share",true);
+        }
+        else if( !book_name.equals("") && !author.equals("") && content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("share",true);
+        }
+        else if( !book_name.equals("") && author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("share",true);
+        }
+
+        else if( book_name.equals("") && !author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("content",content).whereEqualTo("share",true);
+        }
+        else if( !book_name.equals("") && !author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content).
+                    whereEqualTo("share",true);
+        }
+        else {
+            // name, author, content 없을 때
+        }
+
+
+        if(position == 0){
+            //최신순 정렬
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value,
                                             @Nullable FirebaseFirestoreException e) {
-
                             if (e != null) {
                                 Log.d("hs_test", "Listen failed.", e);
                                 return;
                             }
-
                             int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
+                            arrayList.clear();
                             for (QueryDocumentSnapshot doc : value) {
                                 if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
                                     MemoDTO memoDTO = doc.toObject(MemoDTO.class);
                                     arrayList.add(memoDTO);
-
-
                                 }
-                                Log.d("hs_test", "메모 검색 성공222", e);
                             }
-                            //어답터 갱신
                             adapter.notifyDataSetChanged();
                         }
                     });
-
         }
-
-        else if( author.equals("") && content.equals("")){
-            Log.d("hs_test", "author 만 검색한 경우");
-            db.collection("memos").whereEqualTo("book_name",book_name)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value,
-                                            @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                Log.d("hs_test", "Listen failed.", e);
-                                return;
-                            }
-
-                            int count = value.size();
-                            arrayList.clear();//일딴 초기화 해줘야 한다. 안 그럼 기존 데이터에 반복해서 뒤에 추가된다.
-                            for (QueryDocumentSnapshot doc : value) {
-                                if (doc.get("book_name") != null) {
-                                    Log.d("hs_test", "메모 검색 성공", e);
-
-                                    MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                    arrayList.add(memoDTO);
-
-
-                                }
-                                Log.d("hs_test", "메모 검색 성공222", e);
-                            }
-                            //어답터 갱신
-                            adapter.notifyDataSetChanged();
+        else if(position == 1){
+            //오래된순 정렬
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.d("hs_test", "Listen failed.", e);
+                        return;
+                    }
+                    int count = value.size();
+                    arrayList.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("book_name") != null) {
+                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                            arrayList.add(0, memoDTO);
                         }
-                    });
-
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            });
         }
-
+        else if(position == 2){
+            //책제목순 정렬
+            query.orderBy("book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.d("hs_test", "Listen failed.", e);
+                        return;
+                    }
+                    int count = value.size();
+                    arrayList.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc.get("book_name") != null) {
+                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                            arrayList.add(memoDTO);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
 
 
     }
+
+
 }
