@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:paddingBottom="20dp"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp">
 
     <LinearLayout
         android:id="@+id/round_layout"
@@ -11,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/more_round_shape_gray"
         android:orientation="vertical"
-        android:padding="40dp">
+        android:padding="30dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -76,6 +78,18 @@
                     android:textSize="16dp" />
 
             </LinearLayout>
+
+            <Spinner
+                android:id="@+id/memoEditSpinner"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:stateListAnimator="@null"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="@drawable/more"
+                android:entries="@array/memo_edit"/>
 
 
 

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -42,6 +43,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
     Button memoSearchBtn;
     ImageButton addMemoBtn;
     ImageButton bookEditBtn;
+    TextView bookNameTitle;
     FirebaseFirestore db;
 
     int fromYear;
@@ -68,6 +70,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
         memoSearchBtn = (Button)findViewById(R.id.memoSearchBtn);
         addMemoBtn = (ImageButton)findViewById(R.id.addMemoBtn);
         bookEditBtn = (ImageButton)findViewById(R.id.book_edit_btn);
+        bookNameTitle = findViewById(R.id.book_name_title);
 
         addMemoBtn.setOnClickListener(this);
         bookEditBtn.setOnClickListener(this);
@@ -78,6 +81,8 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
         // memoDTO 인텐트 받으면 여기에 넣기
         List<String> imgs = new ArrayList<>();
         memoDTO = new MemoDTO("책이름", "b", imgs, "내용", 231, "2019.12.13",false,"admin",5555);
+        bookNameTitle.setText(memoDTO.getBook_name());
+
 
         init();
 

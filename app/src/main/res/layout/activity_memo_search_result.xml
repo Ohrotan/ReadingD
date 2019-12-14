@@ -42,8 +42,8 @@
         android:id="@+id/topLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center_vertical"
         android:layout_below="@id/memo_search_result_title"
         android:orientation="horizontal"
@@ -105,7 +105,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_weight="2"
-            android:entries="@array/sort_book"
+            android:entries="@array/sort_memo"
             android:padding="5dp">
 
         </Spinner>
@@ -115,7 +115,8 @@
         android:id="@+id/recyclerView"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_tab_layout"
         android:layout_below="@id/topLayout2" />
 
     <LinearLayout
