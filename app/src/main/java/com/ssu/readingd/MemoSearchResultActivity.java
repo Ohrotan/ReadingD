@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ public class MemoSearchResultActivity extends AppCompatActivity {
     EditText memoListSearchText;
     Intent intent;
     ArrayList<MemoDTO> arrayList;
+    FirebaseFirestore db;
 
     String book_name;
     String author;
@@ -57,10 +59,8 @@ public class MemoSearchResultActivity extends AppCompatActivity {
         memoBtn = (ImageButton)findViewById(R.id.memoListBtn);
         memoListSearchText = (EditText)findViewById(R.id.memoListSearchText);
 
+        db = FirebaseFirestore.getInstance();
         intent = getIntent();
-
-
-
         book_name = intent.getStringExtra("book_name");
         author = intent.getStringExtra("author");
         content = intent.getStringExtra("content");
@@ -72,6 +72,7 @@ public class MemoSearchResultActivity extends AppCompatActivity {
         toDate = intent.getIntExtra("toDate", 0);
         activity = intent.getStringExtra("Activity");
 
+
         if(activity == "BookMemoListActivity"){
             BookMemoSearchResult();
         }
@@ -80,6 +81,96 @@ public class MemoSearchResultActivity extends AppCompatActivity {
         }
 
         MemoListSearchResult();
+
+        sortMemoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0){
+                    //최신순 정렬
+                    db.collection("memos")
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value,
+                                                    @Nullable FirebaseFirestoreException e) {
+                                    if (e != null) {
+                                        Log.d("hs_test", "Listen failed.", e);
+                                        return;
+                                    }
+                                    int count = value.size();
+                                    arrayList.clear();
+                                    for (QueryDocumentSnapshot doc : value) {
+                                        if (doc.get("book_name") != null) {
+                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            arrayList.add(memoDTO);
+
+                                        }
+                                    }
+                                    //어답터 갱신
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                }
+                else if(position == 1){
+                    //오래된순
+                    db.collection("memos")
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value,
+                                                    @Nullable FirebaseFirestoreException e) {
+                                    if (e != null) {
+                                        Log.d("hs_test", "Listen failed.", e);
+                                        return;
+                                    }
+                                    int count = value.size();
+                                    arrayList.clear();
+                                    for (QueryDocumentSnapshot doc : value) {
+                                        if (doc.get("book_name") != null) {
+                                            Log.d("hs_test", "읽기 성공", e);
+                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            arrayList.add(0, memoDTO);
+                                        }
+                                        Log.d("hs_test", "읽기 성공222", e);
+                                    }
+                                    //어답터 갱신
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                }
+                else{
+                    //책이름순
+                    db.collection("memos").orderBy("book_name")
+                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value,
+                                                    @Nullable FirebaseFirestoreException e) {
+                                    if (e != null) {
+                                        Log.d("hs_test", "Listen failed.", e);
+                                        return;
+                                    }
+                                    int count = value.size();
+                                    arrayList.clear();
+                                    for (QueryDocumentSnapshot doc : value) {
+                                        if (doc.get("book_name") != null) {
+                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            arrayList.add(memoDTO);
+                                        }
+                                    }
+                                    //어답터 갱신
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
 
