@@ -17,7 +17,7 @@ public class MemoDTO implements Serializable {
     boolean share;
     String user_id;
     int w_page;
-    private String doc_id;
+    private String memo_id;
 
 
 
@@ -55,6 +55,18 @@ public class MemoDTO implements Serializable {
     }
 
     public MemoDTO(String book_name,String book_author, String memo_text, int r_page, String reg_date, boolean share, String user_id, int w_page){
+        this.book_name = book_name;
+        this.book_author = book_author;
+        this.memo_text = memo_text;
+        this.r_page = r_page;
+        this.reg_date = reg_date;
+        this.share = share;
+        this.user_id = user_id;
+        this.w_page = w_page;
+    }
+
+    public MemoDTO(String memo_id, String book_name,String book_author, String memo_text, int r_page, String reg_date, boolean share, String user_id, int w_page){
+        this.memo_id = memo_id;
         this.book_name = book_name;
         this.book_author = book_author;
         this.memo_text = memo_text;
@@ -130,8 +142,8 @@ public class MemoDTO implements Serializable {
     }
     public String getBook_author() { return book_author; }
     public void setBook_author(String book_author) { this.book_author = book_author; }
-    public void setDoc_id(String doc_id) { this.doc_id = doc_id; }
-    public String getDoc_id() { return doc_id; }
+    public void setMemo_id(String memo_id) { this.memo_id = memo_id; }
+    public String getMemo_id() { return memo_id; }
 
 
 }

@@ -75,7 +75,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
 
 
         sortMemoSpinner.setOnItemSelectedListener(this);
-        
+
     }
 
     @Override

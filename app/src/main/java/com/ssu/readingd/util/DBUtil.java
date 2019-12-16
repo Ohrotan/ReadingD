@@ -44,7 +44,7 @@ public class DBUtil {
 
     Map<String, Object> memo;
     MemoDTO memoDTO;
-    boolean findUser= false;
+    boolean find= false;
 
     public MemoDTO getMemo(String id) {
 
@@ -153,9 +153,9 @@ public class DBUtil {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Log.d(TAG, "회원가입/비밀번호 변경 완료");
+                    Log.d("hs_test", "회원가입/비밀번호 변경 완료");
                 } else {
-                    Log.d(TAG, "회원가입/비밀번호 변경 실패");
+                    Log.d("hs_test", "회원가입/비밀번호 변경 실패");
                 }
             }
         });
@@ -165,28 +165,22 @@ public class DBUtil {
 
 
         DocumentReference docRef = db.collection("users").document(id);
-        findUser = false;
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("hs_test", "DocumentSnapshot data: " + document.getData());
-                        findUser = true;
-                    } else {
-                        Log.d("hs_test", "No such document");
-                     //   findUser = false;
-                    }
-                } else {
-                    Log.d("hs_test", "get failed with ", task.getException());
-               //     findUser = false;
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+
+                    find=true;
+                    Log.d("hs_test", "find : "+find);
+                }
+                else{
+                    Log.d("hs_test", "데이터 없음");
                 }
             }
         });
 
-        return findUser;
+        Log.d("hs_test", "return find : "+find);
+        return find;
 
     }
 

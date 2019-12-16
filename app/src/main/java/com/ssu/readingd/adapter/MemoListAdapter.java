@@ -1,23 +1,30 @@
 package com.ssu.readingd.adapter;
 
 import android.animation.ValueAnimator;
+import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.ssu.readingd.R;
 import com.ssu.readingd.dto.MemoDTO;
+import com.ssu.readingd.util.DBUtil;
 
 import java.util.ArrayList;
 
@@ -29,6 +36,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
 
     private int prePosition = -1;
+    Dialog dialog;
 
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
 
@@ -140,6 +148,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private LinearLayout roundLayout;
         private MemoDTO data;
         private int position;
+        private String memo_id;
 
         ViewHolder_MemoList(View itemView) {
             super(itemView) ;
@@ -157,15 +166,14 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             memoEditSpn = itemView.findViewById(R.id.memoEditSpinner);
 
 
-
         }
 
         void onBind(MemoDTO data, int position) {
             this.data = data;
             this.position = position;
+            this.memo_id = data.getMemo_id();
 
             final MemoDTO memoDTO = data;
-
 
             bookName.setText(data.getBook_name()) ;
             bookWriter.setText(data.getBook_author()) ;
@@ -179,7 +187,58 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             roundLayout.setOnClickListener(this);
 
+            memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if(position ==0){
+                        //수정일 때
 
+                        //인텐트 보내서 수정화면으로 보내기
+
+                    }
+                    else{
+                        //삭제일 때
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+
+                        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        final View dialogView = inflater.inflate(R.layout.layout_memo_delete, null);
+                        Button memoDeleteCancelBtn = dialogView.findViewById(R.id.memoDeleteCancelBtn);
+                        Button memoDeleteBtn = dialogView.findViewById(R.id.memoDeleteBtn);
+                        builder.setView(dialogView);
+
+                        memoDeleteCancelBtn.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "수정 버튼 클릭", Toast.LENGTH_SHORT).show();
+                                Log.d("hs_test", "메모 ... 스피너 삭제 --> 취소 버튼 클릭");
+                                dialog.dismiss();
+                            }
+                        });
+
+                        memoDeleteBtn.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                new DBUtil().DeleteMemo(memo_id);
+                                Toast.makeText(v.getContext(), "삭제 버튼 클릭", Toast.LENGTH_SHORT).show();
+                                Log.d("hs_test", "메모 ... 스피너 삭제--> 확인 버튼 클릭");
+                                dialog.dismiss();
+                            }
+                        });
+
+                        dialog = builder.create();
+                        dialog.show();
+
+
+
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+
+            });
 
         }
 
