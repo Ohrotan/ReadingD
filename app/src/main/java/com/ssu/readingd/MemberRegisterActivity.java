@@ -52,16 +52,20 @@ public class MemberRegisterActivity extends AppCompatActivity implements View.On
 
         if( id.equals("")){
             Toast.makeText(MemberRegisterActivity.this, "아이디를 입력하세요.", Toast.LENGTH_SHORT).show();
+            return;
         }
         else if(pw1.equals("") && pw2.equals("")){
             Toast.makeText(MemberRegisterActivity.this, "비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+            return;
         }
         else if(!pw1.equals(pw2)){
             Toast.makeText(MemberRegisterActivity.this, "비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         if(pw1.length() < 6){
             Toast.makeText(MemberRegisterActivity.this, "비밀번호가 너무 짧습니다.", Toast.LENGTH_SHORT).show();
+            return;
         }
 
 
@@ -77,6 +81,7 @@ public class MemberRegisterActivity extends AppCompatActivity implements View.On
                     else{
                         Toast.makeText(MemberRegisterActivity.this, "가입되었습니다.", Toast.LENGTH_SHORT).show();
                         new DBUtil().addUser(id, pw1);
+                        finish();
                     }
                 }
                 else{
