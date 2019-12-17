@@ -27,6 +27,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ssu.readingd.dto.BookDTO;
 import com.ssu.readingd.dto.MemoDTO;
+import com.ssu.readingd.dto.UserDTO;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -44,11 +45,12 @@ public class DBUtil {
 
     Map<String, Object> memo;
     MemoDTO memoDTO;
-    boolean find= false;
+    UserDTO userDTO;
+    boolean find=false;
 
     public MemoDTO getMemo(String id) {
 
-        DocumentReference docRef = db.collection("memos").document("90909");
+        DocumentReference docRef = db.collection("memos").document(id);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -161,26 +163,40 @@ public class DBUtil {
         });
     }
 
-    public boolean findUser(String id){
-
+    public void getUser(String id){
 
         DocumentReference docRef = db.collection("users").document(id);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
-
-                    find=true;
-                    Log.d("hs_test", "find : "+find);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()){
+                        Log.d("hs_test", "DocumentSnapshot data" + document.getData());
+                        find = true;
+                        Log.d("hs_test", "find : " + find);
+                        //userDTO = document.toObject(UserDTO.class);
+                        //Log.d("hs_test", "userDTO : " + userDTO.getId());
+                    }
+                    else{
+                        Log.d("hs_test", "No such document");
+                    }
                 }
                 else{
-                    Log.d("hs_test", "데이터 없음");
+                    Log.d("hs_test", "get failed with", task.getException());
                 }
             }
         });
 
-        Log.d("hs_test", "return find : "+find);
-        return find;
+        try {
+            Thread.sleep(3000);
+        }catch(InterruptedException e){
+            System.out.println(e.getMessage());
+        }
+
+        //Log.d("hs_test", "userDTO : " + userDTO.getId());
+        Log.d("hs_test", "return find : " + find);
+        //return userDTO;
 
     }
 
