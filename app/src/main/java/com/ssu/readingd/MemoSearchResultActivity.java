@@ -80,10 +80,10 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(activity == "BookMemoListActivity"){
+        if(activity.equals("BookMemoListActivity")){
             BookMemoSearchResult(position);
         }
-        else if(activity == "MemoListActivity"){
+        else if(activity.equals("MemoListActivity")){
             MemoListSearchResult(position);
         }
         else{
@@ -128,7 +128,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
 
         arrayList = new ArrayList<>();
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MemoListAdapter(this,arrayList,1);
+        adapter = new MemoListAdapter(this, arrayList,0);
         recyclerView.setAdapter(adapter);
 
         if(!book_name.equals("") && author.equals("") && content.equals("")){
@@ -159,7 +159,8 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
             // 책제목, 작가, 내용 없을 때 -> 전체메모 보여주기
             if(position == 0){
                 //최신순
-                memoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                db.collection("memos")
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value,
                                                 @Nullable FirebaseFirestoreException e) {
@@ -172,7 +173,9 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                                 for (QueryDocumentSnapshot doc : value) {
                                     if (doc.get("book_name") != null) {
                                         MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                        memoDTO.setMemo_id(doc.getId());
                                         arrayList.add(memoDTO);
+                                        Log.d("hs_test", "메모 불러오기", e);
                                     }
                                 }
                                 //어답터 갱신

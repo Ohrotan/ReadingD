@@ -37,7 +37,8 @@
         <activity android:name=".BookShelfActivity"
             android:theme="@style/NoTitle"/>
         <activity android:name=".MemoSearchResultActivity"
-            android:theme="@style/NoTitle" />
+            android:theme="@style/NoTitle"
+            android:launchMode="singleTop"/>
         <activity android:name=".BookMemoListActivity"
             android:theme="@style/NoTitle"/>
         <activity android:name=".MemoListActivity"

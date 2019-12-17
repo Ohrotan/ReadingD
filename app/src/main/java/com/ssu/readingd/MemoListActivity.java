@@ -15,15 +15,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -36,7 +33,6 @@ import com.ssu.readingd.dto.MemoDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 public class MemoListActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -91,43 +87,6 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
         // String 랜덤변수 생성 - 대문자 20글자
 
-        StringBuffer temp = new StringBuffer();
-        Random rnd = new Random();
-        for (int i = 0; i < 20; i++) {
-            int rIndex = rnd.nextInt(3);
-            temp.append((char) ((int) (rnd.nextInt(26)) + 65));
-            break;
-
-        }
-        String memo_id = temp.toString();
-
-
-        // memo_id 값이 있는 MemoDTO 객체 생성
-        MemoDTO memo = new MemoDTO(memo_id, "책이름11", "b2", "내용", 231, "2019.12.13 10:12",false,"admin",5555);
-
-        // 디비에 저장
-        db.collection("memos").document(memo_id).set(memo)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("hs_test", "memo update success");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("hs_Test", "memo update fail");
-                    }
-                });
-
-        try {
-            Thread.sleep(1000);
-        }catch(InterruptedException e){
-            System.out.println(e.getMessage());
-        }
-
-        //
-
 
     }
 
@@ -160,7 +119,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         arrayList = new ArrayList<>();
-        adapter = new MemoListAdapter(this,arrayList,0);
+        adapter = new MemoListAdapter(this, arrayList,0);
         recyclerView.setAdapter(adapter);
 
         sortMemoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
