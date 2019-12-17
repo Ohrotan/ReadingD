@@ -1,9 +1,12 @@
 package com.ssu.readingd.adapter;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -32,6 +35,7 @@ import com.ssu.readingd.R;
 import com.ssu.readingd.dto.MemoDTO;
 import com.ssu.readingd.util.DBUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,6 +181,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         void onBind(final MemoDTO data, int position) {
             this.data = data;
             this.position = position;
@@ -195,11 +200,13 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(data.getImg()!=null)
                 imgcnt = data.getImg().size();
             setImageSwitcher(context, memoImage, imgIndex, data);
+
             memoImage.setOnTouchListener(new View.OnTouchListener() {
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     float x = event.getX();
-                    float width = v.getWidth();
+                    float width = v.getX() + v.getWidth()/2;
                     if(x > width){
                         if(imgIndex < imgcnt -1)
                             imgIndex++;
@@ -276,8 +283,16 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @Override
         public void onClick(View v) {
+            if(v==memoImage){
+                if(imgIndex < imgcnt -1)
+                    imgIndex++;
+                else
+                    imgIndex = 0;
+                setImageSwitcher(context, memoImage, imgIndex, data);
+                return;
+            }
 
-            if (selectedItems.get(position)) {
+            else if (selectedItems.get(position)) {
                 // 펼쳐진 Item을 클릭 시
                 selectedItems.delete(position);
 
@@ -373,6 +388,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         void onBind(final MemoDTO data, int position) {
             this.data = data;
             this.position = position;
@@ -388,11 +404,12 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(data.getImg()!=null)
                 imgcnt = data.getImg().size();
             setImageSwitcher(context, memoImage, imgIndex, data);
+
             memoImage.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     float x = event.getX();
-                    float width = v.getWidth();
+                    float width = v.getX() + v.getWidth()/2;
                     if(x > width){
                         if(imgIndex < imgcnt -1)
                             imgIndex++;
@@ -416,7 +433,16 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Override
         public void onClick(View v) {
 
-            if (selectedItems.get(position)) {
+            if(v==memoImage){
+                if(imgIndex < imgcnt -1)
+                    imgIndex++;
+                else
+                    imgIndex=0;
+                setImageSwitcher(context, memoImage, imgIndex, data);
+                return;
+            }
+
+            else if (selectedItems.get(position)) {
                 // 펼쳐진 Item을 클릭 시
                 selectedItems.delete(position);
 
@@ -524,6 +550,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Override
         public void onClick(View v) {
 
+
             if (selectedItems.get(position)) {
                 // 펼쳐진 Item을 클릭 시
                 selectedItems.delete(position);
@@ -566,7 +593,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         List<String> imgs = data.getImg();
         String imgname = "default_image.jpg";
         int imgcnt = 0;
-        //imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imageview.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         if(imgs != null){
             imgcnt = imgs.size();
         }
@@ -580,7 +607,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Task<Uri> uritask = httpsReference.getDownloadUrl();
         while(!uritask.isSuccessful()){;}
         Uri uri = uritask.getResult();
-        Glide.with(con).load(uri).into(imageview);
+        Glide.with(con).load(uri).override(600,400).into(imageview);
     }
 
 
