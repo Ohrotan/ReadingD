@@ -1,11 +1,19 @@
 package com.ssu.readingd;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -24,18 +32,26 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.google.firestore.v1.Cursor;
 import com.ssu.readingd.util.DBUtil;
 import com.ssu.readingd.dto.MemoDTO;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,6 +98,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
     DocumentReference docRef = db.collection("memos").document("90909");
 
 
+    Uri filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +124,8 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         user_id = "aaaabb2";
 
 
-        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory(){
-            public View makeView(){
+        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+            public View makeView() {
 
                 ImageView imageview = new ImageView(getApplicationContext());
                 imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -117,34 +134,34 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
- //       Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
- //       Animation out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
- //       imageSwitcher.setInAnimation(in);
+        //       Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
+        //       Animation out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
+        //       imageSwitcher.setInAnimation(in);
 //        imageSwitcher.setOutAnimation(out);
 //        imageSwitcher.setImageResource(Imgids[imgIndex]);
 
-        BtnPrev.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(imgIndex > 0)
+        BtnPrev.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (imgIndex > 0)
                     imgIndex--;
 
-                setImageSwitcher(getApplicationContext(),imageSwitcher, imgIndex);
+                setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
                 //imageSwitcher.setImageResource(Imgids[imgIndex]);
             }
         });
-        BtnNext.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(imgIndex < imgcnt -1)
+        BtnNext.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (imgIndex < imgcnt - 1)
                     imgIndex++;
 
-                setImageSwitcher(getApplicationContext(),imageSwitcher, imgIndex);
-               // imageSwitcher.setImageResource(Imgids[imgIndex]);
+                setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
+                // imageSwitcher.setImageResource(Imgids[imgIndex]);
             }
         });
 
-        BtnDelete.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(imgcnt>0) {
+        BtnDelete.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (imgcnt > 0) {
                     Imgids2.remove(imgIndex);
                     imgcnt--;
 
@@ -156,19 +173,25 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-        BtnAddphoto.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        BtnAddphoto.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                /*
                 Imgids2.add("memoimgadd");
                 imgcnt++;
-                //Imgids2.set(imgcnt++, "memoimgadd");
-                //Imgids[imgcnt++] = R.drawable.memoimgadd;
-                imgIndex = imgcnt-1;
+                imgIndex = imgcnt - 1;
 
-                setImageSwitcher(getApplicationContext(),imageSwitcher, imgIndex);
-                //imageSwitcher.setImageResource(Imgids[imgIndex]);
+                setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);*/
+
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
+                uploadFile();
+                imgcnt++;
+                imgIndex = imgcnt -1;
+                setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
             }
         });
-
 
         Seekbar.setMax(w_page);
         Seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -178,7 +201,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
                 update();
             }
 
-            public void update(){
+            public void update() {
                 TvCurpage.setText(new StringBuilder().append(r_page));
             }
 
@@ -196,7 +219,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         ShareSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
+                if (isChecked)
                     share = true;
                 else
                     share = false;
@@ -223,10 +246,9 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if(v==BtnCancel){
+        if (v == BtnCancel) {
             onBackPressed();
-        }
-        else if(v==BtnSave){
+        } else if (v == BtnSave) {
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             String reg_date = dateformat.format(cal.getTime());
@@ -237,20 +259,52 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    public void setImageSwitcher(final Context con, ImageSwitcher imageSwitcher, int imgIndex){
+
+    public void setImageSwitcher(final Context con, ImageSwitcher imageSwitcher, int imgIndex) {
         String imgname = "default_image.jpg";
-        if(imgcnt != 0)
+        if (imgcnt != 0)
             imgname = Imgids2.get(imgIndex);
-        if(!imgname.contains("jpg"))
-            imgname = imgname+".PNG";
+        if (!imgname.contains("jpg"))
+            imgname = imgname + ".PNG";
         StorageReference httpsReference = FirebaseStorage.getInstance()
                 .getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + imgname);
 
         Task<Uri> uritask = httpsReference.getDownloadUrl();
-        while(!uritask.isSuccessful()){;}
+        while (!uritask.isSuccessful()) {
+            ;
+        }
         Uri uri = uritask.getResult();
-        Glide.with(con).load(uri).into((ImageView)imageSwitcher.getCurrentView());
+        Glide.with(con).load(uri).into((ImageView) imageSwitcher.getCurrentView());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            filePath = data.getData();
+            //  Log.d(TAG, "uri:" + String.valueOf(filePath));
+        }
+    }
+
+    private void uploadFile() {
+        //업로드할 파일이 있으면 수행
+        if (filePath != null) {
+            //Unique한 파일명을 만들자.
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHH_mmss");
+            String reg_date = dateformat.format(cal.getTime());
+            String filename = reg_date + ".png";
+            //storage 주소와 폴더 파일명을 지정해 준다.
+            StorageReference storageRef = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + filename);
+
+            Task<UploadTask.TaskSnapshot> task = storageRef.putFile(filePath);
+            while (!task.isSuccessful()) {
+                ;
+            }
+            Imgids2.add(filename);
+        } else
+            Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
+    }
 }
 

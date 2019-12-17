@@ -3,13 +3,16 @@ package com.ssu.readingd.adapter;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -21,12 +24,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.ssu.readingd.R;
 import com.ssu.readingd.dto.MemoDTO;
 import com.ssu.readingd.util.DBUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -142,7 +149,9 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView bookPage;
         private TextView memoContent_short;
         private TextView memoContent_long;
-        private ImageView memoImage;
+        public ImageView memoImage;
+        public int imgIndex;
+        public int imgcnt;
         private Spinner memoEditSpn;
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
@@ -168,7 +177,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }
 
-        void onBind(MemoDTO data, int position) {
+        void onBind(final MemoDTO data, int position) {
             this.data = data;
             this.position = position;
             this.memo_id = data.getMemo_id();
@@ -181,6 +190,29 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             bookDate.setText(data.getReg_date()) ;
             memoContent_short.setText(String.valueOf(data.getMemo_text()+ "short text"));
             memoContent_long.setText(String.valueOf(data.getMemo_text()+"long text"));
+            imgIndex = 0;
+            imgcnt = 0;
+            if(data.getImg()!=null)
+                imgcnt = data.getImg().size();
+            setImageSwitcher(context, memoImage, imgIndex, data);
+            memoImage.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    float x = event.getX();
+                    float width = v.getWidth();
+                    if(x > width){
+                        if(imgIndex < imgcnt -1)
+                            imgIndex++;
+                        setImageSwitcher(context, memoImage, imgIndex, data);
+                    }
+                    else{
+                        if(imgIndex > 0)
+                            imgIndex--;
+                        setImageSwitcher(context, memoImage, imgIndex, data);
+                    }
+                    return true;
+                }
+            });
 
 
             changeVisibility(selectedItems.get(position));
@@ -317,7 +349,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         private TextView memoContent_short;
         private TextView memoContent_long;
-        private ImageView memoImage;
+        public ImageView memoImage;
+        int imgIndex, imgcnt;
 
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
@@ -340,7 +373,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }
 
-        void onBind(MemoDTO data, int position) {
+        void onBind(final MemoDTO data, int position) {
             this.data = data;
             this.position = position;
 
@@ -350,6 +383,29 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             memoDate.setText(data.getReg_date()) ;
             memoContent_short.setText(String.valueOf(data.getMemo_text()+ "short text"));
             memoContent_long.setText(String.valueOf(data.getMemo_text()+"long text"));
+            imgIndex = 0;
+            imgcnt = 0;
+            if(data.getImg()!=null)
+                imgcnt = data.getImg().size();
+            setImageSwitcher(context, memoImage, imgIndex, data);
+            memoImage.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    float x = event.getX();
+                    float width = v.getWidth();
+                    if(x > width){
+                        if(imgIndex < imgcnt -1)
+                            imgIndex++;
+                        setImageSwitcher(context, memoImage, imgIndex, data);
+                    }
+                    else{
+                        if(imgIndex > 0)
+                            imgIndex--;
+                        setImageSwitcher(context, memoImage, imgIndex, data);
+                    }
+                    return true;
+                }
+            });
 
 
             changeVisibility(selectedItems.get(position));
@@ -489,7 +545,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
 
-
     }
 
 
@@ -507,6 +562,26 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
+    public void setImageSwitcher(final Context con, ImageView imageview, int imgIndex, MemoDTO data){
+        List<String> imgs = data.getImg();
+        String imgname = "default_image.jpg";
+        int imgcnt = 0;
+        //imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        if(imgs != null){
+            imgcnt = imgs.size();
+        }
+        if(imgcnt != 0)
+            imgname = imgs.get(imgIndex);
+        if(!imgname.contains("jpg"))
+            imgname = imgname+".PNG";
+        StorageReference httpsReference = FirebaseStorage.getInstance()
+                .getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + imgname);
+
+        Task<Uri> uritask = httpsReference.getDownloadUrl();
+        while(!uritask.isSuccessful()){;}
+        Uri uri = uritask.getResult();
+        Glide.with(con).load(uri).into(imageview);
+    }
 
 
 }
