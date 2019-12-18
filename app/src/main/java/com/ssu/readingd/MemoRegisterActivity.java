@@ -187,6 +187,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
 
                 setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);*/
                 makeDialog();
+                setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
             }
         });
 
@@ -314,7 +315,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 if(photoFile != null){
-                    filePath = FileProvider.getUriForFile(this, getApplicationContext().getPackageName()+".fileprovider",photoFile);
+                    filePath = FileProvider.getUriForFile(this, getApplicationContext().getPackageName(),photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
                     startActivityForResult(takePictureIntent, 2001);
                     uploadFile();
@@ -327,34 +328,32 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void selectAlbum(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 2002);
-        uploadFile();
-        imgcnt++;
-        imgIndex = imgcnt -1;
-        setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 2002);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
+        if (requestCode == 2002 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            uploadFile();
+        }
         if (requestCode == 0 && resultCode == RESULT_OK) {
             filePath = data.getData();
-            //  Log.d(TAG, "uri:" + String.valueOf(filePath));
+            Log.d("알림", "uri:" + String.valueOf(filePath));
         }
     }
 
     private void uploadFile() {
         //업로드할 파일이 있으면 수행
         if (filePath != null) {
-            //Unique한 파일명을 만들자.
             Calendar cal = Calendar.getInstance();
-            SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHH_mmss");
+            SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHHmmss");
             String reg_date = dateformat.format(cal.getTime());
-            String filename = reg_date + ".png";
+            String filename = reg_date + ".jpg";
             //storage 주소와 폴더 파일명을 지정해 준다.
             StorageReference storageRef = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + filename);
 
@@ -363,17 +362,21 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
                 ;
             }
             Imgids2.add(filename);
+            imgcnt++;
+            imgIndex = imgcnt -1;
         } else
             Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
     }
 
     private File createImageFile() throws IOException{
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHH_mmss");
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHHmmss");
         String reg_date = dateformat.format(cal.getTime());
-        String filename = reg_date + ".png";
+        String filename = reg_date + ".jpg";
         File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/pathvalue/" +filename);
         return storageDir;
     }
+
+
 }
 
