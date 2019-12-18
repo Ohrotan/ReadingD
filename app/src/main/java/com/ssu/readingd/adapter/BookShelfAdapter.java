@@ -1,95 +1,119 @@
 package com.ssu.readingd.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
-import com.ssu.readingd.dto.BookItem;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.ssu.readingd.BookMemoListActivity;
+import com.ssu.readingd.R;
+import com.ssu.readingd.dto.BookSimpleDTO;
+import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.util.ArrayList;
 
-public class BookShelfAdapter extends BaseAdapter {
+public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
-    ArrayList<BookItem> items;
-    Holder holder;
+    ArrayList<BookSimpleDTO> items;
+    boolean delete = false;
+    //Holder holder;
     private int displayWidth; //화면 크기
     private int size; //이미지 크기
     private int padding; //패딩
 
-    public BookShelfAdapter(){
-        super();
-    }
-
-    public BookShelfAdapter(Context context, int displayWidth) {
-        super();
-
-        this.context = context;
-        items = new ArrayList<BookItem>();
-
-        this.displayWidth = displayWidth;
-        size = displayWidth/3 ;  //화면크기를 / 3으로 나누어서 이미지 사이즈를 구한다.
-        padding = 50;
-        System.out.println("size="+size);
-    }
-
-    public BookShelfAdapter(Context context, ArrayList<BookItem> items, int displayWidth) {
-        this.context = context;
-        this.items = items;
-
-        this.displayWidth = displayWidth;
-        size = displayWidth/3 ;  //화면크기를 / 3으로 나누어서 이미지 사이즈를 구한다.
-        padding = 20;
-        System.out.println("size="+size);
-
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_book, parent, false);
+        return new BookShelfAdapter.ViewHolder_Grid(view);
     }
 
     @Override
-    public int getCount() {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        final BookSimpleDTO book_model = items.get(position);
+        Glide.with(holder.itemView);
+        BookShelfAdapter.ViewHolder_Grid vh_g = (BookShelfAdapter.ViewHolder_Grid) holder;
+        vh_g.onBind(book_model, position);
+    }
+
+    @Override
+    public int getItemCount() {
         return items.size();
     }
 
-    public void addItem(BookItem item){
-        items.add(item);
-    }
+    public class ViewHolder_Grid extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    @Override
-    public Object getItem(int position) {
-        return items.get(position);
-    }
+        private ImageView book_image;
+        private ConstraintLayout book_layout;
+        private BookSimpleDTO data;
+        private int position;
+        private String id;
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        ViewHolder_Grid(View itemView) {
+            super(itemView) ;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
-        if(convertView == null){
-            imageView = new ImageView(context);
-            imageView.setLayoutParams(new GridView.LayoutParams(size, size)); //85,85
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(padding, padding, padding, padding);
+            // 뷰 객체에 대한 참조. (hold strong reference)
+            book_image = itemView.findViewById(R.id.book_img);
+            book_layout = itemView.findViewById(R.id.book_layout);
 
-
-        }else{
-            imageView = (ImageView) convertView;
         }
-        //이미지뷰에 주어진 위치의 이미지를 설정함
-        imageView.setImageResource(items.get(position).getImage());
-        return imageView;
+
+        void onBind(BookSimpleDTO data, int position) {
+            this.data = data;
+            this.position = position;
+            this.id = data.getId();
+
+            LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            RelativeLayout deleteLayout = (RelativeLayout)layoutInflater.inflate(R.layout.layout_book_img_delete, null);
+            book_layout.addView(deleteLayout);
+            deleteLayout.setVisibility(View.INVISIBLE);
+
+            if(delete){
+                deleteLayout.setVisibility(View.VISIBLE);
+                //book_layout.addView(deleteLayout);
+            }
+
+
+            ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
+            //new DBUtil().setImageViewFromDB(context, book_image, data.getImg());
+            //book_image.setImageResource(R.drawable.book_1);
+            book_image.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            Intent intent = new Intent(v.getContext(), BookMemoListActivity.class);
+            intent.putExtra("book", data);
+            context.startActivity(intent);
+
+        }
+
 
     }
 
-    public class Holder {
-
-        public ImageView img;
-
+    public BookShelfAdapter(Context context, ArrayList<BookSimpleDTO> list) {
+        items = list;
+        this.context = context;
 
     }
+
+    public BookShelfAdapter(Context context, ArrayList<BookSimpleDTO> list, boolean delete) {
+        items = list;
+        this.context = context;
+        this.delete = delete;
+    }
+
 
 }

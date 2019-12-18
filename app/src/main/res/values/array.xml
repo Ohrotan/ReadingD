@@ -6,8 +6,8 @@
         <item>다 읽은 책</item>
     </string-array>
     <string-array name="sort_book">
-        <item>제목 순</item>
         <item>등록 순</item>
+        <item>제목 순</item>
     </string-array>
     <string-array name="book_kind">
         <item>읽은 책</item>

@@ -83,11 +83,11 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         if(activity.equals("BookMemoListActivity")){
             BookMemoSearchResult(position);
         }
-        else if(activity.equals("MemoListActivity")){
-            MemoListSearchResult(position);
+        else if(activity.equals("CommunityActivity")){
+            CommunitySearchResult(position);
         }
         else{
-            CommunitySearchResult(position);
+            MemoListSearchResult(position);
         }
     }
 
