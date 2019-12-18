@@ -1,5 +1,6 @@
 package com.ssu.readingd;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssu.readingd.adapter.MemoListAdapter;
 import com.ssu.readingd.dto.MemoDTO;
+import com.ssu.readingd.dto.UserDTO;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,6 +50,8 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     final Calendar cal = Calendar.getInstance();
     Dialog alertDialog;
 
+    UserDTO user;
+
 
 
     @Override
@@ -63,7 +67,25 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         memoBtn.setOnClickListener(this);
         memoSearchBtn.setOnClickListener(this);
 
-        init();
+        if(user == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, 1);
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            user = data.getParcelableExtra("user");
+            init();
+        }
+        else if(resultCode == Activity.RESULT_CANCELED){
+            finish();
+        }
+
     }
 
     public void clickTab(View v) {

@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssu.readingd.adapter.MemoListAdapter;
+import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.ArrayList;
@@ -45,6 +46,9 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
     ImageButton bookEditBtn;
     TextView bookNameTitle;
     FirebaseFirestore db;
+    BookSimpleDTO book;
+    String strBookName;
+
 
     int fromYear;
     int fromMonth;
@@ -80,8 +84,13 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
 
         // memoDTO 인텐트 받으면 여기에 넣기
         List<String> imgs = new ArrayList<>();
-        memoDTO = new MemoDTO("책이름", "b", imgs, "내용", 231, "2019.12.13",false,"admin",5555);
-        bookNameTitle.setText(memoDTO.getBook_name());
+        Intent intent = getIntent();
+        BookSimpleDTO book = intent.getParcelableExtra("book");
+        strBookName = book.getBook_name();
+
+        //memoDTO = new MemoDTO("책이름", "b", imgs, "내용", 231, "2019.12.13",false,"admin",5555);
+        Log.d("hs_test","book : "+book.toString());
+        bookNameTitle.setText(book.getBook_name());
 
 
         init();
@@ -118,7 +127,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0){
                     //최신순 정렬
-                    db.collection("memos").whereEqualTo("book_name", memoDTO.getBook_name())
+                    db.collection("memos").whereEqualTo("book_name", strBookName)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -131,8 +140,8 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                                     arrayList.clear();
                                     for (QueryDocumentSnapshot doc : value) {
                                         if (doc.get("book_name") != null) {
-                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                            arrayList.add(memoDTO);
+                                            MemoDTO book = doc.toObject(MemoDTO.class);
+                                            arrayList.add(book);
 
                                         }
                                     }
@@ -143,7 +152,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                 }
                 else{
                     //오래된순
-                    db.collection("memos").whereEqualTo("book_name", memoDTO.getBook_name())
+                    db.collection("memos").whereEqualTo("book_name", strBookName)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                                 @Override
@@ -157,8 +166,8 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                                     arrayList.clear();
                                     for (QueryDocumentSnapshot doc : value) {
                                         if (doc.get("book_name") != null) {
-                                            MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                            arrayList.add(0, memoDTO);
+                                            MemoDTO book = doc.toObject(MemoDTO.class);
+                                            arrayList.add(0, book);
                                         }
                                     }
                                     //어답터 갱신
@@ -234,7 +243,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                     final String content = contentSearchTxt.getText().toString();
 
                     Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
-                    intent.putExtra("book_name", memoDTO.getBook_name());
+                    intent.putExtra("book_name", book.getBook_name());
                     intent.putExtra("author", author);
                     intent.putExtra("content", content);
                     intent.putExtra("fromYear", fromYear);
