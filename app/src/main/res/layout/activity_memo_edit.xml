@@ -77,11 +77,11 @@
         android:layout_height="match_parent"
         android:background="@drawable/round_shape_gray"
         android:layout_below="@id/seekbar_layout"
-        android:layout_above="@id/bottom_tab_layout"
+        android:layout_above="@id/cancel_save_layout"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="50dp"
         android:orientation="vertical"
         >
 
@@ -89,7 +89,7 @@
             android:layout_alignParentTop="true"
             android:id="@+id/image_switcher"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:background="#ffffff">
         </ImageSwitcher>
 
@@ -135,6 +135,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars  = "vertical"
+            android:inputType="textMultiLine"
+            android:gravity="top"
             ></EditText>
 
 
@@ -144,6 +146,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_above="@id/cancel_save_layout"
+
         android:layout_marginLeft="130dp">
 
 
@@ -164,7 +167,8 @@
         android:layout_height="60dp"
         android:gravity="center"
         android:id="@+id/cancel_save_layout"
-        android:layout_above="@+id/bottom_tab_layout">
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true">
 
         <Button
             android:id="@+id/cancel_btn"
@@ -189,16 +193,4 @@
 
     </LinearLayout>
 
-
-
-    <LinearLayout
-        android:id="@+id/bottom_tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@android:color/white"
-        android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-    </LinearLayout>
 </RelativeLayout>

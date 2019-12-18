@@ -239,22 +239,6 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         });
 
     }
-
-    public void clickTab(View v) {
-        ImageView[] img = new ImageView[5];
-        img[0] = findViewById(R.id.tab_flash_back);
-        img[1] = findViewById(R.id.tab_memo);
-        img[2] = findViewById(R.id.tab_book);
-        img[3] = findViewById(R.id.tab_share);
-        img[4] = findViewById(R.id.tab_setting);
-
-        if (v == img[0]) {
-            startActivity(new Intent(this, FlashbackActivity.class));
-            overridePendingTransition(0, 0);
-        }
-
-    }
-
     @Override
     public void onClick(View v) {
 
@@ -268,6 +252,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
             MemoText = MemoEdit.getText().toString();
             memoDTO = new MemoDTO(book_name, book_author, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
             new DBUtil().updateMemo(memo_id, memoDTO);
+            onBackPressed();
         }
     }
 
