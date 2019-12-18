@@ -2,11 +2,16 @@ package com.ssu.readingd;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
@@ -40,9 +46,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ssu.readingd.util.DBUtil;
 import com.ssu.readingd.dto.MemoDTO;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,7 +67,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     String book_name;
     TextView TvBookname;
     String user_id;
-    String memo_id = "McRGKlAF4hHQ55POQs0X";
+    String memo_id = "CdLyCrIvFtsA17h3ylgK";
     ImageView BtnAddphoto;
     SeekBar Seekbar;
     TextView TvCurpage;
@@ -84,6 +93,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     StorageReference pathRefernece;
+    Uri filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,14 +181,12 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
 
         BtnAddphoto.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                /*
                 Imgids2.add("memoimgadd");
                 imgcnt++;
-                //Imgids2.set(imgcnt++, "memoimgadd");
-                //Imgids[imgcnt++] = R.drawable.memoimgadd;
-                imgIndex = imgcnt-1;
-
-                setImageSwitcher(getApplicationContext(),imageSwitcher, imgIndex);
-                //imageSwitcher.setImageResource(Imgids[imgIndex]);
+                imgIndex = imgcnt-1;*/
+                makeDialog();
+                setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
             }
         });
 
@@ -291,5 +299,104 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         Uri uri = uritask.getResult();
         Glide.with(con).load(uri).into((ImageView)imageSwitcher.getCurrentView());
     }
+
+
+    private void makeDialog(){
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(MemoEditActivity.this);
+
+        alt_bld.setTitle("사진 업로드").setCancelable(false).setPositiveButton("사진촬영",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.v("알림", "다이얼로그 > 사진촬영 선택");
+                        takePhoto();
+                    }
+                }).setNegativeButton("앨범선택",
+
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int id) {
+                        Log.v("알림", "다이얼로그 > 앨범선택 선택");
+                        selectAlbum();
+                    }
+                }).setNeutralButton("취소   ",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alt_bld.create();
+        alert.show();
+    }
+
+    public void takePhoto(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File photoFile = null;
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(photoFile != null){
+                filePath = Uri.fromFile(photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
+                startActivityForResult(takePictureIntent, 2001);
+            }
+        }
+    }
+
+    public void selectAlbum(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 2002);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2002 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            uploadFile();
+        }
+        if (requestCode == 2001 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            uploadFile();
+        }
+    }
+
+    private void uploadFile() {
+        //업로드할 파일이 있으면 수행
+        if (filePath != null) {
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHHmmss");
+            String reg_date = dateformat.format(cal.getTime());
+            String filename = reg_date + ".jpg";
+            //storage 주소와 폴더 파일명을 지정해 준다.
+            StorageReference storageRef = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + filename);
+
+            Task<UploadTask.TaskSnapshot> task = storageRef.putFile(filePath);
+            while (!task.isSuccessful()) {
+                ;
+            }
+            Imgids2.add(filename);
+            imgcnt++;
+            imgIndex = imgcnt -1;
+        } else
+            Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
+    }
+
+    private File createImageFile() throws IOException{
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHHmmss");
+        String reg_date = dateformat.format(cal.getTime());
+        String filename = reg_date + ".jpg";
+        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +filename);
+        if(!storageDir.exists()){
+            storageDir.mkdirs();
+        }
+        return storageDir;
+    }
+
 }
 
