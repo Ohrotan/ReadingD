@@ -77,6 +77,17 @@
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.ssu.readingd.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path"></meta-data>
+        </provider>
+
+
     </application>
 
 </manifest>

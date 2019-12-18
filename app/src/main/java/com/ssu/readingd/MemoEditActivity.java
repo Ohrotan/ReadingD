@@ -8,9 +8,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -94,6 +96,8 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     StorageReference pathRefernece;
     Uri filePath;
+    File image;
+    String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +117,9 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         ShareSwitch = findViewById(R.id.share_switch);
         BtnCancel = findViewById(R.id.cancel_btn);
         BtnSave = findViewById(R.id.save_btn);
+
+   //     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+   //     memo_id = pref.getString("id", null);
 
 
         DocumentReference docRef = db.collection("memos").document(memo_id);
@@ -330,20 +337,21 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
 
     public void takePhoto(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
         File photoFile = null;
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            try {
-                photoFile = createImageFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            photoFile = File.createTempFile("IMG",".jpg", dir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
             if(photoFile != null){
-                filePath = Uri.fromFile(photoFile);
+                filePath = FileProvider.getUriForFile(this, getApplicationContext().getPackageName()+".fileprovider", photoFile);
+                takePictureIntent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                 startActivityForResult(takePictureIntent, 2001);
             }
         }
-    }
 
     public void selectAlbum(){
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -391,10 +399,10 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHHmmss");
         String reg_date = dateformat.format(cal.getTime());
         String filename = reg_date + ".jpg";
-        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +filename);
-        if(!storageDir.exists()){
-            storageDir.mkdirs();
-        }
+        File storageDir = new File(Environment.getExternalStorageDirectory(), filename);
+
+        path = storageDir.getAbsolutePath();
+        //image = File.createTempFile(filename, ".jpg",storageDir);
         return storageDir;
     }
 
