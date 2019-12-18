@@ -107,7 +107,29 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         img[4] = findViewById(R.id.tab_setting);
 
         if (v == img[0]) {
-            startActivity(new Intent(this, FlashbackActivity.class));
+            Intent intent = new Intent(this, FlashbackActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[1]) {
+            Intent intent = new Intent(this, MemoListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[2]) {
+            Intent intent = new Intent(this, BookShelfActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[3]) {
+            Intent intent = new Intent(this, CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[4]) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
             overridePendingTransition(0, 0);
         }
 
