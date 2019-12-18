@@ -33,7 +33,12 @@
             android:windowSoftInputMode="adjustResize|adjustPan"
             android:theme="@style/NoTitle"/>
         <activity android:name=".LoginActivity"
-            android:theme="@style/NoTitle" />
+            android:theme="@style/NoTitle" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".BookShelfActivity"
             android:theme="@style/NoTitle"/>
         <activity android:name=".MemoSearchResultActivity"
@@ -42,7 +47,9 @@
         <activity android:name=".BookMemoListActivity"
             android:theme="@style/NoTitle"/>
         <activity android:name=".MemoListActivity"
-            android:theme="@style/NoTitle"/>
+            android:theme="@style/NoTitle">
+        </activity>
+
         <activity android:name=".activity_test_HyeSeon" />
         <activity android:name=".MemoRegisterActivity" />
         <activity android:name=".TestSeulwooActivity" />
@@ -57,18 +64,14 @@
             android:name=".util.LivePreviewActivity"
             android:exported="true"></activity>
 
+
+
         <activity
             android:name=".util.StillImageActivity"
             android:exported="true"></activity>
         <activity android:name=".util.ChooserActivity" />
 
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"

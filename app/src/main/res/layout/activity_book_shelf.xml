@@ -15,7 +15,7 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/addMemoBtn"
+            android:id="@+id/addBookBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"

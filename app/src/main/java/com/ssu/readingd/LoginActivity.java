@@ -1,6 +1,7 @@
 package com.ssu.readingd;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Intent intent;
     UserDTO user;
     Dialog alertDialog;
+    Context context;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -48,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         idText = (EditText)findViewById(R.id.idText);
         pwText = (EditText)findViewById(R.id.pwText);
         pwText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        context = this;
 
 
 
@@ -85,9 +88,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Log.d("hs_test", "user.getPwd() = " + user.getPwd());
 
                                 // 인텐트 객체 생성해서 결과 담벼락으로 보내고 종료하기
-                                Intent intent = new Intent();
-                                intent.putExtra("user", user);
-                                setResult(RESULT_OK, intent);
+                                Intent intent = new Intent(context, MemoListActivity.class);
+                                startActivity(intent);
                                 finish();
                             }
                             else{

@@ -2,9 +2,11 @@ package com.ssu.readingd;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssu.readingd.adapter.BookShelfAdapter;
 import com.ssu.readingd.dto.BookSimpleDTO;
+import com.ssu.readingd.util.StillImageActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,11 +43,15 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
     BookShelfAdapter adapter;
     ImageButton imageButton;
     Button bookSearchBtn;
+    ImageButton addBookBtn;
     //GridView gridView;
     RecyclerView recyclerView;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ImageButton deleteBtn;
     Query query;
+
+    AlertDialog dialog;
+
 
     int fromYear;
     int fromMonth;
@@ -69,12 +76,55 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
         //gridView = findViewById(R.id.gridView);
         recyclerView = findViewById(R.id.recyclerView);
         deleteBtn = findViewById(R.id.deleteBtn);
+        addBookBtn = findViewById(R.id.addBookBtn);
 
         deleteBtn.setOnClickListener(this);
 
         arrayList = new ArrayList<>();
         bookSearchBtn.setOnClickListener(this);
         imageButton.setOnClickListener(this);
+
+        addBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                final View bookAddPopup = inflater.inflate(R.layout.layout_book_add_search, null);
+                Button barcode = bookAddPopup.findViewById(R.id.barcode_search_btn);
+                barcode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(BookShelfActivity.this, StillImageActivity.class));
+
+                    }
+
+                });
+                builder.setView(bookAddPopup);
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        EditText keyword = bookAddPopup.findViewById(R.id.api_search_etv);
+
+                        Intent intent = new Intent(BookShelfActivity.this, BookAddSearchResultActivity.class);
+                        intent.putExtra("keyword", keyword.getText().toString());
+
+                        startActivity(intent);
+                        //제목이나 저자로 책검색 이동
+
+
+                    }
+                });
+
+                builder.setNegativeButton("취소", null);
+
+                dialog = builder.create();
+                dialog.show();
+                return;
+
+            }
+        });
 
         init();
 
@@ -95,19 +145,6 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
-                    //읽은 책
-                    query = db.collection("books").whereEqualTo("state", "DONE");
-                }
-                else if(position==1){
-                    //읽고있는 책
-                    query = db.collection("books").whereEqualTo("state", "NOW");
-
-                }
-                else if(position==2){
-                    //읽고싶은책
-                    query = db.collection("books").whereEqualTo("state", "FUTURE");
-                }
-                else{
                     //전체
                     db.collection("books")
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -132,6 +169,21 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                 }
                             });
                     return;
+
+
+                }
+                else if(position==1){
+                    //읽고있는 책
+                    query = db.collection("books").whereEqualTo("state", "NOW");
+
+                }
+                else if(position==2){
+                    //읽고싶은책
+                    query = db.collection("books").whereEqualTo("state", "FUTURE");
+                }
+                else{
+                    //읽은 책
+                    query = db.collection("books").whereEqualTo("state", "DONE");
                 }
 
                 query
@@ -186,7 +238,29 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
         img[4] = findViewById(R.id.tab_setting);
 
         if (v == img[0]) {
-            startActivity(new Intent(this, FlashbackActivity.class));
+            Intent intent = new Intent(this, FlashbackActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[1]) {
+            Intent intent = new Intent(this, MemoListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[2]) {
+            Intent intent = new Intent(this, BookShelfActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[3]) {
+            Intent intent = new Intent(this, CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[4]) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
             overridePendingTransition(0, 0);
         }
 
