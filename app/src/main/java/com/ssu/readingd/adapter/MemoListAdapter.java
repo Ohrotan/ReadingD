@@ -283,16 +283,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @Override
         public void onClick(View v) {
-            if(v==memoImage){
-                if(imgIndex < imgcnt -1)
-                    imgIndex++;
-                else
-                    imgIndex = 0;
-                setImageSwitcher(context, memoImage, imgIndex, data);
-                return;
-            }
-
-            else if (selectedItems.get(position)) {
+            if (selectedItems.get(position)) {
                 // 펼쳐진 Item을 클릭 시
                 selectedItems.delete(position);
 
@@ -432,17 +423,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @Override
         public void onClick(View v) {
-
-            if(v==memoImage){
-                if(imgIndex < imgcnt -1)
-                    imgIndex++;
-                else
-                    imgIndex=0;
-                setImageSwitcher(context, memoImage, imgIndex, data);
-                return;
-            }
-
-            else if (selectedItems.get(position)) {
+            if (selectedItems.get(position)) {
                 // 펼쳐진 Item을 클릭 시
                 selectedItems.delete(position);
 
