@@ -51,6 +51,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.firestore.v1.Cursor;
+import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.util.DBUtil;
 import com.ssu.readingd.dto.MemoDTO;
 
@@ -72,6 +73,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
     MemoDTO memoDTO;
     Map<String, Object> memo;
     String book_name;
+    String book_author;
     TextView TvBookname;
     ImageView BtnAddphoto;
     SeekBar Seekbar;
@@ -102,8 +104,9 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     DocumentReference docRef = db.collection("memos").document("90909");
 
-
     Uri filePath;
+    File image;
+    String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,9 +127,18 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         BtnCancel = findViewById(R.id.cancel_btn);
         BtnSave = findViewById(R.id.save_btn);
 
+        //     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        //     user_id = pref.getString("id", null);
+        //     Intent intent = getIntent();
+        //BookSimpleDTO bookSimpleDTO = getIntent().getExtras().getParcelable();
+       // book_name = bookSimpleDTO.getBook_name();
+       // w_page = bookSimpleDTO.getW_page();
+       // book_author = bookSimpleDTO.getBook_author();
         book_name = "hiehie";
+        book_author = "aa";
         w_page = 233;
         user_id = "aaaabb2";
+        TvBookname.setText(book_name);
 
 
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
@@ -139,11 +151,6 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-        //       Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
-        //       Animation out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
-        //       imageSwitcher.setInAnimation(in);
-//        imageSwitcher.setOutAnimation(out);
-//        imageSwitcher.setImageResource(Imgids[imgIndex]);
 
         BtnPrev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -252,7 +259,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             String reg_date = dateformat.format(cal.getTime());
             MemoText = MemoEdit.getText().toString();
 
-            memoDTO = new MemoDTO(book_name, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
+            memoDTO = new MemoDTO(book_name, book_author, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
             new DBUtil().addMemo(memoDTO);
         }
     }
@@ -303,27 +310,18 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void takePhoto(){
-        String state = Environment.getExternalStorageState();
-        if(Environment.MEDIA_MOUNTED.equals(state)){
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if(takePictureIntent.resolveActivity(getPackageManager())!=null){
-                File photoFile = null;
-                try{
-                    photoFile = createImageFile();
-                }catch(IOException ex){
-
-                }
-
-                if(photoFile != null){
-                    filePath = FileProvider.getUriForFile(this, getApplicationContext().getPackageName(),photoFile);
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
-                    startActivityForResult(takePictureIntent, 2001);
-                    uploadFile();
-                    imgcnt++;
-                    imgIndex = imgcnt -1;
-                    setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
-                }
-            }
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        File photoFile = null;
+        try {
+            photoFile = File.createTempFile("IMG",".jpg", dir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(photoFile != null){
+            filePath = FileProvider.getUriForFile(this, getApplicationContext().getPackageName()+".fileprovider", photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
+            startActivityForResult(takePictureIntent, 2001);
         }
     }
 
@@ -341,9 +339,9 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             filePath = data.getData();
             uploadFile();
         }
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            filePath = data.getData();
-            Log.d("알림", "uri:" + String.valueOf(filePath));
+        if (requestCode == 2001 && resultCode == RESULT_OK) {
+            //filePath = data.getData();
+            uploadFile();
         }
     }
 
@@ -366,15 +364,6 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             imgIndex = imgcnt -1;
         } else
             Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
-    }
-
-    private File createImageFile() throws IOException{
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHHmmss");
-        String reg_date = dateformat.format(cal.getTime());
-        String filename = reg_date + ".jpg";
-        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/pathvalue/" +filename);
-        return storageDir;
     }
 
 

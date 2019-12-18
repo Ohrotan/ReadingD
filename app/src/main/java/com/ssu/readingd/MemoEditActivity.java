@@ -67,6 +67,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
 
     MemoDTO memoDTO;
     String book_name;
+    String book_author;
     TextView TvBookname;
     String user_id;
     String memo_id = "CdLyCrIvFtsA17h3ylgK";
@@ -119,7 +120,10 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         BtnSave = findViewById(R.id.save_btn);
 
    //     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-   //     memo_id = pref.getString("id", null);
+   //     user_id = pref.getString("id", null);
+   //     Intent intent = getIntent();
+   //    memo_id = intent.getExtras().getString("id");
+
 
 
         DocumentReference docRef = db.collection("memos").document(memo_id);
@@ -262,7 +266,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
             SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             String reg_date = dateformat.format(cal.getTime());
             MemoText = MemoEdit.getText().toString();
-            memoDTO = new MemoDTO(book_name, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
+            memoDTO = new MemoDTO(book_name, book_author, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
             new DBUtil().updateMemo(memo_id, memoDTO);
         }
     }
@@ -275,6 +279,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         this.share = memoDTO.getShare();
         this.user_id = memoDTO.getUser_id();
         this.w_page = memoDTO.getW_page();
+        this.book_author = memoDTO.getBook_author();
 
         TvBookname.setText(book_name);
         MemoEdit.setText(MemoText);
@@ -346,9 +351,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         }
             if(photoFile != null){
                 filePath = FileProvider.getUriForFile(this, getApplicationContext().getPackageName()+".fileprovider", photoFile);
-                takePictureIntent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                 startActivityForResult(takePictureIntent, 2001);
             }
         }
@@ -367,8 +370,8 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
             filePath = data.getData();
             uploadFile();
         }
-        if (requestCode == 2001 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            filePath = data.getData();
+        if (requestCode == 2001 && resultCode == RESULT_OK) {
+            //filePath = data.getData();
             uploadFile();
         }
     }
