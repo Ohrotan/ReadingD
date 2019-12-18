@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.ssu.readingd.R;
+import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.dto.MemoDTO;
 import com.ssu.readingd.util.DBUtil;
 
@@ -32,6 +33,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     private ArrayList<MemoDTO> mData = new ArrayList<>();
+    private ArrayList<BookSimpleDTO> bookData = new ArrayList<>();
 
     private Context context;
 
@@ -46,6 +48,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     final int memo_list_main = 0; // adapter_type = 0이면 layout_memo_list_main 레이아웃 뷰홀더 사용
     final int memo_search_result = 1; // adapter_type = 1이면 layout_memo_search_result 레이아웃 뷰홀더 사용
     final int community_main = 2; // adapter_type = 2이면 layout_community 레이아웃 뷰홀더 사용
+    final int book_shelf = 3;
 
 
     public void addItem(MemoDTO data) {
@@ -70,6 +73,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case community_main:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_community, parent, false);
                 return new ViewHolder_Community(view);
+
 
         }
 
@@ -99,6 +103,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ViewHolder_Community vh_c = (ViewHolder_Community) holder;
                 vh_c.onBind(model, position);
                 break;
+
         }
 
 
@@ -542,12 +547,19 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+
+
+
+
     // 생성자에서 데이터 리스트 객체를 전달받음.
     public MemoListAdapter(Context context, ArrayList<MemoDTO> list, int adapter_type) {
         mData = list;
         this.context = context;
         this.adapter_type = adapter_type;
+
+
     }
+
 
     public MemoListAdapter(Context context, int adapter_type){
         this.context = context;

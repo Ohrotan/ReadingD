@@ -72,11 +72,6 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
             startActivityForResult(intent, 1);
         }
 
-        init();
-
-
-
-
     }
 
     @Override
@@ -85,6 +80,10 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
 
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
             user = data.getParcelableExtra("user");
+            init();
+        }
+        else if(resultCode == Activity.RESULT_CANCELED){
+            finish();
         }
 
     }

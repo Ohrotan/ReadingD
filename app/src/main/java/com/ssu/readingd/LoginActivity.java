@@ -1,10 +1,12 @@
 package com.ssu.readingd;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText pwText;
     Intent intent;
     UserDTO user;
+    Dialog alertDialog;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -104,17 +107,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             });
 
 
-
-
-
-
         }
         else if(v == registerBtn){
             intent = new Intent(this, MemberRegisterActivity.class);
             startActivity(intent);
         }
         else if(v == findPwBtn){
-            Toast.makeText(LoginActivity.this, "비밀번호찾기", Toast.LENGTH_SHORT).show();
+            alertDialog = new Dialog(LoginActivity.this);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_find_password);
+
+            Button cancelBtn = alertDialog.findViewById(R.id.findPWCancelBtn);
+            Button findBtn = alertDialog.findViewById(R.id.findBtn);
+
+            cancelBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view)
+                {
+                    alertDialog.dismiss();
+                }
+            });
+
+            findBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(LoginActivity.this, "비밀번호 찾기", Toast.LENGTH_SHORT).show();
+                    alertDialog.dismiss();
+                }
+            });
+
+            alertDialog.show();
         }
 
     }
