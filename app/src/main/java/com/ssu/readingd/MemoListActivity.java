@@ -15,15 +15,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -36,7 +33,6 @@ import com.ssu.readingd.dto.MemoDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 public class MemoListActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -78,7 +74,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         memoBtn = (ImageButton)findViewById(R.id.memoListBtn);
         memoSearchBtn = (Button)findViewById(R.id.memoSearchBtn);
-        addMemoTitleBtn = (ImageButton)findViewById(R.id.addMemoBtn);
+        addMemoTitleBtn = (ImageButton)findViewById(R.id.addBookBtn);
         searchBox = (LinearLayout)findViewById(R.id.searchBox);
         memoEditSpinner = findViewById(R.id.memoEditSpinner);
 
@@ -90,43 +86,6 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         //List<String> imgs = new ArrayList<>();
 
         // String 랜덤변수 생성 - 대문자 20글자
-
-        StringBuffer temp = new StringBuffer();
-        Random rnd = new Random();
-        for (int i = 0; i < 20; i++) {
-            int rIndex = rnd.nextInt(3);
-            temp.append((char) ((int) (rnd.nextInt(26)) + 65));
-            break;
-
-        }
-        String memo_id = temp.toString();
-
-
-        // memo_id 값이 있는 MemoDTO 객체 생성
-        MemoDTO memo = new MemoDTO(memo_id, "책이름11", "b2", "내용", 231, "2019.12.13 10:12",false,"admin",5555);
-
-        // 디비에 저장
-        db.collection("memos").document(memo_id).set(memo)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("hs_test", "memo update success");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("hs_Test", "memo update fail");
-                    }
-                });
-
-        try {
-            Thread.sleep(1000);
-        }catch(InterruptedException e){
-            System.out.println(e.getMessage());
-        }
-
-        //
 
 
     }
@@ -148,7 +107,29 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         img[4] = findViewById(R.id.tab_setting);
 
         if (v == img[0]) {
-            startActivity(new Intent(this, FlashbackActivity.class));
+            Intent intent = new Intent(this, FlashbackActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[1]) {
+            Intent intent = new Intent(this, MemoListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[2]) {
+            Intent intent = new Intent(this, BookShelfActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[3]) {
+            Intent intent = new Intent(this, CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[4]) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
             overridePendingTransition(0, 0);
         }
 
@@ -160,7 +141,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         arrayList = new ArrayList<>();
-        adapter = new MemoListAdapter(this,arrayList,0);
+        adapter = new MemoListAdapter(this, arrayList,0);
         recyclerView.setAdapter(adapter);
 
         sortMemoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -265,95 +246,97 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-            View dialogView = getLayoutInflater().inflate(R.layout.memo_search_layout, null);
+            if(v==memoBtn || v == memoSearchBtn || v==searchBox){
+                View dialogView = getLayoutInflater().inflate(R.layout.memo_search_layout, null);
 
-            Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
-            Button searchBtn = dialogView.findViewById(R.id.searchBtn);
-            final EditText nameSearchTxt = dialogView.findViewById(R.id.nameSearchText);
-            final EditText writerSearchTxt = dialogView.findViewById(R.id.writerSearchText);
-            final EditText contentSearchTxt = dialogView.findViewById(R.id.contentSearchText);
-            final Button startDate = dialogView.findViewById(R.id.startDate);
-            final Button endDate = dialogView.findViewById(R.id.endDate);
+                Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
+                Button searchBtn = dialogView.findViewById(R.id.searchBtn);
+                final EditText nameSearchTxt = dialogView.findViewById(R.id.nameSearchText);
+                final EditText writerSearchTxt = dialogView.findViewById(R.id.writerSearchText);
+                final EditText contentSearchTxt = dialogView.findViewById(R.id.contentSearchText);
+                final Button startDate = dialogView.findViewById(R.id.startDate);
+                final Button endDate = dialogView.findViewById(R.id.endDate);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(dialogView);
-
-
-            cancelBtn.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view)
-                {
-                    alertDialog.dismiss();
-                }
-            });
-            searchBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Toast.makeText(MemoListActivity.this, "검색", Toast.LENGTH_SHORT).show();
-
-                    final String book_name = nameSearchTxt.getText().toString();
-                    final String author = writerSearchTxt.getText().toString();
-                    final String content = contentSearchTxt.getText().toString();
-
-                    Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
-                    intent.putExtra("book_name", book_name);
-                    intent.putExtra("author", author);
-                    intent.putExtra("content", content);
-                    intent.putExtra("fromYear", fromYear);
-                    intent.putExtra("fromMonth",fromMonth);
-                    intent.putExtra("fromDate", fromDate);
-                    intent.putExtra("toYear",toYear);
-                    intent.putExtra("toMonth",toMonth);
-                    intent.putExtra("toDate",toDate);
-                    intent.putExtra("Activity", "MemoListActivity");
-
-                    startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setView(dialogView);
 
 
-                    alertDialog.dismiss();
-                }
-            });
+                cancelBtn.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view)
+                    {
+                        alertDialog.dismiss();
+                    }
+                });
+                searchBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Toast.makeText(MemoListActivity.this, "검색", Toast.LENGTH_SHORT).show();
 
-            Button.OnClickListener btnListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final View view = v;
-                    DatePickerDialog dialog = new DatePickerDialog(MemoListActivity.this, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        final String book_name = nameSearchTxt.getText().toString();
+                        final String author = writerSearchTxt.getText().toString();
+                        final String content = contentSearchTxt.getText().toString();
 
-                            String msg = String.format("%d.%d.%d", year, month+1, date);
+                        Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
+                        intent.putExtra("book_name", book_name);
+                        intent.putExtra("author", author);
+                        intent.putExtra("content", content);
+                        intent.putExtra("fromYear", fromYear);
+                        intent.putExtra("fromMonth",fromMonth);
+                        intent.putExtra("fromDate", fromDate);
+                        intent.putExtra("toYear",toYear);
+                        intent.putExtra("toMonth",toMonth);
+                        intent.putExtra("toDate",toDate);
+                        intent.putExtra("Activity", "MemoListActivity");
 
-                            if(view==startDate){
-                                startDate.setText(msg);
-                                fromYear = year;
-                                fromMonth = month+1;
-                                fromDate = date;
+                        startActivity(intent);
+
+
+                        alertDialog.dismiss();
+                    }
+                });
+
+                Button.OnClickListener btnListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final View view = v;
+                        DatePickerDialog dialog = new DatePickerDialog(MemoListActivity.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+
+                                String msg = String.format("%d.%d.%d", year, month+1, date);
+
+                                if(view==startDate){
+                                    startDate.setText(msg);
+                                    fromYear = year;
+                                    fromMonth = month+1;
+                                    fromDate = date;
+                                }
+                                else if(view == endDate){
+                                    endDate.setText(msg);
+                                    toYear = year;
+                                    toMonth = month+1;
+                                    toDate = date;
+                                }
+
+                                //Toast.makeText(MemoListActivity.this, msg, Toast.LENGTH_SHORT).show();
                             }
-                            else if(view == endDate){
-                                endDate.setText(msg);
-                                toYear = year;
-                                toMonth = month+1;
-                                toDate = date;
-                            }
+                        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
 
-                            //Toast.makeText(MemoListActivity.this, msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
-
-                    dialog.getDatePicker().setMaxDate(new Date().getTime());    //입력한 날짜 이후로 클릭 안되게 옵션
-                    dialog.show();
+                        dialog.getDatePicker().setMaxDate(new Date().getTime());    //입력한 날짜 이후로 클릭 안되게 옵션
+                        dialog.show();
 
 
-                }
-            };
+                    }
+                };
 
-            startDate.setOnClickListener(btnListener);
-            endDate.setOnClickListener(btnListener);
+                startDate.setOnClickListener(btnListener);
+                endDate.setOnClickListener(btnListener);
 
-            alertDialog = builder.create();
-            alertDialog.show();
+                alertDialog = builder.create();
+                alertDialog.show();
 
+            }
     }
 
 

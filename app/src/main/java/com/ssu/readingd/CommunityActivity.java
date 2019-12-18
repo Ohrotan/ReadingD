@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssu.readingd.adapter.MemoListAdapter;
 import com.ssu.readingd.dto.MemoDTO;
+import com.ssu.readingd.dto.UserDTO;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,6 +49,8 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     final Calendar cal = Calendar.getInstance();
     Dialog alertDialog;
 
+    UserDTO user;
+
 
 
     @Override
@@ -63,8 +66,26 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         memoBtn.setOnClickListener(this);
         memoSearchBtn.setOnClickListener(this);
 
+//        if(user == null){
+//            Intent intent = new Intent(this, LoginActivity.class);
+//            startActivityForResult(intent, 1);
+//        }
         init();
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+//            user = data.getParcelableExtra("user");
+//            init();
+//        }
+//        else if(resultCode == Activity.RESULT_CANCELED){
+//            finish();
+//        }
+//
+//    }
 
     public void clickTab(View v) {
         ImageView[] img = new ImageView[5];
@@ -75,7 +96,29 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         img[4] = findViewById(R.id.tab_setting);
 
         if (v == img[0]) {
-            startActivity(new Intent(this, FlashbackActivity.class));
+            Intent intent = new Intent(this, FlashbackActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[1]) {
+            Intent intent = new Intent(this, MemoListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[2]) {
+            Intent intent = new Intent(this, BookShelfActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[3]) {
+            Intent intent = new Intent(this, CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[4]) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
             overridePendingTransition(0, 0);
         }
 

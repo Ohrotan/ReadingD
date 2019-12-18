@@ -32,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ssu.readingd.R;
+import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.dto.MemoDTO;
 import com.ssu.readingd.util.DBUtil;
 
@@ -43,6 +44,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     private ArrayList<MemoDTO> mData = new ArrayList<>();
+    private ArrayList<BookSimpleDTO> bookData = new ArrayList<>();
 
     private Context context;
 
@@ -57,6 +59,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     final int memo_list_main = 0; // adapter_type = 0이면 layout_memo_list_main 레이아웃 뷰홀더 사용
     final int memo_search_result = 1; // adapter_type = 1이면 layout_memo_search_result 레이아웃 뷰홀더 사용
     final int community_main = 2; // adapter_type = 2이면 layout_community 레이아웃 뷰홀더 사용
+    final int book_shelf = 3;
 
 
     public void addItem(MemoDTO data) {
@@ -81,6 +84,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case community_main:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_community, parent, false);
                 return new ViewHolder_Community(view);
+
 
         }
 
@@ -110,6 +114,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ViewHolder_Community vh_c = (ViewHolder_Community) holder;
                 vh_c.onBind(model, position);
                 break;
+
         }
 
 
@@ -360,6 +365,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
+        private Spinner memoEditSpinner;
+        private String memo_id;
         private MemoDTO data;
         private int position;
 
@@ -376,6 +383,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             memoImage = itemView.findViewById(R.id.pictureML);
             //expandedArea = itemView.findViewById(R.id.memoExpandArea);
             roundLayout = itemView.findViewById(R.id.round_layout);
+            memoEditSpinner = itemView.findViewById(R.id.memoEditSpinner);
+
 
         }
 
@@ -383,6 +392,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         void onBind(final MemoDTO data, int position) {
             this.data = data;
             this.position = position;
+            this.memo_id = memo_id;
 
             bookName.setText(data.getBook_name()) ;
             bookWriter.setText(data.getBook_author()) ;
@@ -419,6 +429,59 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             changeVisibility(selectedItems.get(position));
 
             roundLayout.setOnClickListener(this);
+
+            memoEditSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if(position ==0){
+                        //수정일 때
+
+                        //인텐트 보내서 수정화면으로 보내기
+
+                    }
+                    else{
+                        //삭제일 때
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+
+                        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        final View dialogView = inflater.inflate(R.layout.layout_memo_delete, null);
+                        Button memoDeleteCancelBtn = dialogView.findViewById(R.id.memoDeleteCancelBtn);
+                        Button memoDeleteBtn = dialogView.findViewById(R.id.memoDeleteBtn);
+                        builder.setView(dialogView);
+
+                        memoDeleteCancelBtn.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "수정 버튼 클릭", Toast.LENGTH_SHORT).show();
+                                Log.d("hs_test", "메모 ... 스피너 삭제 --> 취소 버튼 클릭");
+                                dialog.dismiss();
+                            }
+                        });
+
+                        memoDeleteBtn.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                new DBUtil().DeleteMemo(memo_id);
+                                Toast.makeText(v.getContext(), "삭제 버튼 클릭", Toast.LENGTH_SHORT).show();
+                                Log.d("hs_test", "메모 ... 스피너 삭제--> 확인 버튼 클릭");
+                                dialog.dismiss();
+                            }
+                        });
+
+                        dialog = builder.create();
+                        dialog.show();
+
+
+
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+
+            });
         }
 
         @Override
@@ -530,30 +593,23 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @Override
         public void onClick(View v) {
-
-
             if (selectedItems.get(position)) {
                 // 펼쳐진 Item을 클릭 시
                 selectedItems.delete(position);
-
             } else {
                 // 직전의 클릭됐던 Item의 클릭상태를 지움
                 selectedItems.delete(prePosition);
                 // 클릭한 Item의 position을 저장
                 selectedItems.put(position, true);
-
-
             }
             // 해당 포지션의 변화를 알림
             if (prePosition != -1) notifyItemChanged(prePosition);
             notifyItemChanged(position);
             // 클릭된 position 저장
             prePosition = position;
-
         }
-
-
     }
+
 
 
 
@@ -562,7 +618,10 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mData = list;
         this.context = context;
         this.adapter_type = adapter_type;
+
+
     }
+
 
     public MemoListAdapter(Context context, int adapter_type){
         this.context = context;

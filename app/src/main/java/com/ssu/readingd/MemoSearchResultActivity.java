@@ -80,14 +80,14 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(activity == "BookMemoListActivity"){
+        if(activity.equals("BookMemoListActivity")){
             BookMemoSearchResult(position);
         }
-        else if(activity == "MemoListActivity"){
-            MemoListSearchResult(position);
+        else if(activity.equals("CommunityActivity")){
+            CommunitySearchResult(position);
         }
         else{
-            CommunitySearchResult(position);
+            MemoListSearchResult(position);
         }
     }
 
@@ -107,7 +107,29 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         img[4] = findViewById(R.id.tab_setting);
 
         if (v == img[0]) {
-            startActivity(new Intent(this, FlashbackActivity.class));
+            Intent intent = new Intent(this, FlashbackActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[1]) {
+            Intent intent = new Intent(this, MemoListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[2]) {
+            Intent intent = new Intent(this, BookShelfActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[3]) {
+            Intent intent = new Intent(this, CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[4]) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
             overridePendingTransition(0, 0);
         }
 
@@ -128,7 +150,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
 
         arrayList = new ArrayList<>();
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MemoListAdapter(this,arrayList,1);
+        adapter = new MemoListAdapter(this, arrayList,0);
         recyclerView.setAdapter(adapter);
 
         if(!book_name.equals("") && author.equals("") && content.equals("")){
@@ -159,7 +181,8 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
             // 책제목, 작가, 내용 없을 때 -> 전체메모 보여주기
             if(position == 0){
                 //최신순
-                memoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                db.collection("memos")
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value,
                                                 @Nullable FirebaseFirestoreException e) {
@@ -172,7 +195,9 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                                 for (QueryDocumentSnapshot doc : value) {
                                     if (doc.get("book_name") != null) {
                                         MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                        memoDTO.setMemo_id(doc.getId());
                                         arrayList.add(memoDTO);
+                                        Log.d("hs_test", "메모 불러오기", e);
                                     }
                                 }
                                 //어답터 갱신
