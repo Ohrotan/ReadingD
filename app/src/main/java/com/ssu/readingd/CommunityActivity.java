@@ -1,6 +1,5 @@
 package com.ssu.readingd;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -67,26 +66,26 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         memoBtn.setOnClickListener(this);
         memoSearchBtn.setOnClickListener(this);
 
-        if(user == null){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivityForResult(intent, 1);
-        }
-
+//        if(user == null){
+//            Intent intent = new Intent(this, LoginActivity.class);
+//            startActivityForResult(intent, 1);
+//        }
+        init();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
-            user = data.getParcelableExtra("user");
-            init();
-        }
-        else if(resultCode == Activity.RESULT_CANCELED){
-            finish();
-        }
-
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+//            user = data.getParcelableExtra("user");
+//            init();
+//        }
+//        else if(resultCode == Activity.RESULT_CANCELED){
+//            finish();
+//        }
+//
+//    }
 
     public void clickTab(View v) {
         ImageView[] img = new ImageView[5];

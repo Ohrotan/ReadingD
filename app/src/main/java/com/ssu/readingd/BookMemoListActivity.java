@@ -72,7 +72,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         memoBtn = (ImageButton)findViewById(R.id.memoListBtn);
         memoSearchBtn = (Button)findViewById(R.id.memoSearchBtn);
-        addMemoBtn = (ImageButton)findViewById(R.id.addMemoBtn);
+        addMemoBtn = (ImageButton)findViewById(R.id.addBookBtn);
         bookEditBtn = (ImageButton)findViewById(R.id.book_edit_btn);
         bookNameTitle = findViewById(R.id.book_name_title);
 
