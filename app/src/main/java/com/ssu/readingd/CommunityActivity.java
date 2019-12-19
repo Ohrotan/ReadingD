@@ -53,6 +53,9 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     final Calendar cal = Calendar.getInstance();
     Dialog alertDialog;
 
+    String from;
+    String to;
+
     UserDTO user;
 
 
@@ -189,6 +192,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         final Button startDate = dialogView.findViewById(R.id.startDate);
         final Button endDate = dialogView.findViewById(R.id.endDate);
 
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
 
@@ -209,7 +213,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                 final String author = writerSearchTxt.getText().toString();
                 final String content = contentSearchTxt.getText().toString();
 
-                CommunitySearchResult(book_name, author, content);
+                CommunitySearchResult(book_name, author, content, from, to);
 
 
                 alertDialog.dismiss();
@@ -231,12 +235,14 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                             fromYear = year;
                             fromMonth = month+1;
                             fromDate = date;
+                            from = fromYear + "-" + fromMonth + "-" + fromDate+" "+"00:00";
                         }
                         else if(view == endDate){
                             endDate.setText(msg);
                             toYear = year;
                             toMonth = month+1;
                             toDate = date;
+                            to = toYear+"-"+toMonth+"-"+toDate+" "+"23:59";
                         }
 
                         //Toast.makeText(MemoListActivity.this, msg, Toast.LENGTH_SHORT).show();
@@ -257,7 +263,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         alertDialog.show();
     }
 
-    public void CommunitySearchResult(String book_name, String author, String content) {
+    public void CommunitySearchResult(String book_name, String author, String content, String from, String to) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference memoRef = db.collection("memos");
@@ -288,8 +294,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
             query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("content",content).whereEqualTo("share",true);
         }
         else if( !book_name.equals("") && !author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content).
-                    whereEqualTo("share",true);
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content);
         }
         else {
             // name, author, content 없을 때

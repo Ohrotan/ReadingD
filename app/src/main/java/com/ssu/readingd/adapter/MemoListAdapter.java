@@ -633,6 +633,16 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     return true;
                 }
             });
+
+
+            if(imgcnt != 0){
+                memoImage.getLayoutParams().height = (int)(150*context.getResources().getDisplayMetrics().density);
+                memoImage.requestLayout();
+                Log.d("hs_test", "not empty");
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT );
+                param.topMargin = (int)(20 * context.getResources().getDisplayMetrics().density);
+                //memoContent_long.setLayoutParams(param);
+            }
         }
 
         @Override
