@@ -1,6 +1,8 @@
 package com.ssu.readingd.adapter;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ public class BookResultListAdapter extends BaseAdapter {
     Activity activity;
     ArrayList<BookSimpleDTO> list;
     ViewHolder viewholder;
+    BookSimpleDTO selec;
 
     public BookResultListAdapter() {
         super();
@@ -58,26 +61,56 @@ public class BookResultListAdapter extends BaseAdapter {
         return position;
     }
 
+    public BookSimpleDTO getSelec() {
+        return selec;
+    }
+
+
+    public void setSelec(int pos) {
+        this.selec = list.get(pos);
+    }
+
+    public void setSelec(BookSimpleDTO selec) {
+        this.selec = selec;
+    }
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(activity).inflate(R.layout.layout_book_search_result_item, null);
-            viewholder = new ViewHolder();
         }
+        viewholder = new ViewHolder();
         viewholder.img = convertView.findViewById(R.id.cover_img);
         viewholder.name = convertView.findViewById(R.id.name_tv);
         viewholder.authors = convertView.findViewById(R.id.authors_tv);
         viewholder.publisher = convertView.findViewById(R.id.publisher_tv);
         viewholder.date = convertView.findViewById(R.id.pub_date_tv);
 
+        if (selec != null) {
+            Log.v("selec", list.get(position).getBook_name() + "/" + selec.getBook_name());
+        }
+        if (list.get(position) != selec) {
+            convertView.setBackgroundColor(Color.WHITE);
+        } else {
+            convertView.setBackgroundColor(Color.LTGRAY);
+        }
         // viewholder.img.setImageResource(list.get(position).getImg());
         if (list.get(position).getImg() != null) {
-            ImageViewFromURL.setImageView(activity, viewholder.img, list.get(position).getImg());
-        }else{
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ImageViewFromURL.setImageView(activity, viewholder.img, list.get(position).getImg());
+                }
+            }).start();
+
+        } else {
             viewholder.img.setImageResource(R.drawable.default_book);
         }
         viewholder.name.setText(list.get(position).getBook_name());
-        viewholder.authors.setText(list.get(position).getAuthor() + " \n " + list.get(position).getTranslator() + " ");
+        String auth = list.get(position).getAuthor();
+        if (list.get(position).getTranslator() != null)
+            auth = auth + " \n " + list.get(position).getTranslator();
+        viewholder.authors.setText(auth);
         viewholder.publisher.setText(list.get(position).getPublisher());
         viewholder.date.setText(list.get(position).getPub_date());
 

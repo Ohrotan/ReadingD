@@ -1,6 +1,5 @@
 package com.ssu.readingd.util;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -9,12 +8,8 @@ import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.ssu.readingd.BookManualRegisterActivity;
 import com.ssu.readingd.common.FrameMetadata;
 import com.ssu.readingd.common.GraphicOverlay;
-import com.ssu.readingd.dto.BookSimpleDTO;
 
 import java.io.IOException;
 import java.util.List;
@@ -95,9 +90,9 @@ public class BarcodeScanningProcessor extends VisionProcessorBase<List<FirebaseV
 
             REQUEST_URL = SEARCH_URL + API_KEY + RESULT_STYLE + PAGE_NO + PAGE_SIZE + ISBN
                     + barcode.getRawValue() + TITLE + PUBLISHER + AUTHOR + SORT;
-            BookAPITask a = new BookAPITask(REQUEST_URL);
-            JsonObject jo = a.doInBackground();
-            Log.v("barcode", jo.toString());
+            BookAPITask a = new BookAPITask(REQUEST_URL, activity);
+            a.execute();
+           /* Log.v("barcode", jo.toString());
             JsonArray ja = jo.get("docs").getAsJsonArray();
             if (ja.size() > 0) {
                 BookSimpleDTO book = BookSimpleDTO.parse(ja.get(0).getAsJsonObject());
@@ -110,7 +105,7 @@ public class BarcodeScanningProcessor extends VisionProcessorBase<List<FirebaseV
                 activity.finish();
             } else {
                 activity.showToast("검색결과가 없습니다. 책 제목을 직접 입력해주세요.");
-            }
+            }*/
             // BarcodeGraphic barcodeGraphic = new BarcodeGraphic(graphicOverlay, barcode);
             //  graphicOverlay.add(barcodeGraphic);
         }

@@ -1,7 +1,6 @@
 package com.ssu.readingd;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +30,7 @@ public class FlashbackActivity extends AppCompatActivity {
     TextView date_tv;
     ImageSwitcher imgs;
     TextView memo_tv;
-    Map<String,Object> memo;
+    Map<String, Object> memo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,8 @@ public class FlashbackActivity extends AppCompatActivity {
         final String TAG = "Async Task";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("memos").whereEqualTo("user_id", "admin")
+        db.collection("memos")
+                //.whereEqualTo("user_id", "admin")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -62,8 +62,11 @@ public class FlashbackActivity extends AppCompatActivity {
                                 Log.v(TAG, "memo null");
                             } else {
                                 Log.v(TAG, "memo" + memo.get("book_name"));
-                                book_title_tv.setText((String)memo.get("book_name"));
-                                page_tv.setText(((long) memo.get("r_page"))+" p");
+                                if (memo.get("img") != null) {
+
+                                }
+                                book_title_tv.setText((String) memo.get("book_name"));
+                                page_tv.setText(((long) memo.get("r_page")) + " p");
                                 date_tv.setText((String) memo.get("reg_date"));
                                 memo_tv.setText((String) memo.get("memo_text"));
                             }

@@ -13,45 +13,49 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/book"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/book"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SettingActivity"></activity>
         <activity
             android:name=".MemoEditActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustResize|adjustPan"></activity>
         <activity
             android:name=".MemoRegisterActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan">
-        </activity>
-        <activity android:name=".CommunitySearchResultActivity"
-            android:theme="@style/NoTitle"/>
-        <activity android:name=".CommunityActivity"
-            android:theme="@style/NoTitle"/>
+            android:windowSoftInputMode="adjustResize|adjustPan"></activity>
+        <activity
+            android:name=".CommunitySearchResultActivity"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".CommunityActivity"
+            android:theme="@style/NoTitle" />
         <activity
             android:name=".MemberRegisterActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan"
-            android:theme="@style/NoTitle">
-        </activity>
-        <activity android:name=".LoginActivity"
-            android:theme="@style/NoTitle" >
-
-
-        </activity>
-        <activity android:name=".BookShelfActivity"
-            android:theme="@style/NoTitle"/>
-        <activity android:name=".MemoSearchResultActivity"
             android:theme="@style/NoTitle"
-            android:launchMode="singleTop"/>
-        <activity android:name=".BookMemoListActivity"
-            android:theme="@style/NoTitle"/>
-        <activity android:name=".MemoListActivity"
+            android:windowSoftInputMode="adjustResize|adjustPan"></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/NoTitle">
+
+
+        </activity>
+        <activity
+            android:name=".BookShelfActivity"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".MemoSearchResultActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".BookMemoListActivity"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".MemoListActivity"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,7 +67,8 @@
         <activity android:name=".TestSeulwooActivity" />
         <activity android:name=".TestRanActivity" />
         <activity android:name=".BookEditActivity" />
-        <activity android:name=".BookManualRegisterActivity"
+        <activity
+            android:name=".BookManualRegisterActivity"
             android:launchMode="singleTop" />
         <activity android:name=".BookRegisterActivity" />
         <activity android:name=".BookAddSearchResultActivity" />
@@ -71,7 +76,6 @@
         <activity
             android:name=".util.LivePreviewActivity"
             android:exported="true"></activity>
-
 
 
         <activity

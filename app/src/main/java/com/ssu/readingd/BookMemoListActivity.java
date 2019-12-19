@@ -14,12 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,7 +31,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class BookMemoListActivity extends AppCompatActivity implements View.OnClickListener{
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class BookMemoListActivity extends AppCompatActivity implements View.OnClickListener {
 
     MemoListAdapter adapter;
     RecyclerView recyclerView;
@@ -69,12 +70,12 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_book_memo_list);
 
         db = FirebaseFirestore.getInstance();
-        sortMemoSpinner = (Spinner)findViewById(R.id.sortMemoSpinner);
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        memoBtn = (ImageButton)findViewById(R.id.memoListBtn);
-        memoSearchBtn = (Button)findViewById(R.id.memoSearchBtn);
-        addMemoBtn = (ImageButton)findViewById(R.id.addBookBtn);
-        bookEditBtn = (ImageButton)findViewById(R.id.book_edit_btn);
+        sortMemoSpinner = (Spinner) findViewById(R.id.sortMemoSpinner);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        memoBtn = (ImageButton) findViewById(R.id.memoListBtn);
+        memoSearchBtn = (Button) findViewById(R.id.memoSearchBtn);
+        addMemoBtn = (ImageButton) findViewById(R.id.addBookBtn);
+        bookEditBtn = (ImageButton) findViewById(R.id.book_edit_btn);
         bookNameTitle = findViewById(R.id.book_name_title);
 
         addMemoBtn.setOnClickListener(this);
@@ -90,7 +91,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
         strBookName = book.getBook_name();
 
         //memoDTO = new MemoDTO("책이름", "b", imgs, "내용", 231, "2019.12.13",false,"admin",5555);
-        Log.d("hs_test","book : "+book.toString());
+        Log.d("hs_test", "book : " + book.toString());
         bookNameTitle.setText(book.getBook_name());
 
 
@@ -141,18 +142,18 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    public void init(){
+    public void init() {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         arrayList = new ArrayList<>();
-        adapter = new MemoListAdapter(this,arrayList,0);
+        adapter = new MemoListAdapter(this, arrayList, 0);
         recyclerView.setAdapter(adapter);
 
         sortMemoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0){
+                if (position == 0) {
                     //최신순 정렬
                     db.collection("memos").whereArrayContains("book_name", strBookName)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -176,8 +177,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                                     adapter.notifyDataSetChanged();
                                 }
                             });
-                }
-                else{
+                } else {
                     //오래된순
                     db.collection("memos").whereArrayContains("book_name", strBookName).orderBy("reg_date", Query.Direction.DESCENDING)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -213,37 +213,30 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
         });
 
 
-
-
-
-
-
-
-
     }
 
 
     @Override
     public void onClick(View v) {
-        if(v==addMemoBtn){
+        if (v == addMemoBtn) {
             Intent intent = new Intent(this, MemoRegisterActivity.class);
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-            intent.putExtra("book",book);
+            intent.putExtra("book", book);
 
             startActivity(intent);
 
-        }
-        else if(v == bookEditBtn){
+        } else if (v == bookEditBtn) {
             Intent intent = new Intent(this, BookManualRegisterActivity.class);
-            Log.v("bookname",strBookName);
-            intent.putExtra("mode","edit");
-            intent.putExtra("bookName",strBookName);
+            Log.v("bookname", strBookName);
+            intent.putExtra("mode", "edit");
+            Toast.makeText(this, book.getId(), Toast.LENGTH_SHORT).show();
+            intent.putExtra("bookId", book.getId());
+
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
-        }
-        else if(v == memoSearchBtn || v==memoBtn){
+        } else if (v == memoSearchBtn || v == memoBtn) {
             View dialogView = getLayoutInflater().inflate(R.layout.layout_book_memo_search, null);
 
             Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn_b);
@@ -261,12 +254,9 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
             //alertDialog.setContentView(R.layout.memo_search_layout);
 
 
-
-
-            cancelBtn.setOnClickListener(new View.OnClickListener(){
+            cancelBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view)
-                {
+                public void onClick(View view) {
                     alertDialog.dismiss();
                 }
             });
@@ -284,11 +274,11 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                     intent.putExtra("author", author);
                     intent.putExtra("content", content);
                     intent.putExtra("fromYear", fromYear);
-                    intent.putExtra("fromMonth",fromMonth);
+                    intent.putExtra("fromMonth", fromMonth);
                     intent.putExtra("fromDate", fromDate);
-                    intent.putExtra("toYear",toYear);
-                    intent.putExtra("toMonth",toMonth);
-                    intent.putExtra("toDate",toDate);
+                    intent.putExtra("toYear", toYear);
+                    intent.putExtra("toMonth", toMonth);
+                    intent.putExtra("toDate", toDate);
                     intent.putExtra("Activity", "BookMemoListActivity");
 
                     startActivity(intent);
@@ -306,18 +296,17 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int date) {
 
-                            String msg = String.format("%d.%d.%d", year, month+1, date);
+                            String msg = String.format("%d.%d.%d", year, month + 1, date);
 
-                            if(view==startDate){
+                            if (view == startDate) {
                                 startDate.setText(msg);
                                 fromYear = year;
-                                fromMonth = month+1;
+                                fromMonth = month + 1;
                                 fromDate = date;
-                            }
-                            else if(view == endDate){
+                            } else if (view == endDate) {
                                 endDate.setText(msg);
                                 toYear = year;
-                                toMonth = month+1;
+                                toMonth = month + 1;
                                 toDate = date;
                             }
 
