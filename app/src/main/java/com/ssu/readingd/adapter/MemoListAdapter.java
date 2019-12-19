@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -31,6 +32,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ssu.readingd.BookMemoListActivity;
+import com.ssu.readingd.MemoEditActivity;
 import com.ssu.readingd.R;
 import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.dto.MemoDTO;
@@ -235,9 +238,12 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if(position ==0){
-                        //수정일 때
+                        /*
+                        Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
+                        intent.putExtra("memo", mData.get(position));
+                        context.startActivity(intent);
 
-                        //인텐트 보내서 수정화면으로 보내기
+                         */
 
                     }
                     else{
@@ -434,10 +440,12 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if(position ==0){
-                        //수정일 때
+                        /*
+                        Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
+                        intent.putExtra("memo", mData.get(position));
+                        context.startActivity(intent);
 
-                        //인텐트 보내서 수정화면으로 보내기
-
+                         */
                     }
                     else{
                         //삭제일 때

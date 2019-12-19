@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
@@ -149,7 +150,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0){
                     //최신순 정렬
-                    db.collection("memos")
+                    db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -174,7 +175,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                 }
                 else if(position == 1){
                     //오래된순
-                    db.collection("memos")
+                    db.collection("memos").orderBy("reg_date", Query.Direction.ASCENDING)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
