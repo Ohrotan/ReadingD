@@ -15,9 +15,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ssu.readingd.BookMemoListActivity;
+import com.ssu.readingd.MemoRegisterActivity;
 import com.ssu.readingd.R;
 import com.ssu.readingd.dto.BookSimpleDTO;
+import com.ssu.readingd.dto.MemoDTO;
 import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.util.ArrayList;
@@ -26,6 +33,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     Context context;
     ArrayList<BookSimpleDTO> items;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     boolean delete = false;
     //Holder holder;
     private int displayWidth; //화면 크기
@@ -60,6 +68,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private BookSimpleDTO data;
         private int position;
         private String id;
+        private long btnPressTime = 0;
 
         ViewHolder_Grid(View itemView) {
             super(itemView) ;
@@ -90,9 +99,38 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Override
         public void onClick(View v) {
 
-            Intent intent = new Intent(v.getContext(), BookMemoListActivity.class);
-            intent.putExtra("book", data);
-            context.startActivity(intent);
+            if (System.currentTimeMillis() <= btnPressTime + 1000) {
+
+                db.collection("memos")
+                        .whereEqualTo("memo", data.getBook_name())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                        Intent intent = new Intent(context, MemoRegisterActivity.class);
+                                        MemoDTO memo = document.toObject(MemoDTO.class);
+                                        intent.putExtra("memo", memo);
+                                        context.startActivity(intent);
+
+                                        break;
+                                    }
+                                } else {
+                                    //Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+
+            }
+            else{
+                Intent intent = new Intent(v.getContext(), BookMemoListActivity.class);
+                intent.putExtra("book", data);
+                context.startActivity(intent);
+            }
+
+
 
         }
 
