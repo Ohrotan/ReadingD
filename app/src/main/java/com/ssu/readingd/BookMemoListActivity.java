@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -155,7 +154,10 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     //최신순 정렬
-                    db.collection("memos").whereArrayContains("book_name", strBookName)
+                    db.collection("memos")
+                            //.whereEqualTo("user_id","")
+                            .whereEqualTo("book_name", book.getBook_name())
+                            .orderBy("reg_date", Query.Direction.DESCENDING)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -179,7 +181,10 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                             });
                 } else {
                     //오래된순
-                    db.collection("memos").whereArrayContains("book_name", strBookName).orderBy("reg_date", Query.Direction.DESCENDING)
+                    db.collection("memos")
+                            //.whereEqualTo("user_id","")
+                            .whereEqualTo("book_name", book.getBook_name())
+                            .orderBy("reg_date")
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                                 @Override
@@ -231,7 +236,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
             Intent intent = new Intent(this, BookManualRegisterActivity.class);
             Log.v("bookname", strBookName);
             intent.putExtra("mode", "edit");
-            Toast.makeText(this, book.getId(), Toast.LENGTH_SHORT).show();
+            //     Toast.makeText(this, book.getId(), Toast.LENGTH_SHORT).show();
             intent.putExtra("bookId", book.getId());
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

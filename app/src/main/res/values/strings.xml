@@ -23,7 +23,7 @@
     스며들어 가는 열락의 소리다이것은 피어나기유소년에게서 구하지 못할 바이며 시들어 가는 노년에게서 구하지 못할 바이며 오직 우리
     스며들어 가는 열락의 소리다이것은 피어나기유소년에게서 구하지 못할 바이며 시들어 가는 노년에게서 구하지 못할 바이며 오직 우리</string>
 
-<!--Firebase camera-->
+    <!--Firebase camera-->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>

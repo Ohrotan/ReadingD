@@ -1,18 +1,25 @@
 package com.ssu.readingd;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -28,9 +35,11 @@ public class FlashbackActivity extends AppCompatActivity {
     TextView autour_tv;
     TextView page_tv;
     TextView date_tv;
-    ImageSwitcher imgs;
+    ImageView imgs;
     TextView memo_tv;
     Map<String, Object> memo;
+    int imgIndex = 0;
+    int imgcnt = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +72,37 @@ public class FlashbackActivity extends AppCompatActivity {
                             } else {
                                 Log.v(TAG, "memo" + memo.get("book_name"));
                                 if (memo.get("img") != null) {
+                                    imgIndex = 0;
+                                    imgcnt = ((ArrayList<String>) memo.get("img")).size();
+                                    setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, (ArrayList<String>) memo.get("img"));
 
+                                    imgs.setOnTouchListener(new View.OnTouchListener() {
+
+                                        @Override
+                                        public boolean onTouch(View v, MotionEvent event) {
+                                            float x = event.getX();
+                                            float width = v.getX() + v.getWidth() / 2;
+                                            if (x > width) {
+                                                if (imgIndex < imgcnt - 1)
+                                                    imgIndex++;
+                                                setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, (ArrayList<String>) memo.get("img"));
+
+                                            } else {
+                                                if (imgIndex > 0)
+                                                    imgIndex--;
+                                                setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, (ArrayList<String>) memo.get("img"));
+
+                                            }
+                                            return true;
+                                        }
+                                    });
                                 }
                                 book_title_tv.setText((String) memo.get("book_name"));
                                 page_tv.setText(((long) memo.get("r_page")) + " p");
                                 date_tv.setText((String) memo.get("reg_date"));
                                 memo_tv.setText((String) memo.get("memo_text"));
+
+
                             }
                         } else {
                             Log.w(TAG, "Error getting memo documents.", task.getException());
@@ -93,6 +127,28 @@ public class FlashbackActivity extends AppCompatActivity {
          */
     }
 
+    public void setImageSwitcher(final Context con, ImageView imageview, int imgIndex, List<String> imgs) {
+        String imgname = "default_image.jpg";
+        int imgcnt = 0;
+        imageview.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        if (imgs != null) {
+            imgcnt = imgs.size();
+        }
+        if (imgcnt != 0)
+            imgname = imgs.get(imgIndex);
+        if (!imgname.contains("jpg"))
+            imgname = imgname + ".PNG";
+        StorageReference httpsReference = FirebaseStorage.getInstance()
+                .getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + imgname);
+
+        Task<Uri> uritask = httpsReference.getDownloadUrl();
+        while (!uritask.isSuccessful()) {
+            ;
+        }
+        Uri uri = uritask.getResult();
+        Glide.with(con).load(uri).override(600, 400).into(imageview);
+    }
+
     public void clickTab(View v) {
         ImageView[] img = new ImageView[5];
         img[0] = findViewById(R.id.tab_flash_back);
@@ -106,30 +162,35 @@ public class FlashbackActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            finish();
             overridePendingTransition(0, 0);
         } else if (v == img[1]) {
             Intent intent = new Intent(this, MemoListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            finish();
             overridePendingTransition(0, 0);
         } else if (v == img[2]) {
             Intent intent = new Intent(this, BookShelfActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            finish();
             overridePendingTransition(0, 0);
         } else if (v == img[3]) {
             Intent intent = new Intent(this, CommunityActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            finish();
             overridePendingTransition(0, 0);
         } else if (v == img[4]) {
             Intent intent = new Intent(this, SettingActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            finish();
             overridePendingTransition(0, 0);
         }
 
