@@ -154,6 +154,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     //최신순 정렬
+                    Log.v("setdata", "최신");
                     db.collection("memos")
                             //.whereEqualTo("user_id","")
                             .whereEqualTo("book_name", book.getBook_name())
@@ -167,19 +168,24 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                                         return;
                                     }
                                     int count = value.size();
-                                    arrayList.clear();
+                                    arrayList = new ArrayList<>();
                                     for (QueryDocumentSnapshot doc : value) {
                                         if (doc.get("book_name") != null) {
                                             MemoDTO book = doc.toObject(MemoDTO.class);
+                                            book.setMemo_id(doc.getId());
+                                            Log.v("setdata", book.getReg_date());
                                             arrayList.add(book);
 
                                         }
                                     }
                                     //어답터 갱신
-                                    adapter.notifyDataSetChanged();
+                                    adapter = new MemoListAdapter(BookMemoListActivity.this, arrayList, 0);
+                                    recyclerView.setAdapter(adapter);
+                                    // adapter.notifyDataSetChanged();
                                 }
                             });
                 } else {
+                    Log.v("setdata", "오래");
                     //오래된순
                     db.collection("memos")
                             //.whereEqualTo("user_id","")
@@ -195,15 +201,19 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                                         return;
                                     }
                                     int count = value.size();
-                                    arrayList.clear();
+                                    arrayList = new ArrayList<>();
                                     for (QueryDocumentSnapshot doc : value) {
                                         if (doc.get("book_name") != null) {
                                             MemoDTO book = doc.toObject(MemoDTO.class);
+                                            book.setMemo_id(doc.getId());
+                                            Log.v("setdata", book.getReg_date());
                                             arrayList.add(0, book);
                                         }
                                     }
+                                    adapter = new MemoListAdapter(BookMemoListActivity.this, arrayList, 0);
+                                    recyclerView.setAdapter(adapter);
                                     //어답터 갱신
-                                    adapter.notifyDataSetChanged();
+                                    //adapter.notifyDataSetChanged();
                                 }
                             });
 
