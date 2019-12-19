@@ -40,6 +40,7 @@ import android.widget.ViewSwitcher;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -281,7 +282,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         TvBookname.setText(book_name);
     }
 
-    public void setImageSwitcher(final Context con, ImageSwitcher imageSwitcher, int imgIndex){
+    public void setImageSwitcher(final Context con, final ImageSwitcher imageSwitcher, int imgIndex){
         String imgname = "default_image.jpg";
         if(imgcnt != 0)
             imgname = Imgids2.get(imgIndex);
@@ -290,10 +291,13 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         StorageReference httpsReference = FirebaseStorage.getInstance()
                 .getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + imgname);
 
-        Task<Uri> uritask = httpsReference.getDownloadUrl();
-        while(!uritask.isSuccessful()){;}
-        Uri uri = uritask.getResult();
-        Glide.with(con).load(uri).into((ImageView)imageSwitcher.getCurrentView());
+        httpsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                ImageSwitcher temp = imageSwitcher;
+                Glide.with(con).load(uri).into((ImageView)imageSwitcher.getCurrentView());
+            }
+        });
     }
 
 
@@ -366,18 +370,20 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHHmmss");
             String reg_date = dateformat.format(cal.getTime());
-            String filename = reg_date + ".jpg";
+            final String filename = reg_date + ".jpg";
             //storage 주소와 폴더 파일명을 지정해 준다.
             StorageReference storageRef = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + filename);
 
-            Task<UploadTask.TaskSnapshot> task = storageRef.putFile(filePath);
-            while (!task.isSuccessful()) {
-                ;
-            }
-            Imgids2.add(filename);
-            imgcnt++;
-            imgIndex = imgcnt -1;
-            setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
+            storageRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    String fname = filename;
+                    Imgids2.add(filename);
+                    imgcnt++;
+                    imgIndex = imgcnt -1;
+                    setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
+                }
+            });
         } else
             Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
     }
