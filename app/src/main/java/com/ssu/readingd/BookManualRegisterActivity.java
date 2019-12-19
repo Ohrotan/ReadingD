@@ -16,6 +16,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ssu.readingd.custom_enum.BookState;
 import com.ssu.readingd.dto.BookDTO;
 import com.ssu.readingd.dto.BookSimpleDTO;
@@ -60,17 +64,7 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().getStringExtra("mode") != null && getIntent().getStringExtra("mode").equals("edit")) {
-            getSupportActionBar().setTitle("책 수정");
-            // selecBook = getIntent().getParcelableExtra("book");
-            result = new BookDTO("", "", "book name", "author", "translator",
-                    "publisher", "pub_date", "isbn", 100, 3, BookState.FUTURE,
-                    "2019.10.10", "2019.12.01", 5, "", "");
-        } else {
-            getSupportActionBar().setTitle("책 등록");
-            selecBook = getIntent().getParcelableExtra("book");
-            result = new BookDTO(selecBook);
-        }
+
         setContentView(R.layout.activity_book_manual_register);
 
         c = Calendar.getInstance();
@@ -96,6 +90,70 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
         start_date_tv.setText(year + "." + (month + 1) + "." + day);
         end_date_tv.setText(year + "." + (month + 1) + "." + day);
 
+        if (getIntent().getStringExtra("mode") != null && getIntent().getStringExtra("mode").equals("edit")) {
+
+            FirebaseFirestore.getInstance().collection("books")
+                    .whereEqualTo("book_name", getIntent().getStringExtra("bookName"))
+                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        result = doc.toObject(BookDTO.class);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setViews(result);
+                            }
+                        });
+                    }
+                }
+            });
+
+
+            getSupportActionBar().setTitle("책 수정");
+
+        } else {
+            getSupportActionBar().setTitle("책 등록");
+            selecBook = getIntent().getParcelableExtra("book");
+            result = new BookDTO(selecBook);
+            setViews(result);
+        }
+
+
+        cancel_btn = findViewById(R.id.cancel_btn);
+        save_btn = findViewById(R.id.save_btn);
+
+
+        state = getResources().getStringArray(R.array.state);
+
+        state_spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, state));
+        state_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (result != null) {
+                    if (i == 0) {
+                        result.setState(BookState.FUTURE);
+                    } else if (i == 1) {
+                        result.setState(BookState.NOW);
+                    } else if (i == 2) {
+                        result.setState(BookState.PAST);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                if (result != null)
+                    result.setState(BookState.NOW);
+            }
+        });
+
+
+    }
+
+    public void setViews(BookDTO result) {
         ImageViewFromURL.setImageView(this, book_cover_img, result.getImg());
         if (result.getBook_name() != null && !result.getBook_name().trim().equals("")) {
             name_etv.setText(result.getBook_name());
@@ -139,34 +197,6 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
         if (result.getRating() != 0) {
             ratingBar.setRating(result.getRating());
         }
-
-        cancel_btn = findViewById(R.id.cancel_btn);
-        save_btn = findViewById(R.id.save_btn);
-
-
-        state = getResources().getStringArray(R.array.state);
-
-        state_spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, state));
-        state_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0) {
-                    result.setState(BookState.FUTURE);
-                } else if (i == 1) {
-                    result.setState(BookState.NOW);
-                } else if (i == 2) {
-                    result.setState(BookState.PAST);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                result.setState(BookState.NOW);
-            }
-        });
-
-
     }
 
     public void clickCalendar(View v) {
