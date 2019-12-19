@@ -1,18 +1,43 @@
 package com.ssu.readingd;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-public class SettingActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
+    TextView btn1;
+    TextView btn2;
+    TextView btn3;
+    TextView btn4;
+    TextView btn5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        getActionBar().setTitle("환경설정");
+        btn1 = findViewById(R.id.setting_1);
+        btn2 = findViewById(R.id.setting_2);
+        btn3 = findViewById(R.id.setting_3);
+        btn4 = findViewById(R.id.setting_4);
+        btn5 = findViewById(R.id.setting_5);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == btn1) {
+            startActivity(new Intent(this, GuideActivity.class));
+        } else if (v == btn3) {
+
+        } else if (v == btn4) {
+            //로그아웃
+        } else if (v == btn5) {
+            //회원탈퇴
+        }
     }
 
     public void clickTab(View v) {

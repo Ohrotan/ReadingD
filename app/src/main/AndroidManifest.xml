@@ -18,15 +18,16 @@
         android:roundIcon="@mipmap/book"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".GuideActivity"></activity>
+        <activity android:name=".SettingActivity" />
         <activity
             android:name=".MemoEditActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan"></activity>
+            android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity
             android:name=".MemoRegisterActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan"></activity>
+            android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity
             android:name=".CommunitySearchResultActivity"
             android:theme="@style/NoTitle" />
@@ -37,13 +38,10 @@
             android:name=".MemberRegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoTitle"
-            android:windowSoftInputMode="adjustResize|adjustPan"></activity>
+            android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/NoTitle">
-
-
-        </activity>
+            android:theme="@style/NoTitle"></activity>
         <activity
             android:name=".BookShelfActivity"
             android:theme="@style/NoTitle" />
@@ -59,10 +57,10 @@
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity_test_HyeSeon" />
         <activity android:name=".TestSeulwooActivity" />
         <activity android:name=".TestRanActivity" />
@@ -75,14 +73,11 @@
         <activity android:name=".FlashbackActivity" />
         <activity
             android:name=".util.LivePreviewActivity"
-            android:exported="true"></activity>
-
-
+            android:exported="true" />
         <activity
             android:name=".util.StillImageActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity android:name=".util.ChooserActivity" />
-
         <activity android:name=".MainActivity" />
 
         <meta-data
@@ -96,10 +91,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_path"></meta-data>
+                android:resource="@xml/file_path" />
         </provider>
-
-
     </application>
 
 </manifest>
