@@ -4,8 +4,6 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -30,8 +28,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.ssu.readingd.BookMemoListActivity;
-import com.ssu.readingd.MemoEditActivity;
 import com.ssu.readingd.R;
 import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.dto.MemoDTO;
@@ -570,24 +566,26 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class ViewHolder_Community extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView imageView;
+        ImageView memoImage;
         TextView BookNameView;
         TextView BookWriterView;
         TextView BookPageView;
         TextView BookDateView;
         TextView EmailView;
         TextView contentView;
+        int imgIndex;
+        int imgcnt;
 
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
-        private MemoDTO data;
+        private MemoDTO memo;
         private int position;
 
         ViewHolder_Community(View itemView) {
             super(itemView) ;
 
             roundLayout = itemView.findViewById(R.id.round_layout);
-            imageView = itemView.findViewById(R.id.communityPicture);
+            memoImage = itemView.findViewById(R.id.communityPicture);
             BookNameView = itemView.findViewById(R.id.BookTitleCm);
             BookWriterView = itemView.findViewById(R.id.BookWriterCm);
             BookPageView = itemView.findViewById(R.id.BookPageCm) ;
@@ -598,7 +596,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         void onBind(MemoDTO data, int position) {
-            this.data = data;
+            this.memo = data;
             this.position = position;
 
             BookNameView.setText(data.getBook_name()) ;
@@ -606,9 +604,35 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             BookPageView.setText(String.valueOf((data.getR_page())));
             BookDateView.setText(data.getReg_date()) ;
             contentView.setText(data.getMemo_text());
+            EmailView.setText(data.getUser_id());
 
             //changeVisibility(selectedItems.get(position));
             //roundLayout.setOnClickListener(this);
+            imgIndex = 0;
+            imgcnt = 0;
+            if(memo.getImg()!=null)
+                imgcnt = data.getImg().size();
+            setImageSwitcher(context, memoImage, imgIndex, memo);
+
+            memoImage.setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    float x = event.getX();
+                    float width = v.getX() + v.getWidth()/2;
+                    if(x > width){
+                        if(imgIndex < imgcnt -1)
+                            imgIndex++;
+                        setImageSwitcher(context, memoImage, imgIndex, memo);
+                    }
+                    else{
+                        if(imgIndex > 0)
+                            imgIndex--;
+                        setImageSwitcher(context, memoImage, imgIndex, memo);
+                    }
+                    return true;
+                }
+            });
         }
 
         @Override

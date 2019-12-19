@@ -18,9 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssu.readingd.adapter.MemoListAdapter;
@@ -193,19 +195,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                 final String author = writerSearchTxt.getText().toString();
                 final String content = contentSearchTxt.getText().toString();
 
-                Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
-                intent.putExtra("book_name", book_name);
-                intent.putExtra("author", author);
-                intent.putExtra("content", content);
-                intent.putExtra("fromYear", fromYear);
-                intent.putExtra("fromMonth",fromMonth);
-                intent.putExtra("fromDate", fromDate);
-                intent.putExtra("toYear",toYear);
-                intent.putExtra("toMonth",toMonth);
-                intent.putExtra("toDate",toDate);
-                intent.putExtra("Activity", "CommunityActivity");
-
-                startActivity(intent);
+                CommunitySearchResult(book_name, author, content);
 
 
                 alertDialog.dismiss();
@@ -252,4 +242,68 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         alertDialog = builder.create();
         alertDialog.show();
     }
+
+    public void CommunitySearchResult(String book_name, String author, String content) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference memoRef = db.collection("memos");
+        Query query = db.collection("memos").whereEqualTo("share",true);
+
+        arrayList = new ArrayList<>();
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new MemoListAdapter(this,arrayList,2);
+        recyclerView.setAdapter(adapter);
+
+        if(!book_name.equals("") && author.equals("") && content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("share",true);
+        }
+        else if(book_name.equals("") && !author.equals("") && content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("share",true);
+        }
+        else if(book_name.equals("") && author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("content",content).whereEqualTo("share",true);
+        }
+        else if( !book_name.equals("") && !author.equals("") && content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("share",true);
+        }
+        else if( !book_name.equals("") && author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("share",true);
+        }
+
+        else if( book_name.equals("") && !author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("content",content).whereEqualTo("share",true);
+        }
+        else if( !book_name.equals("") && !author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content).
+                    whereEqualTo("share",true);
+        }
+        else {
+            // name, author, content 없을 때
+        }
+
+
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("hs_test", "Listen failed.", e);
+                    return;
+                }
+                int count = value.size();
+                arrayList.clear();
+                for (QueryDocumentSnapshot doc : value) {
+                    if (doc.get("book_name") != null) {
+                        MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                        arrayList.add(memoDTO);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+
+    }
+
+
 }

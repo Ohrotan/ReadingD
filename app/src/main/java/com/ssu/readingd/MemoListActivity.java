@@ -3,7 +3,9 @@ package com.ssu.readingd;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -84,10 +86,12 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         memoBtn.setOnClickListener(this);
 
         init();
-        //List<String> imgs = new ArrayList<>();
-
-        // String 랜덤변수 생성 - 대문자 20글자
-
+        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
+        String login_id=sharedPref.getString("id", "none");
+        if(login_id.equals("none")){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
     }
 
