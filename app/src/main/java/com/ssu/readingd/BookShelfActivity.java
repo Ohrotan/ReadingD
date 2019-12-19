@@ -4,7 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +64,8 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
     final Calendar cal = Calendar.getInstance();
     Dialog alertDialog;
 
+    String login_id;
+
     ArrayList<BookSimpleDTO> arrayList;
 
     @Override
@@ -83,6 +87,14 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
         arrayList = new ArrayList<>();
         bookSearchBtn.setOnClickListener(this);
         imageButton.setOnClickListener(this);
+
+        init();
+        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
+        login_id=sharedPref.getString("id", "none");
+        if(login_id.equals("none")){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         addBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +158,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
                     //전체
-                    db.collection("books")
+                    db.collection("books").whereEqualTo("user_id", login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -183,10 +195,10 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                 }
                 else{
                     //읽은 책
-                    query = db.collection("books").whereEqualTo("state", "DONE");
+                    query = db.collection("books").whereEqualTo("state", "PAST");
                 }
 
-                query
+                query.whereEqualTo("user_id", login_id)
                         .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value,
@@ -288,7 +300,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if(position == 0){
                         //등록순 정렬
-                        db.collection("books")
+                        db.collection("books").whereEqualTo("user_id", login_id)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot value,
@@ -313,7 +325,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                     }
                     else if(position == 1){
                         //제목순
-                        db.collection("books").orderBy("book_name")
+                        db.collection("books").orderBy("book_name").whereEqualTo("user_id", login_id)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot value,

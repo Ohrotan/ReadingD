@@ -2,6 +2,7 @@ package com.ssu.readingd;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,12 +18,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -50,6 +54,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
     LinearLayout searchBox;
     Spinner memoEditSpinner;
     String login_id;
+    Context context;
 
     int fromYear;
     int fromMonth;
@@ -81,6 +86,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         addMemoTitleBtn = (ImageButton)findViewById(R.id.addBookBtn);
         searchBox = (LinearLayout)findViewById(R.id.searchBox);
         memoEditSpinner = findViewById(R.id.memoEditSpinner);
+        context = this;
 
         memoSearchBtn.setOnClickListener(this);
         searchBox.setOnClickListener(this);
@@ -98,8 +104,30 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
     public void AddMemo(View v){
 
-        Intent intent = new Intent(this, MemoRegisterActivity.class);
-        startActivity(intent);
+
+        db.collection("memos")
+                .orderBy("reg_date", Query.Direction.ASCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                Intent intent = new Intent(context, MemoRegisterActivity.class);
+                                MemoDTO memo = document.toObject(MemoDTO.class);
+                                intent.putExtra("memo", memo);
+                                startActivity(intent);
+
+                                break;
+                            }
+                        } else {
+                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
 
     }
 
