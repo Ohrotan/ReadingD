@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -55,6 +56,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private ImageView book_image;
         private ConstraintLayout book_layout;
+        private TextView book_name_tv;
         private BookSimpleDTO data;
         private int position;
         private String id;
@@ -65,6 +67,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // 뷰 객체에 대한 참조. (hold strong reference)
             book_image = itemView.findViewById(R.id.book_img);
             book_layout = itemView.findViewById(R.id.book_layout);
+            book_name_tv = itemView.findViewById(R.id.book_name);
 
         }
 
@@ -75,15 +78,8 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             RelativeLayout deleteLayout = (RelativeLayout)layoutInflater.inflate(R.layout.layout_book_img_delete, null);
-            book_layout.addView(deleteLayout);
-            deleteLayout.setVisibility(View.INVISIBLE);
 
-            if(delete){
-                deleteLayout.setVisibility(View.VISIBLE);
-                //book_layout.addView(deleteLayout);
-            }
-
-
+            book_name_tv.setText(data.getBook_name());
             ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
             //new DBUtil().setImageViewFromDB(context, book_image, data.getImg());
             //book_image.setImageResource(R.drawable.book_1);
