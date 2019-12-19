@@ -71,16 +71,15 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private long btnPressTime = 0;
 
         ViewHolder_Grid(View itemView) {
-            super(itemView) ;
+            super(itemView);
 
             // 뷰 객체에 대한 참조. (hold strong reference)
             book_image = itemView.findViewById(R.id.book_img);
-            book_layout = itemView.findViewById(R.id.book_layout);
             book_name_tv = itemView.findViewById(R.id.book_name);
 
         }
 
-        void onBind(BookSimpleDTO data, int position) {
+        void onBind(final BookSimpleDTO data, int position) {
             this.data = data;
             this.position = position;
             this.id = data.getId();
@@ -90,6 +89,21 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             book_name_tv.setText(data.getBook_name());
             ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
+
+
+            if (delete) {
+                deleteLayout.setVisibility(View.VISIBLE);
+                //book_layout.addView(deleteLayout);
+            }
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
+                }
+            }).start();
+
+
             //new DBUtil().setImageViewFromDB(context, book_image, data.getImg());
             //book_image.setImageResource(R.drawable.book_1);
             book_image.setOnClickListener(this);

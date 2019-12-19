@@ -19,7 +19,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        getActionBar().setTitle("환경설정");
+        getSupportActionBar().setTitle("환경설정");
         btn1 = findViewById(R.id.setting_1);
         btn2 = findViewById(R.id.setting_2);
         btn3 = findViewById(R.id.setting_3);

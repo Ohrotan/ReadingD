@@ -92,8 +92,6 @@
                 android:entries="@array/memo_edit"/>
 
 
-
-
         </RelativeLayout>
 
         <ImageView

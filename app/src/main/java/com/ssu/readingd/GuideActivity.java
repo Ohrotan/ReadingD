@@ -10,6 +10,6 @@ public class GuideActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
-        getActionBar().setTitle("사용 설명");
+        getSupportActionBar().setTitle("사용 설명");
     }
 }

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+<<<<<<< HEAD
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.CollectionReference;
+=======
+>>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -35,7 +38,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CommunityActivity extends AppCompatActivity implements View.OnClickListener{
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class CommunityActivity extends AppCompatActivity implements View.OnClickListener {
 
     RecyclerView recyclerView;
     MemoListAdapter adapter;
@@ -57,7 +66,6 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     String to;
 
     UserDTO user;
-
 
 
     @Override
@@ -101,57 +109,17 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
 //
 //    }
 
-    public void clickTab(View v) {
-        ImageView[] img = new ImageView[5];
-        img[0] = findViewById(R.id.tab_flash_back);
-        img[1] = findViewById(R.id.tab_memo);
-        img[2] = findViewById(R.id.tab_book);
-        img[3] = findViewById(R.id.tab_share);
-        img[4] = findViewById(R.id.tab_setting);
 
-        if (v == img[0]) {
-            Intent intent = new Intent(this, FlashbackActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (v == img[1]) {
-            Intent intent = new Intent(this, MemoListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (v == img[2]) {
-            Intent intent = new Intent(this, BookShelfActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (v == img[3]) {
-            Intent intent = new Intent(this, CommunityActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (v == img[4]) {
-            Intent intent = new Intent(this, SettingActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        }
-
-    }
-
-    public void init(){
+    public void init() {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         arrayList = new ArrayList<>();
-        adapter = new MemoListAdapter(this,arrayList,2);
+        adapter = new MemoListAdapter(this, arrayList, 2);
         recyclerView.setAdapter(adapter);
 
         db.collection("memos").whereEqualTo("share", true)
+                .orderBy("reg_date", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
@@ -165,6 +133,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                         for (QueryDocumentSnapshot doc : value) {
                             if (doc.get("book_name") != null) {
                                 MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                memoDTO.setMemo_id(doc.getId());
                                 arrayList.add(memoDTO);
                             }
                         }
@@ -172,8 +141,6 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                         adapter.notifyDataSetChanged();
                     }
                 });
-
-
 
 
     }
@@ -197,10 +164,9 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         builder.setView(dialogView);
 
 
-        cancelBtn.setOnClickListener(new View.OnClickListener(){
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 alertDialog.dismiss();
             }
         });
@@ -213,7 +179,23 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                 final String author = writerSearchTxt.getText().toString();
                 final String content = contentSearchTxt.getText().toString();
 
+<<<<<<< HEAD
                 CommunitySearchResult(book_name, author, content, from, to);
+=======
+                Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
+                intent.putExtra("book_name", book_name);
+                intent.putExtra("author", author);
+                intent.putExtra("content", content);
+                intent.putExtra("fromYear", fromYear);
+                intent.putExtra("fromMonth", fromMonth);
+                intent.putExtra("fromDate", fromDate);
+                intent.putExtra("toYear", toYear);
+                intent.putExtra("toMonth", toMonth);
+                intent.putExtra("toDate", toDate);
+                intent.putExtra("Activity", "CommunityActivity");
+
+                startActivity(intent);
+>>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
 
 
                 alertDialog.dismiss();
@@ -228,19 +210,23 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
 
-                        String msg = String.format("%d.%d.%d", year, month+1, date);
+                        String msg = String.format("%d.%d.%d", year, month + 1, date);
 
-                        if(view==startDate){
+                        if (view == startDate) {
                             startDate.setText(msg);
                             fromYear = year;
-                            fromMonth = month+1;
+                            fromMonth = month + 1;
                             fromDate = date;
+<<<<<<< HEAD
                             from = fromYear + "-" + fromMonth + "-" + fromDate+" "+"00:00";
                         }
                         else if(view == endDate){
+=======
+                        } else if (view == endDate) {
+>>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
                             endDate.setText(msg);
                             toYear = year;
-                            toMonth = month+1;
+                            toMonth = month + 1;
                             toDate = date;
                             to = toYear+"-"+toMonth+"-"+toDate+" "+"23:59";
                         }
@@ -263,6 +249,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         alertDialog.show();
     }
 
+<<<<<<< HEAD
     public void CommunitySearchResult(String book_name, String author, String content, String from, String to) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -325,4 +312,48 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     }
 
 
+=======
+
+    public void clickTab(View v) {
+        ImageView[] img = new ImageView[5];
+        img[0] = findViewById(R.id.tab_flash_back);
+        img[1] = findViewById(R.id.tab_memo);
+        img[2] = findViewById(R.id.tab_book);
+        img[3] = findViewById(R.id.tab_share);
+        img[4] = findViewById(R.id.tab_setting);
+
+        if (v == img[0]) {
+            Intent intent = new Intent(this, FlashbackActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[1]) {
+            Intent intent = new Intent(this, MemoListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[2]) {
+            Intent intent = new Intent(this, BookShelfActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[3]) {
+            Intent intent = new Intent(this, CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (v == img[4]) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }
+
+    }
+>>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
 }
