@@ -9,10 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.ssu.readingd.BookMemoListActivity;
 import com.ssu.readingd.R;
@@ -20,6 +16,10 @@ import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -60,7 +60,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private String id;
 
         ViewHolder_Grid(View itemView) {
-            super(itemView) ;
+            super(itemView);
 
             // 뷰 객체에 대한 참조. (hold strong reference)
             book_image = itemView.findViewById(R.id.book_img);
@@ -68,23 +68,28 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         }
 
-        void onBind(BookSimpleDTO data, int position) {
+        void onBind(final BookSimpleDTO data, int position) {
             this.data = data;
             this.position = position;
             this.id = data.getId();
 
-            LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            RelativeLayout deleteLayout = (RelativeLayout)layoutInflater.inflate(R.layout.layout_book_img_delete, null);
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            RelativeLayout deleteLayout = (RelativeLayout) layoutInflater.inflate(R.layout.layout_book_img_delete, null);
             book_layout.addView(deleteLayout);
             deleteLayout.setVisibility(View.INVISIBLE);
 
-            if(delete){
+            if (delete) {
                 deleteLayout.setVisibility(View.VISIBLE);
                 //book_layout.addView(deleteLayout);
             }
 
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
+                }
+            }).start();
 
-            ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
             //new DBUtil().setImageViewFromDB(context, book_image, data.getImg());
             //book_image.setImageResource(R.drawable.book_1);
             book_image.setOnClickListener(this);
