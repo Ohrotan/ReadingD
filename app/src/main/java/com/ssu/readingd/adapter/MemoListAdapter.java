@@ -45,6 +45,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
 
     private int prePosition = -1;
+    private boolean isFirstSelected = true;
     Dialog dialog;
 
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
@@ -223,18 +224,20 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             roundLayout.setOnClickListener(this);
 
+            memoEditSpn.setSelection(2);
             memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (position == 0) {
-                        /*
-                        Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
-                        intent.putExtra("memo", mData.get(position));
-                        context.startActivity(intent);
 
-                         */
+                    if(position ==0){
 
-                    } else {
+
+                            Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
+                            intent.putExtra("memo", mData.get(position));
+                            context.startActivity(intent);
+
+                    }
+                    else if(position == 1){
                         //삭제일 때
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
 
@@ -422,17 +425,19 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             roundLayout.setOnClickListener(this);
 
+            memoEditSpinner.setSelection(2);
             memoEditSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (position == 0) {
-                        /*
-                        Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
-                        intent.putExtra("memo", mData.get(position));
-                        context.startActivity(intent);
 
-                         */
-                    } else {
+                    if(position ==0){
+
+                            Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
+                            intent.putExtra("memo", mData.get(position));
+                            context.startActivity(intent);
+                    }
+                    else if(position ==1){
+
                         //삭제일 때
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
 
@@ -445,7 +450,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         memoDeleteCancelBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(v.getContext(), "수정 버튼 클릭", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), "삭제 버튼 클릭", Toast.LENGTH_SHORT).show();
                                 Log.d("hs_test", "메모 ... 스피너 삭제 --> 취소 버튼 클릭");
                                 dialog.dismiss();
                             }
