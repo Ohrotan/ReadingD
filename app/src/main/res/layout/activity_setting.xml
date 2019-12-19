@@ -1,9 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingActivity">
+    <LinearLayout
+        android:id="@+id/bottom_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/white"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/tab_flash_back"
+        app:srcCompat="@drawable/flash_back_b"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="clickTab"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:tag="cur" />
+
+    <ImageView
+        android:id="@+id/tab_memo"
+        app:srcCompat="@drawable/memo_b"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="clickTab"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp" />
+
+
+    <ImageView
+        android:id="@+id/tab_book"
+        app:srcCompat="@drawable/book_b"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="clickTab"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp" />
+
+
+    <ImageView
+        android:id="@+id/tab_share"
+        app:srcCompat="@drawable/share_b"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="clickTab"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp" />
+
+
+    <ImageView
+        android:id="@+id/tab_setting"
+        app:srcCompat="@drawable/setting_c"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="clickTab"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp" />
+    </LinearLayout>
+</RelativeLayout>
