@@ -1,7 +1,6 @@
 package com.ssu.readingd;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,13 +13,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.ssu.readingd.custom_enum.BookState;
 import com.ssu.readingd.dto.BookDTO;
 import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.util.DBUtil;
@@ -93,19 +89,21 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
         if (getIntent().getStringExtra("mode") != null && getIntent().getStringExtra("mode").equals("edit")) {
 
             FirebaseFirestore.getInstance().collection("books")
-                    .whereEqualTo("book_name", getIntent().getStringExtra("bookName"))
-                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    .document(getIntent().getStringExtra("bookId"))
+                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        result = doc.toObject(BookDTO.class);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setViews(result);
-                            }
-                        });
-                    }
+                public void onSuccess(DocumentSnapshot doc) {
+                    Log.v("doc", doc.getId() + "/" + doc.getData().get("book_name"));
+                    result = doc.toObject(BookDTO.class);
+                    result.setId(doc.getId());
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setViews(result);
+                        }
+                    });
+
                 }
             });
 
@@ -133,11 +131,11 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (result != null) {
                     if (i == 0) {
-                        result.setState(BookState.FUTURE);
+                        result.setState("FUTURE");
                     } else if (i == 1) {
-                        result.setState(BookState.NOW);
+                        result.setState("NOW");
                     } else if (i == 2) {
-                        result.setState(BookState.PAST);
+                        result.setState("PAST");
                     }
                 }
 
@@ -146,15 +144,21 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 if (result != null)
-                    result.setState(BookState.NOW);
+                    result.setState("NOW");
             }
         });
 
 
     }
 
-    public void setViews(BookDTO result) {
-        ImageViewFromURL.setImageView(this, book_cover_img, result.getImg());
+    public void setViews(final BookDTO result) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ImageViewFromURL.setImageView(BookManualRegisterActivity.this, book_cover_img, result.getImg());
+            }
+        }).start();
+
         if (result.getBook_name() != null && !result.getBook_name().trim().equals("")) {
             name_etv.setText(result.getBook_name());
             name_etv.setEnabled(false);
@@ -185,8 +189,13 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
             read_p_etv.setText(result.getR_page() + "");
         }
         if (result.getState() != null) {
-            state_spinner.setSelection(result.getState().ordinal());
-            Log.v("enum", result.getState().ordinal() + "/" + result.getState().name());
+            if (result.getState().startsWith("P"))
+                state_spinner.setSelection(0);
+            if (result.getState().startsWith("N"))
+                state_spinner.setSelection(1);
+            if (result.getState().startsWith("F"))
+                state_spinner.setSelection(2);
+            // Log.v("enum", result.getState().ordinal() + "/" + result.getState().name());
         }
         if (result.getStart_date() != null && !result.getStart_date().trim().equals("")) {
             start_date_tv.setText(result.getStart_date() + "");
@@ -228,16 +237,18 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
             result.setEnd_date(end_date_tv.getText().toString());
             result.setRating(ratingBar.getRating());
 
-            Toast.makeText(this, result.toString() + " \n저장", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(this, result.toString() + " \n저장", Toast.LENGTH_SHORT).show();
 
 
             if (getIntent().getStringExtra("mode") != null
                     && getIntent().getStringExtra("mode").equals("edit")) {
                 new DBUtil().updateBook(result.getId(), result);
+                finish();
             } else {
                 result.setReg_date(year + "." + (month + 1) + "." + day);
                 new DBUtil().addBook("admin", result);
-                startActivity(new Intent(this, TestRanActivity.class));
+                //startActivity(new Intent(this, TestRanActivity.class));
+                finish();
             }
 
         }

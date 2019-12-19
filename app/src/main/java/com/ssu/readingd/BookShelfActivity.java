@@ -18,12 +18,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -37,6 +31,12 @@ import com.ssu.readingd.util.StillImageActivity;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class BookShelfActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -69,14 +69,14 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
     ArrayList<BookSimpleDTO> arrayList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_shelf);
 
-        sortSpinner = (Spinner)findViewById(R.id.sortBookSpinner);
-        bookKindSpinner = (Spinner)findViewById(R.id.bookKindSpinner);
-        imageButton = (ImageButton)findViewById(R.id.shelfSearchBtn);
-        bookSearchBtn = (Button)findViewById(R.id.bookSearchBtn);
+        sortSpinner = (Spinner) findViewById(R.id.sortBookSpinner);
+        bookKindSpinner = (Spinner) findViewById(R.id.bookKindSpinner);
+        imageButton = (ImageButton) findViewById(R.id.shelfSearchBtn);
+        bookSearchBtn = (Button) findViewById(R.id.bookSearchBtn);
         //gridView = findViewById(R.id.gridView);
         recyclerView = findViewById(R.id.recyclerView);
         deleteBtn = findViewById(R.id.deleteBtn);
@@ -143,7 +143,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    public void init(){
+    public void init() {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
@@ -156,7 +156,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
         bookKindSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position==0){
+                if (position == 0) {
                     //전체
                     db.collection("books").whereEqualTo("user_id", login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -173,6 +173,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                         if (doc.get("book_name") != null) {
                                             BookSimpleDTO book = doc.toObject(BookSimpleDTO.class);
                                             Log.d("hs_test", book.toString());
+                                            book.setId(doc.getId());
                                             arrayList.add(book);
                                         }
                                     }
@@ -183,17 +184,14 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                     return;
 
 
-                }
-                else if(position==1){
+                } else if (position == 1) {
                     //읽고있는 책
                     query = db.collection("books").whereEqualTo("state", "NOW");
 
-                }
-                else if(position==2){
+                } else if (position == 2) {
                     //읽고싶은책
                     query = db.collection("books").whereEqualTo("state", "FUTURE");
-                }
-                else{
+                } else {
                     //읽은 책
                     query = db.collection("books").whereEqualTo("state", "PAST");
                 }
@@ -213,6 +211,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                     if (doc.get("book_name") != null) {
                                         BookSimpleDTO book = doc.toObject(BookSimpleDTO.class);
                                         Log.d("hs_test", book.toString());
+                                        book.setId(doc.getId());
                                         arrayList.add(book);
                                     }
                                 }
@@ -229,13 +228,6 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
-
-
-
-
-
-
-
 
 
     }
@@ -287,7 +279,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
 
-        if(v==deleteBtn){
+        if (v == deleteBtn) {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
             recyclerView.setLayoutManager(gridLayoutManager);
@@ -298,7 +290,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
             sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if(position == 0){
+                    if (position == 0) {
                         //등록순 정렬
                         db.collection("books").whereEqualTo("user_id", login_id)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -315,6 +307,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                             if (doc.get("book_name") != null) {
                                                 BookSimpleDTO book = doc.toObject(BookSimpleDTO.class);
                                                 Log.d("hs_test", book.toString());
+                                                book.setId(doc.getId());
                                                 arrayList.add(book);
                                             }
                                         }
@@ -322,8 +315,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                         adapter.notifyDataSetChanged();
                                     }
                                 });
-                    }
-                    else if(position == 1){
+                    } else if (position == 1) {
                         //제목순
                         db.collection("books").orderBy("book_name").whereEqualTo("user_id", login_id)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -340,6 +332,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                             if (doc.get("book_name") != null) {
                                                 BookSimpleDTO book = doc.toObject(BookSimpleDTO.class);
                                                 Log.d("hs_test", book.toString());
+                                                book.setId(doc.getId());
                                                 arrayList.add(book);
                                             }
                                         }
@@ -357,9 +350,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
                 }
             });
-        }
-
-        else if(v==bookSearchBtn || v==imageButton){
+        } else if (v == bookSearchBtn || v == imageButton) {
             View dialogView = getLayoutInflater().inflate(R.layout.memo_search_layout, null);
 
             Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
@@ -374,10 +365,9 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
             builder.setView(dialogView);
 
 
-            cancelBtn.setOnClickListener(new View.OnClickListener(){
+            cancelBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view)
-                {
+                public void onClick(View view) {
                     alertDialog.dismiss();
                 }
             });
@@ -395,11 +385,11 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                     intent.putExtra("author", author);
                     intent.putExtra("content", content);
                     intent.putExtra("fromYear", fromYear);
-                    intent.putExtra("fromMonth",fromMonth);
+                    intent.putExtra("fromMonth", fromMonth);
                     intent.putExtra("fromDate", fromDate);
-                    intent.putExtra("toYear",toYear);
-                    intent.putExtra("toMonth",toMonth);
-                    intent.putExtra("toDate",toDate);
+                    intent.putExtra("toYear", toYear);
+                    intent.putExtra("toMonth", toMonth);
+                    intent.putExtra("toDate", toDate);
                     intent.putExtra("Activity", "BookShelfActivity");
 
                     startActivity(intent);
@@ -417,18 +407,17 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int date) {
 
-                            String msg = String.format("%d.%d.%d", year, month+1, date);
+                            String msg = String.format("%d.%d.%d", year, month + 1, date);
 
-                            if(view==startDate){
+                            if (view == startDate) {
                                 startDate.setText(msg);
                                 fromYear = year;
-                                fromMonth = month+1;
+                                fromMonth = month + 1;
                                 fromDate = date;
-                            }
-                            else if(view == endDate){
+                            } else if (view == endDate) {
                                 endDate.setText(msg);
                                 toYear = year;
-                                toMonth = month+1;
+                                toMonth = month + 1;
                                 toDate = date;
                             }
 

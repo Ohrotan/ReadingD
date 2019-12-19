@@ -103,6 +103,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                     lastView.setBackgroundColor(Color.WHITE);
                 }
                 lastView = view;
+                adapter.setSelec(position);
                 view.setBackgroundColor(getColor(R.color.colorGray));
                 selecBook = (BookSimpleDTO) parent.getAdapter().getItem(position);
             }

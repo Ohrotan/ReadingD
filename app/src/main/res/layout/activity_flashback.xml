@@ -63,14 +63,13 @@
                         android:textSize="16dp" />
                 </LinearLayout>
 
-                <ImageSwitcher
-                    android:layout_alignParentTop="true"
+                <ImageView
                     android:id="@+id/fimage_switcher"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
                     android:layout_margin="20dp"
-                    android:background="#ffffff">
-                </ImageSwitcher>
+                    android:background="#ffffff"></ImageView>
 
                 <TextView
                     android:id="@+id/fmemo_tv"
@@ -79,7 +78,7 @@
                     android:lineHeight="25dp"
                     android:paddingLeft="25dp"
                     android:paddingRight="25dp"
-                    android:paddingBottom="25dp"/>
+                    android:paddingBottom="25dp" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -96,60 +95,59 @@
         android:gravity="bottom|center"
         android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/tab_flash_back"
-                app:srcCompat="@drawable/flash_back_c"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
-                android:tag="cur" />
+        <ImageView
+            android:id="@+id/tab_flash_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:tag="cur"
+            app:srcCompat="@drawable/flash_back_c" />
 
 
-
-            <ImageView
-                android:id="@+id/tab_memo"
-                app:srcCompat="@drawable/memo_b"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="clickTab"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp" />
-
-
-            <ImageView
-                android:id="@+id/tab_book"
-                app:srcCompat="@drawable/book_b"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="clickTab"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp" />
+        <ImageView
+            android:id="@+id/tab_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            app:srcCompat="@drawable/memo_b" />
 
 
-            <ImageView
-                android:id="@+id/tab_share"
-                app:srcCompat="@drawable/share_b"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="clickTab"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp" />
+        <ImageView
+            android:id="@+id/tab_book"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            app:srcCompat="@drawable/book_b" />
 
 
-            <ImageView
-                android:id="@+id/tab_setting"
-                app:srcCompat="@drawable/setting_b"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="clickTab"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp" />
+        <ImageView
+            android:id="@+id/tab_share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            app:srcCompat="@drawable/share_b" />
+
+
+        <ImageView
+            android:id="@+id/tab_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            app:srcCompat="@drawable/setting_b" />
 
     </LinearLayout>
 </FrameLayout>
