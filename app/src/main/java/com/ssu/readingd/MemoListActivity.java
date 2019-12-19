@@ -163,8 +163,8 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                     for (QueryDocumentSnapshot doc : value) {
                                         if (doc.get("book_name") != null) {
                                             MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            memoDTO.setMemo_id(doc.getId());
                                             arrayList.add(memoDTO);
-
                                         }
                                     }
                                     //어답터 갱신
@@ -189,6 +189,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                         if (doc.get("book_name") != null) {
                                             Log.d("hs_test", "읽기 성공", e);
                                             MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            memoDTO.setMemo_id(doc.getId());
                                             arrayList.add(0, memoDTO);
                                         }
                                         Log.d("hs_test", "읽기 성공222", e);
@@ -216,6 +217,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                     for (QueryDocumentSnapshot doc : value) {
                                         if (doc.get("book_name") != null) {
                                             MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            memoDTO.setMemo_id(doc.getId());
                                             arrayList.add(memoDTO);
                                         }
                                                                             }
