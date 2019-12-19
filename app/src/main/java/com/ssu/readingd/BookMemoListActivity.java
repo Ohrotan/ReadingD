@@ -154,7 +154,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0){
                     //최신순 정렬
-                    db.collection("memos").whereArrayContains("book_name", strBookName)
+                    db.collection("memos").whereEqualTo("book_name", strBookName)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -179,7 +179,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                 }
                 else{
                     //오래된순
-                    db.collection("memos").whereArrayContains("book_name", strBookName).orderBy("reg_date", Query.Direction.DESCENDING)
+                    db.collection("memos").whereEqualTo("book_name", strBookName).orderBy("reg_date", Query.Direction.DESCENDING)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                                 @Override
