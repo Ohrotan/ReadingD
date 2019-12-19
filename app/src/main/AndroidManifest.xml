@@ -41,10 +41,7 @@
         </activity>
         <activity android:name=".LoginActivity"
             android:theme="@style/NoTitle" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
 
         </activity>
         <activity android:name=".BookShelfActivity"
@@ -56,6 +53,10 @@
             android:theme="@style/NoTitle"/>
         <activity android:name=".MemoListActivity"
             android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".activity_test_HyeSeon" />

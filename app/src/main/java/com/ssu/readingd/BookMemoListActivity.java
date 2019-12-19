@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ssu.readingd.adapter.MemoListAdapter;
@@ -85,7 +86,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
         // memoDTO 인텐트 받으면 여기에 넣기
         List<String> imgs = new ArrayList<>();
         Intent intent = getIntent();
-        BookSimpleDTO book = intent.getParcelableExtra("book");
+        book = intent.getParcelableExtra("book");
         strBookName = book.getBook_name();
 
         //memoDTO = new MemoDTO("책이름", "b", imgs, "내용", 231, "2019.12.13",false,"admin",5555);
@@ -153,7 +154,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0){
                     //최신순 정렬
-                    db.collection("memos").whereEqualTo("book_name", strBookName)
+                    db.collection("memos").whereArrayContains("book_name", strBookName)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -178,7 +179,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                 }
                 else{
                     //오래된순
-                    db.collection("memos").whereEqualTo("book_name", strBookName)
+                    db.collection("memos").whereArrayContains("book_name", strBookName).orderBy("reg_date", Query.Direction.DESCENDING)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                                 @Override
@@ -226,8 +227,13 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if(v==addMemoBtn){
             Intent intent = new Intent(this, MemoRegisterActivity.class);
+
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+            intent.putExtra("book",book);
+
             startActivity(intent);
+
         }
         else if(v == bookEditBtn){
             Intent intent = new Intent(this, BookManualRegisterActivity.class);

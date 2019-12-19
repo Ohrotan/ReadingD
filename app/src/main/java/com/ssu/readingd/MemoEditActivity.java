@@ -75,7 +75,8 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     SeekBar Seekbar;
     TextView TvCurpage;
 
-    private ImageSwitcher imageSwitcher;
+
+    ImageSwitcher imageSwitcher;
     ImageButton BtnPrev, BtnNext, BtnDelete;
     EditText MemoEdit;
     String MemoText;
@@ -97,8 +98,8 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     StorageReference pathRefernece;
     Uri filePath;
-    File image;
     String path;
+    int flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,6 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         BtnAddphoto = findViewById(R.id.addphoto_bt);
         Seekbar = findViewById(R.id.page_seekbar);
         TvCurpage = findViewById(R.id.curpage_tv);
-        final ImageSwitcher imageSwitcher = findViewById(R.id.image_switcher);
         BtnPrev = findViewById(R.id.prev_btn);
         BtnNext = findViewById(R.id.next_btn);
         BtnDelete = findViewById(R.id.imagedelete_btn);
@@ -118,20 +118,21 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         ShareSwitch = findViewById(R.id.share_switch);
         BtnCancel = findViewById(R.id.cancel_btn);
         BtnSave = findViewById(R.id.save_btn);
+        imageSwitcher = findViewById(R.id.image_switcher);
 
    //     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
    //     user_id = pref.getString("id", null);
-   //     Intent intent = getIntent();
-   //    memo_id = intent.getExtras().getString("id");
+       Intent intent = getIntent();
+       memoDTO = (MemoDTO)intent.getExtras().getSerializable("memo");
+       user_id = "aa";
 
-
-
+/*
         DocumentReference docRef = db.collection("memos").document(memo_id);
         Task<DocumentSnapshot> task = docRef.get();
         while(!task.isSuccessful()){;}
         DocumentSnapshot document = task.getResult();
         memoDTO = document.toObject(MemoDTO.class);
-
+*/
        ReadMemo(memoDTO);
 
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory(){
@@ -192,11 +193,9 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
 
         BtnAddphoto.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                /*
-                Imgids2.add("memoimgadd");
-                imgcnt++;
-                imgIndex = imgcnt-1;*/
+                flag = 0;
                 makeDialog();
+                //while(flag != 10){;}
                 setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
             }
         });
@@ -239,22 +238,6 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         });
 
     }
-
-    public void clickTab(View v) {
-        ImageView[] img = new ImageView[5];
-        img[0] = findViewById(R.id.tab_flash_back);
-        img[1] = findViewById(R.id.tab_memo);
-        img[2] = findViewById(R.id.tab_book);
-        img[3] = findViewById(R.id.tab_share);
-        img[4] = findViewById(R.id.tab_setting);
-
-        if (v == img[0]) {
-            startActivity(new Intent(this, FlashbackActivity.class));
-            overridePendingTransition(0, 0);
-        }
-
-    }
-
     @Override
     public void onClick(View v) {
 
@@ -263,11 +246,12 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         }
         else if(v==BtnSave) {
             Calendar cal = Calendar.getInstance();
-            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             String reg_date = dateformat.format(cal.getTime());
             MemoText = MemoEdit.getText().toString();
             memoDTO = new MemoDTO(book_name, book_author, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
             new DBUtil().updateMemo(memo_id, memoDTO);
+            onBackPressed();
         }
     }
 
@@ -393,21 +377,11 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
             Imgids2.add(filename);
             imgcnt++;
             imgIndex = imgcnt -1;
+            setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
         } else
             Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
     }
 
-    private File createImageFile() throws IOException{
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMHHmmss");
-        String reg_date = dateformat.format(cal.getTime());
-        String filename = reg_date + ".jpg";
-        File storageDir = new File(Environment.getExternalStorageDirectory(), filename);
-
-        path = storageDir.getAbsolutePath();
-        //image = File.createTempFile(filename, ".jpg",storageDir);
-        return storageDir;
-    }
 
 }
 

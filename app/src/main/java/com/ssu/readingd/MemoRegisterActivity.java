@@ -79,7 +79,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
     SeekBar Seekbar;
     TextView TvCurpage;
 
-    private ImageSwitcher imageSwitcher;
+    ImageSwitcher imageSwitcher;
     ImageButton BtnPrev, BtnNext, BtnDelete;
     EditText MemoEdit;
     String MemoText;
@@ -105,8 +105,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
     DocumentReference docRef = db.collection("memos").document("90909");
 
     Uri filePath;
-    File image;
-    String path;
+    int flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +116,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         BtnAddphoto = findViewById(R.id.addphoto_bt);
         Seekbar = findViewById(R.id.page_seekbar);
         TvCurpage = findViewById(R.id.curpage_tv);
-        final ImageSwitcher imageSwitcher = findViewById(R.id.image_switcher);
+
         BtnPrev = findViewById(R.id.prev_btn);
         BtnNext = findViewById(R.id.next_btn);
         BtnDelete = findViewById(R.id.imagedelete_btn);
@@ -126,19 +125,22 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         ShareSwitch = findViewById(R.id.share_switch);
         BtnCancel = findViewById(R.id.cancel_btn);
         BtnSave = findViewById(R.id.save_btn);
+        imageSwitcher = findViewById(R.id.image_switcher);
 
         //     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         //     user_id = pref.getString("id", null);
-        //     Intent intent = getIntent();
-        //BookSimpleDTO bookSimpleDTO = getIntent().getExtras().getParcelable();
-       // book_name = bookSimpleDTO.getBook_name();
-       // w_page = bookSimpleDTO.getW_page();
-       // book_author = bookSimpleDTO.getBook_author();
-        book_name = "hiehie";
+             Intent intent = getIntent();
+        BookSimpleDTO bookSimpleDTO = intent.getParcelableExtra("book");
+        book_name = bookSimpleDTO.getBook_name();
+        TvBookname.setText(book_name);
+        w_page = bookSimpleDTO.getW_page();
+        book_author = bookSimpleDTO.getAuthor();
+        user_id = "aaee";
+       /* book_name = "hiehie";
         book_author = "aa";
         w_page = 233;
         user_id = "aaaabb2";
-        TvBookname.setText(book_name);
+        TvBookname.setText(book_name);*/
 
 
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
@@ -151,6 +153,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
+        setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
 
         BtnPrev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -187,13 +190,9 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
 
         BtnAddphoto.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                /*
-                Imgids2.add("memoimgadd");
-                imgcnt++;
-                imgIndex = imgcnt - 1;
-
-                setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);*/
+                flag = 0;
                 makeDialog();
+                //while(flag != 10){;}
                 setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
             }
         });
@@ -234,33 +233,19 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    public void clickTab(View v) {
-        ImageView[] img = new ImageView[5];
-        img[0] = findViewById(R.id.tab_flash_back);
-        img[1] = findViewById(R.id.tab_memo);
-        img[2] = findViewById(R.id.tab_book);
-        img[3] = findViewById(R.id.tab_share);
-        img[4] = findViewById(R.id.tab_setting);
-
-        if (v == img[0]) {
-            startActivity(new Intent(this, FlashbackActivity.class));
-            overridePendingTransition(0, 0);
-        }
-
-    }
-
     @Override
     public void onClick(View v) {
         if (v == BtnCancel) {
             onBackPressed();
         } else if (v == BtnSave) {
             Calendar cal = Calendar.getInstance();
-            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             String reg_date = dateformat.format(cal.getTime());
             MemoText = MemoEdit.getText().toString();
 
             memoDTO = new MemoDTO(book_name, book_author, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
             new DBUtil().addMemo(memoDTO);
+            onBackPressed();
         }
     }
 
@@ -303,6 +288,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
 
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        flag = 10;
                     }
                 });
         AlertDialog alert = alt_bld.create();
@@ -317,6 +303,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             photoFile = File.createTempFile("IMG",".jpg", dir);
         } catch (IOException e) {
             e.printStackTrace();
+            flag = 10;
         }
         if(photoFile != null){
             filePath = FileProvider.getUriForFile(this, getApplicationContext().getPackageName()+".fileprovider", photoFile);
@@ -362,6 +349,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             Imgids2.add(filename);
             imgcnt++;
             imgIndex = imgcnt -1;
+            setImageSwitcher(getApplicationContext(), imageSwitcher, imgIndex);
         } else
             Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
     }
