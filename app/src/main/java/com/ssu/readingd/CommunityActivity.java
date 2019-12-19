@@ -3,7 +3,9 @@ package com.ssu.readingd;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -67,6 +69,13 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
 
         memoBtn.setOnClickListener(this);
         memoSearchBtn.setOnClickListener(this);
+        init();
+        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
+        String login_id=sharedPref.getString("id", "none");
+        if(login_id.equals("none")){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
 //        if(user == null){
 //            Intent intent = new Intent(this, LoginActivity.class);

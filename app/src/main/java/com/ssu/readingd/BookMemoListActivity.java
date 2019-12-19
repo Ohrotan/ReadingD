@@ -3,7 +3,9 @@ package com.ssu.readingd;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -92,6 +94,14 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
         //memoDTO = new MemoDTO("책이름", "b", imgs, "내용", 231, "2019.12.13",false,"admin",5555);
         Log.d("hs_test","book : "+book.toString());
         bookNameTitle.setText(book.getBook_name());
+
+        init();
+        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
+        String login_id=sharedPref.getString("id", "none");
+        if(login_id.equals("none")){
+            Intent intent2 = new Intent(this, LoginActivity.class);
+            startActivity(intent2);
+        }
 
 
         init();
