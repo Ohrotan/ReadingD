@@ -49,6 +49,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
     StorageReference storageRef;
     LinearLayout searchBox;
     Spinner memoEditSpinner;
+    String login_id;
 
     int fromYear;
     int fromMonth;
@@ -87,7 +88,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
         init();
         SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
-        String login_id=sharedPref.getString("id", "none");
+        login_id=sharedPref.getString("id", "none");
         if(login_id.equals("none")){
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -154,7 +155,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0){
                     //최신순 정렬
-                    db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING)
+                    db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING).whereEqualTo("user_id", login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -179,7 +180,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                 }
                 else if(position == 1){
                     //오래된순
-                    db.collection("memos").orderBy("reg_date", Query.Direction.ASCENDING)
+                    db.collection("memos").orderBy("reg_date", Query.Direction.ASCENDING).whereEqualTo("user_id", login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -207,7 +208,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                 }
                 else{
                     //책이름순
-                    db.collection("memos").orderBy("book_name")
+                    db.collection("memos").orderBy("book_name").whereEqualTo("user_id", login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                                 @Override
