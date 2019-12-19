@@ -2,12 +2,10 @@ package com.ssu.readingd.dto;
 
 import android.os.Parcel;
 
-import com.ssu.readingd.custom_enum.BookState;
-
 public class BookDTO extends BookSimpleDTO {
 
     int r_page;
-    Enum<BookState> state;
+    String state;
     String start_date;
     String end_date;
     float rating;
@@ -32,7 +30,7 @@ public class BookDTO extends BookSimpleDTO {
         super(simple);
     }
 
-    public BookDTO(BookSimpleDTO simple, int r_page, Enum<BookState> state,
+    public BookDTO(BookSimpleDTO simple, int r_page, String state,
                    String start_date, String end_date, float rating, String user_id, String reg_date) {
         super(simple);
         this.state = state;
@@ -45,7 +43,7 @@ public class BookDTO extends BookSimpleDTO {
     }
 
     public BookDTO(String id, String img, String book_name, String author, String translator,
-                   String publisher, String pub_date, String isbn, int w_page, int r_page, Enum<BookState> state,
+                   String publisher, String pub_date, String isbn, int w_page, int r_page, String state,
                    String start_date, String end_date, float rating, String user_id, String reg_date) {
         super(id, img, book_name, author, translator, publisher, pub_date, isbn, w_page);
         this.state = state;
@@ -67,7 +65,7 @@ public class BookDTO extends BookSimpleDTO {
         this.pub_date = in.readString();
         this.isbn = in.readString();
         this.w_page = in.readInt();
-        this.state = (Enum<BookState>) in.readValue(ClassLoader.getSystemClassLoader());
+        this.state = (String) in.readValue(ClassLoader.getSystemClassLoader());
         this.r_page = in.readInt();
         this.start_date = in.readString();
         this.end_date = in.readString();
@@ -84,11 +82,11 @@ public class BookDTO extends BookSimpleDTO {
         this.r_page = r_page;
     }
 
-    public Enum<BookState> getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(Enum<BookState> state) {
+    public void setState(String state) {
         this.state = state;
     }
 
@@ -131,7 +129,6 @@ public class BookDTO extends BookSimpleDTO {
     public void setReg_date(String reg_date) {
         this.reg_date = reg_date;
     }
-
 
 
     @Override
