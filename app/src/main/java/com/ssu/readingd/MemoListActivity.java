@@ -17,10 +17,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -29,18 +36,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.ssu.readingd.adapter.MemoListAdapter;
+import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MemoListActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -107,24 +108,48 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
 
         db.collection("memos").whereEqualTo("user_id", login_id)
-                .orderBy("reg_date", Query.Direction.ASCENDING)
+                .orderBy("reg_date", Query.Direction.ASCENDING).limit(1)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                Intent intent = new Intent(context, MemoRegisterActivity.class);
-                                MemoDTO memo = document.toObject(MemoDTO.class);
-                                intent.putExtra("memo", memo);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                startActivity(intent);
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                            MemoDTO memo = document.toObject(MemoDTO.class);
+                            Log.d("hs_test", "메모추가");
 
-                                break;
-                            }
+                            db.collection("books").whereEqualTo("user_id", login_id)
+                                    .whereEqualTo("book_name", memo.getBook_name())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+
+                                                DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                                                Log.d("hs_test", "메모추가");
+                                                BookSimpleDTO book = document.toObject(BookSimpleDTO.class);
+
+                                                Intent intent = new Intent(context, MemoRegisterActivity.class);
+                                                intent.putExtra("book", book);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                startActivity(intent);
+
+                                            } else {
+                                                Log.d("hs_test", "메모추가 실패");
+                                                Log.d("hs_test", task.getException().toString());
+                                            }
+                                        }
+                                    });
+
+
+
+                            //for (QueryDocumentSnapshot doc : task.getResult()) {}
+
                         } else {
-                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                            Log.d("hs_test", "메모추가 실패");
+                            Log.d("hs_test", task.getException().toString());
                         }
                     }
                 });
