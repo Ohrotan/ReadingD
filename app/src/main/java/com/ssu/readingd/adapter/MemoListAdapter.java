@@ -237,9 +237,9 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if(position ==0){
 
-                            Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
-                            intent.putExtra("memo", memodata);
-                            context.startActivity(intent);
+                        Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
+                        intent.putExtra("memo", memodata);
+                        context.startActivity(intent);
 
                     }
                     else if(position == 1){
@@ -302,7 +302,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             }
             //if(imgcnt != 0)
-              //      setImageSwitcher(context, memoImage, imgIndex, memo);
+            //      setImageSwitcher(context, memoImage, imgIndex, memo);
             // 해당 포지션의 변화를 알림
             if (prePosition != -1) notifyItemChanged(prePosition);
             notifyItemChanged(position);
@@ -457,9 +457,9 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                     if(position ==0){
-                            Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
-                            intent.putExtra("memo", memodata);
-                            context.startActivity(intent);
+                        Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
+                        intent.putExtra("memo", memodata);
+                        context.startActivity(intent);
                     }
                     else if(position ==1){
 
@@ -671,10 +671,10 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             //changeVisibility(selectedItems.get(position));
             //roundLayout.setOnClickListener(this);
-           // imgIndex = 0;
+            // imgIndex = 0;
             //imgcnt = 0;
             //if(memo.getImg()!=null)
-             //   imgcnt = data.getImg().size();
+            //   imgcnt = data.getImg().size();
             //setImageSwitcher(context, memoImage, imgIndex, memo);
 
 

@@ -11,9 +11,9 @@
     </string-array>
     <string-array name="book_kind">
         <item>전체</item>
-        <item>읽은 책</item>
-        <item>읽고 있는 책</item>
         <item>읽고 싶은 책</item>
+        <item>읽고 있는 책</item>
+        <item>읽은 책</item>
 
     </string-array>
 

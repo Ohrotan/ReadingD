@@ -1,9 +1,5 @@
 package com.ssu.readingd;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,19 +10,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
@@ -37,21 +26,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.SuccessContinuation;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.ssu.readingd.util.DBUtil;
 import com.ssu.readingd.dto.MemoDTO;
+import com.ssu.readingd.util.DBUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,6 +78,8 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     int imgIndex = 0;
     boolean share;
 
+    Context context = this;
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     // Create a storage reference from our app
     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -125,6 +112,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         user_id=sharedPref.getString("id", "none");
        Intent intent = getIntent();
        memoDTO = (MemoDTO)intent.getExtras().getSerializable("memo");
+       memo_id = memoDTO.getMemo_id();
 
 /*
         DocumentReference docRef = db.collection("memos").document(memo_id);
@@ -251,7 +239,11 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
             MemoText = MemoEdit.getText().toString();
             memoDTO = new MemoDTO(book_name, book_author, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
             new DBUtil().updateMemo(memo_id, memoDTO);
-            onBackPressed();
+
+            Intent intent = new Intent(context, MemoListActivity.class);
+            startActivity(intent);
+            finish();
+            //onBackPressed();
         }
     }
 

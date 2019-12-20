@@ -18,12 +18,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.ssu.readingd.adapter.BookDeleteAdapter;
 import com.ssu.readingd.adapter.BookShelfAdapter;
 import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.util.StillImageActivity;
@@ -31,12 +38,6 @@ import com.ssu.readingd.util.StillImageActivity;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class BookShelfActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -110,7 +111,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(BookShelfActivity.this, StillImageActivity.class));
-
+                        dialog.dismiss();
                     }
 
                 });
@@ -125,8 +126,9 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                         intent.putExtra("keyword", keyword.getText().toString());
 
                         startActivity(intent);
-                        //제목이나 저자로 책검색 이동
 
+                        //제목이나 저자로 책검색 이동
+                        dialog.dismiss();
 
                     }
                 });
@@ -138,6 +140,52 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                 return;
 
             }
+        });
+
+        bookSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                View dialogView = getLayoutInflater().inflate(R.layout.layout_book_search, null);
+
+                Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
+                Button searchBtn = dialogView.findViewById(R.id.searchBtn);
+                final EditText nameSearchTxt = dialogView.findViewById(R.id.title_book_search);
+                final EditText writerSearchTxt = dialogView.findViewById(R.id.writer_book_search);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setView(dialogView);
+
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+                searchBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (!nameSearchTxt.equals("") && !writerSearchTxt.equals("")) {
+                        } else if (!nameSearchTxt.equals("") && writerSearchTxt.equals("")) {
+
+                        } else if (nameSearchTxt.equals("") && writerSearchTxt.equals("")) {
+
+                        } else {
+
+
+                        }
+
+
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog = builder.create();
+                alertDialog.show();
+
+            }
+
         });
 
         init();
@@ -287,24 +335,50 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
 
         if (v == deleteBtn) {
-            //GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
             delete = !delete;
 
-            /*
             recyclerView.setLayoutManager(gridLayoutManager);
             arrayList = new ArrayList<>();
-            adapter = new BookShelfAdapter(this, arrayList, delete);
-            recyclerView.setAdapter(adapter);
-
+            // Toast.makeText(this, "delete", Toast.LENGTH_SHORT).show();
+            arrayList = new ArrayList<>();
+            db.collection("books").whereEqualTo("user_id", login_id).orderBy("reg_date")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
+                            }
+                            int count = value.size();
+                            arrayList.clear();
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    BookSimpleDTO book = doc.toObject(BookSimpleDTO.class);
+                                    Log.d("hs_test", book.toString());
+                                    book.setId(doc.getId());
+                                    arrayList.add(book);
+                                }
+                            }
+                            //어답터 갱신
+                            if (delete) {
+                                recyclerView.setAdapter(new BookDeleteAdapter(BookShelfActivity.this, arrayList));
+                            } else {
+                                recyclerView.setAdapter(new BookShelfAdapter(BookShelfActivity.this, arrayList));
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
             sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (position == 0) {
                         //등록순 정렬
                         //.whereEqualTo("user_id", login_id)
-
-                        db.collection("books")
+                        arrayList = new ArrayList<>();
+                        db.collection("books").whereEqualTo("user_id", login_id).orderBy("reg_date")
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot value,
@@ -324,11 +398,18 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                             }
                                         }
                                         //어답터 갱신
+
+                                        if (delete) {
+                                            recyclerView.setAdapter(new BookDeleteAdapter(BookShelfActivity.this, arrayList));
+                                        } else {
+                                            recyclerView.setAdapter(new BookShelfAdapter(BookShelfActivity.this, arrayList));
+                                        }
                                         adapter.notifyDataSetChanged();
                                     }
                                 });
                     } else if (position == 1) {
                         //제목순
+                        arrayList = new ArrayList<>();
                         db.collection("books").orderBy("book_name").whereEqualTo("user_id", login_id)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
@@ -349,6 +430,11 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                             }
                                         }
                                         //어답터 갱신
+                                        if (delete) {
+                                            recyclerView.setAdapter(new BookDeleteAdapter(BookShelfActivity.this, arrayList));
+                                        } else {
+                                            recyclerView.setAdapter(new BookShelfAdapter(BookShelfActivity.this, arrayList));
+                                        }
                                         adapter.notifyDataSetChanged();
                                     }
                                 });
@@ -359,10 +445,10 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
+                    sortSpinner.setSelection(0);
                 }
             });
-            */
+
         } else if (v == bookSearchBtn || v == imageButton) {
             View dialogView = getLayoutInflater().inflate(R.layout.memo_search_layout, null);
 
@@ -393,19 +479,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                     final String author = writerSearchTxt.getText().toString();
                     final String content = contentSearchTxt.getText().toString();
 
-                    Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
-                    intent.putExtra("book_name", book_name);
-                    intent.putExtra("author", author);
-                    intent.putExtra("content", content);
-                    intent.putExtra("fromYear", fromYear);
-                    intent.putExtra("fromMonth", fromMonth);
-                    intent.putExtra("fromDate", fromDate);
-                    intent.putExtra("toYear", toYear);
-                    intent.putExtra("toMonth", toMonth);
-                    intent.putExtra("toDate", toDate);
-                    intent.putExtra("Activity", "BookShelfActivity");
 
-                    startActivity(intent);
 
 
                     alertDialog.dismiss();
