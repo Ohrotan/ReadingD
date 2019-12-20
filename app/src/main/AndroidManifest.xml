@@ -2,30 +2,93 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ssu.readingd">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera2" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/book"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/book"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TestRanActivity"/>
-        <activity android:name=".BookEditActivity" />
-        <activity android:name=".BookManualRegisterActivity" />
-        <activity android:name=".BookRegisterActivity" />
-        <activity android:name=".BookAddSearchResultActivity" />
-        <activity android:name=".FlashbackActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".GuideActivity"></activity>
+        <activity android:name=".SettingActivity" />
+        <activity
+            android:name=".MemoEditActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
+        <activity
+            android:name=".MemoRegisterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
+        <activity
+            android:name=".CommunityActivity"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".MemberRegisterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/NoTitle"></activity>
+        <activity
+            android:name=".BookShelfActivity"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".MemoSearchResultActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".BookMemoListActivity"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".MemoListActivity"
+            android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity_test_HyeSeon" />
+        <activity android:name=".TestSeulwooActivity" />
+        <activity android:name=".TestRanActivity" />
+        <activity
+            android:name=".BookManualRegisterActivity"
+            android:launchMode="singleTop" />
+        <activity android:name=".BookRegisterActivity" />
+        <activity android:name=".BookAddSearchResultActivity" />
+        <activity android:name=".FlashbackActivity" />
+        <activity
+            android:name=".util.LivePreviewActivity"
+            android:exported="true" />
+        <activity
+            android:name=".util.StillImageActivity"
+            android:exported="true" />
+        <activity android:name=".util.ChooserActivity" />
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.ssu.readingd.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
     </application>
 
 </manifest>

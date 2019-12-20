@@ -1,85 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".FlashbackActivity">
+    android:background="@drawable/bg1"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/bg_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:scaleType="centerCrop"
-           android:src="@drawable/bg1" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="50dp"
-            android:background="@drawable/round_shape"
-            android:layout_centerInParent="true"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/book_title_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="30dp"
-                android:text="@string/long_title_sample"
-                android:textSize="25dp"
-                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:orientation="horizontal">
+                android:layout_centerInParent="true"
+                android:layout_margin="50dp"
+                android:background="@drawable/round_shape"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/author_tv"
+                    android:id="@+id/fbook_title_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="저자"
-                    android:textSize="16dp" />
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="30dp"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/fauthor_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="저자"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/fpage_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/fdate_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:textSize="16dp" />
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/fimage_switcher"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="20dp"
+                    android:background="#ffffff"></ImageView>
+                    <ImageButton
+                        android:id="@+id/next_btn"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/nextbtn"
+                        android:background="@android:color/transparent"
+                        android:layout_alignRight="@+id/fimage_switcher"
+                        android:layout_alignBottom="@id/fimage_switcher"
+                        ></ImageButton>
+
+                    <ImageButton
+                        android:id="@+id/prev_btn"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/prevbtn"
+                        android:background="@android:color/transparent"
+                        android:layout_alignLeft="@+id/fimage_switcher"
+                        android:layout_alignBottom="@id/fimage_switcher"
+                        ></ImageButton>
+                </RelativeLayout>
+
+
 
                 <TextView
-                    android:id="@+id/page_tv"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/fmemo_tv"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="00 p"
-                    android:textSize="16dp" />
-
-                <TextView
-                    android:id="@+id/date_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="2019.10.10"
-                    android:textSize="16dp" />
+                    android:lineHeight="25dp"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:paddingBottom="25dp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/memo_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lineHeight="25dp"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-                android:paddingBottom="25dp"
-                android:text="@string/long_memo_sample" />
-        </LinearLayout>
+        </RelativeLayout>
 
-    </RelativeLayout>
 
-</LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|center"
+        android:background="@android:color/white"
+        android:gravity="bottom|center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/tab_flash_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:tag="cur"
+            app:srcCompat="@drawable/flash_back_c" />
+
+
+        <ImageView
+            android:id="@+id/tab_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            app:srcCompat="@drawable/memo_b" />
+
+
+        <ImageView
+            android:id="@+id/tab_book"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            app:srcCompat="@drawable/book_b" />
+
+
+        <ImageView
+            android:id="@+id/tab_share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            app:srcCompat="@drawable/share_b" />
+
+
+        <ImageView
+            android:id="@+id/tab_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="clickTab"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            app:srcCompat="@drawable/setting_b" />
+
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp">
+
+    <LinearLayout
+        android:id="@+id/round_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/more_round_shape_gray"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/BookNameML"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="35dp"
+                    android:text="sdfsdfasdasdfadsfdsafadsfadsfasdfdsafasdfasdf"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/BookWriterML"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="저자"
+                    android:textSize="18dp"
+                    android:layout_below="@+id/BookNameML"/>
+
+                <TextView
+                    android:id="@+id/BookPageML"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="214"
+                    android:textSize="18dp"
+                    android:layout_below="@id/BookWriterML"/>
+
+                <TextView
+                    android:id="@+id/pg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="83dp"
+                    android:layout_marginRight="-152dp"
+                    android:layout_toLeftOf="@id/BookPageML"
+                    android:layout_toEndOf="@+id/BookPageML"
+                    android:text=""
+                    android:textSize="18dp" />
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/MemoDateML"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-42dp"
+                android:layout_below="@id/linearLayout"
+                android:text="2019.12.02 15:10"
+                android:textSize="18dp" />
+
+            <Spinner
+                android:id="@+id/memoEditSpinner"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:stateListAnimator="@null"
+                android:adjustViewBounds="true"
+                android:prompt="@string/prompt"
+                android:scaleType="fitCenter"
+                android:background="@drawable/more"
+                android:entries="@array/memo_edit"/>
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/contentML_short"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/pictureML"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></ImageView>
+            <ImageButton
+                android:id="@+id/next_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/nextbtn"
+                android:background="@android:color/transparent"
+                android:layout_alignRight="@+id/pictureML"
+                android:layout_alignBottom="@id/pictureML"
+                ></ImageButton>
+
+                <ImageButton
+                    android:id="@+id/prev_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/prevbtn"
+                    android:background="@android:color/transparent"
+                    android:layout_alignLeft="@+id/pictureML"
+                    android:layout_alignBottom="@id/pictureML"
+                    ></ImageButton>
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/contentML_long"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

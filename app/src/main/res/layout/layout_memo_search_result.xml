@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp">
+
+    <LinearLayout
+        android:id="@+id/round_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/more_round_shape_gray"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/memoSearchResultTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="책 제목"
+                    android:textStyle="bold"
+                    android:textSize="23dp"
+                    android:layout_marginRight="10dp"/>
+
+
+                <TextView
+                    android:id="@+id/memoSearchResultAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="저자"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" / "
+                    android:textSize="16dp" />
+
+
+                <TextView
+                    android:id="@+id/memoSearchResultPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="214"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="p"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" / "
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/memoSearchResultDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2019.12.02"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/memoEditSpinner"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:stateListAnimator="@null"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="@drawable/more"
+                android:entries="@array/memo_edit"/>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/pictureML"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></ImageView>
+            <ImageButton
+                android:id="@+id/next_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/nextbtn"
+                android:background="@android:color/transparent"
+                android:layout_alignRight="@+id/pictureML"
+                android:layout_alignBottom="@id/pictureML"
+                ></ImageButton>
+
+            <ImageButton
+                android:id="@+id/prev_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/prevbtn"
+                android:background="@android:color/transparent"
+                android:layout_alignLeft="@+id/pictureML"
+                android:layout_alignBottom="@id/pictureML"
+                ></ImageButton>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/contentMSR_short"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트" />
+
+
+        <TextView
+            android:id="@+id/contentMSR_long"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
