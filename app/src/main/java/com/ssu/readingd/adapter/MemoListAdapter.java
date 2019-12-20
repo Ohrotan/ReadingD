@@ -235,7 +235,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             roundLayout.setOnClickListener(this);
 
 
-            
 
             memoEditSpn.setSelection(2);
             memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
