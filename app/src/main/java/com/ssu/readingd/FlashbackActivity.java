@@ -69,7 +69,7 @@ public class FlashbackActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
-        Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
+       //Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
         db.collection("memos")
                 .whereEqualTo("user_id", userid)
                 .get()
