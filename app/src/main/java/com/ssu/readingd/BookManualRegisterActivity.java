@@ -236,6 +236,9 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
             if (!read_p_etv.getText().toString().equals("")) {
                 result.setR_page(Integer.parseInt(read_p_etv.getText().toString()));
             }
+            if (!whole_p_etv.getText().toString().equals("")) {
+                result.setW_page(Integer.parseInt(whole_p_etv.getText().toString()));
+            }
             //result.setState(state_spinner.getSe);
             result.setStart_date(start_date_tv.getText().toString());
             result.setEnd_date(end_date_tv.getText().toString());
