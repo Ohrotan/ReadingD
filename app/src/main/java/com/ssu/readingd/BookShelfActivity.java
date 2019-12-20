@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.ssu.readingd.adapter.BookDeleteAdapter;
 import com.ssu.readingd.adapter.BookShelfAdapter;
 import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.util.StillImageActivity;
@@ -110,7 +111,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(BookShelfActivity.this, StillImageActivity.class));
-
+                        dialog.dismiss();
                     }
 
                 });
@@ -125,9 +126,9 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                         intent.putExtra("keyword", keyword.getText().toString());
 
                         startActivity(intent);
-                        dialog.dismiss();
-                        //제목이나 저자로 책검색 이동
 
+                        //제목이나 저자로 책검색 이동
+                        dialog.dismiss();
 
                     }
                 });
@@ -294,17 +295,44 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
             recyclerView.setLayoutManager(gridLayoutManager);
             arrayList = new ArrayList<>();
-            adapter = new BookShelfAdapter(this, arrayList, delete);
-            recyclerView.setAdapter(adapter);
-
+            // Toast.makeText(this, "delete", Toast.LENGTH_SHORT).show();
+            arrayList = new ArrayList<>();
+            db.collection("books").whereEqualTo("user_id", login_id).orderBy("reg_date")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.d("hs_test", "Listen failed.", e);
+                                return;
+                            }
+                            int count = value.size();
+                            arrayList.clear();
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("book_name") != null) {
+                                    BookSimpleDTO book = doc.toObject(BookSimpleDTO.class);
+                                    Log.d("hs_test", book.toString());
+                                    book.setId(doc.getId());
+                                    arrayList.add(book);
+                                }
+                            }
+                            //어답터 갱신
+                            if (delete) {
+                                recyclerView.setAdapter(new BookDeleteAdapter(BookShelfActivity.this, arrayList));
+                            } else {
+                                recyclerView.setAdapter(new BookShelfAdapter(BookShelfActivity.this, arrayList));
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
             sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (position == 0) {
                         //등록순 정렬
                         //.whereEqualTo("user_id", login_id)
-
-                        db.collection("books")
+                        arrayList = new ArrayList<>();
+                        db.collection("books").whereEqualTo("user_id", login_id).orderBy("reg_date")
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot value,
@@ -324,11 +352,18 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                             }
                                         }
                                         //어답터 갱신
+
+                                        if (delete) {
+                                            recyclerView.setAdapter(new BookDeleteAdapter(BookShelfActivity.this, arrayList));
+                                        } else {
+                                            recyclerView.setAdapter(new BookShelfAdapter(BookShelfActivity.this, arrayList));
+                                        }
                                         adapter.notifyDataSetChanged();
                                     }
                                 });
                     } else if (position == 1) {
                         //제목순
+                        arrayList = new ArrayList<>();
                         db.collection("books").orderBy("book_name").whereEqualTo("user_id", login_id)
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
@@ -349,6 +384,11 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                                             }
                                         }
                                         //어답터 갱신
+                                        if (delete) {
+                                            recyclerView.setAdapter(new BookDeleteAdapter(BookShelfActivity.this, arrayList));
+                                        } else {
+                                            recyclerView.setAdapter(new BookShelfAdapter(BookShelfActivity.this, arrayList));
+                                        }
                                         adapter.notifyDataSetChanged();
                                     }
                                 });
@@ -359,7 +399,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
+                    sortSpinner.setSelection(0);
                 }
             });
         } else if (v == bookSearchBtn || v == imageButton) {
