@@ -279,7 +279,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
             overridePendingTransition(0, 0);
         }
-        finish();
+     //   finish();
     }
 
 
