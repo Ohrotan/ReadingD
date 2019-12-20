@@ -15,6 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.ssu.readingd.BookMemoListActivity;
@@ -46,6 +50,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         // View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_book, parent, false);
         return new BookShelfAdapter.ViewHolder_Grid(view);
+
 
     }
 
