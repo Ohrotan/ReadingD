@@ -29,9 +29,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity
-            android:name=".CommunitySearchResultActivity"
-            android:theme="@style/NoTitle" />
-        <activity
             android:name=".CommunityActivity"
             android:theme="@style/NoTitle" />
         <activity

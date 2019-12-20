@@ -105,8 +105,8 @@ public class activity_test_HyeSeon extends AppCompatActivity implements View.OnC
         }
         else if(v == BtnCommunitySearchResultActivity){
             //담벼락 책 검색결과 액티비티
-            intent = new Intent(this, CommunitySearchResultActivity.class);
-            startActivity(intent);
+           // intent = new Intent(this, CommunitySearchResultActivity.class);
+           // startActivity(intent);
         }
         else if(v == BtnMemoSearchLayout){
             //메모 검색 레이아웃
