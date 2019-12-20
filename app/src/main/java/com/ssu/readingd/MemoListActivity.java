@@ -336,7 +336,6 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(MemoListActivity.this, "검색", Toast.LENGTH_SHORT).show();
 
                     final String book_name = nameSearchTxt.getText().toString();
                     final String author = writerSearchTxt.getText().toString();

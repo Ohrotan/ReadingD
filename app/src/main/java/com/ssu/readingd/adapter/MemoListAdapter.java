@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -261,8 +260,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         memoDeleteCancelBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(v.getContext(), "수정 버튼 클릭", Toast.LENGTH_SHORT).show();
-                                Log.d("hs_test", "메모 ... 스피너 삭제 --> 취소 버튼 클릭");
                                 dialog.dismiss();
                             }
                         });
@@ -271,8 +268,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             @Override
                             public void onClick(View v) {
                                 new DBUtil().DeleteMemo(memo_id);
-                                Toast.makeText(v.getContext(), "삭제 버튼 클릭", Toast.LENGTH_SHORT).show();
-                                Log.d("hs_test", "메모 ... 스피너 삭제--> 확인 버튼 클릭");
                                 dialog.dismiss();
                             }
                         });
