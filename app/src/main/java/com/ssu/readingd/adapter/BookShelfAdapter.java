@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -95,7 +94,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class ViewHolder_Grid extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView book_image;
-        private ImageButton book_delete_button;
+        private ImageView book_delete_button;
         private ConstraintLayout book_layout;
         private TextView book_name_tv;
         private BookSimpleDTO data;
@@ -195,7 +194,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class ViewHolder_Grid_D extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView book_image;
-        private ImageButton book_delete_button;
+        private ImageView book_delete_button;
         private ConstraintLayout book_layout;
         private TextView book_name_tv;
         private BookSimpleDTO data;
