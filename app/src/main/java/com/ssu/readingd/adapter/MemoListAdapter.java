@@ -228,6 +228,17 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     setImageSwitcher(context, memoImage, imgIndex, data);
                 }
             });
+
+
+
+            changeVisibility(selectedItems.get(position));
+
+            roundLayout.setOnClickListener(this);
+
+
+
+            final MemoDTO memodata = this.data;
+
             memoEditSpn.setSelection(2);
             memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -597,6 +608,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageButton prevButton, nextButton;
         int imgIndex, imgcnt;
         List<String> imgs;
+        int imgIndex;
+        int imgcnt;
 
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;

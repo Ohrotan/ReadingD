@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ReadingD</string>
+
     <string name="long_title_sample">이것은 피어나기 유소년에게서 구하지 못할 바이며</string>
     <string name="long_memo_sample">스며들어 가는 열락의 소리다이것은 피어나기유소년에게서 구하지 못할 바이며 시들어 가는 노년에게서 구하지 못할 바이며 오직 우리
     스며들어 가는 열락의 소리다이것은 피어나기유소년에게서 구하지 못할 바이며 시들어 가는 노년에게서 구하지 못할 바이며 오직 우리
@@ -125,5 +126,6 @@
     <string name="pref_entries_automl_models_remote">Remote</string>
     <string name="pref_entries_automl_models_local">Local</string>
     <string name="pref_key_live_preview_automl_remote_model_choices" translatable="false">lparmc</string>
+    <string name="prompt">  </string>
 
 </resources>

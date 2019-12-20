@@ -85,12 +85,13 @@
 
             <Spinner
                 android:id="@+id/memoEditSpinner"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:stateListAnimator="@null"
                 android:adjustViewBounds="true"
+                android:prompt="@string/prompt"
                 android:scaleType="fitCenter"
                 android:background="@drawable/more"
                 android:entries="@array/memo_edit"/>
