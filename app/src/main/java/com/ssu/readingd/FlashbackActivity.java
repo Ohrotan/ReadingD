@@ -2,10 +2,11 @@ package com.ssu.readingd;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,7 +22,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -61,9 +61,11 @@ public class FlashbackActivity extends AppCompatActivity {
 
         final String TAG = "Async Task";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         db.collection("memos")
-                //.whereEqualTo("user_id", "admin")
+                .whereEqualTo("user_id", sharedPref.getString("id", null))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -85,9 +87,9 @@ public class FlashbackActivity extends AppCompatActivity {
                                     page_tv.setText(((long) memo.get("r_page")) + " p");
                                     date_tv.setText((String) memo.get("reg_date"));
                                     memo_tv.setText((String) memo.get("memo_text"));
-                                    if(imgcnt != 0)
+                                    if (imgcnt != 0)
                                         setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, imgIds);
-                                    else{
+                                    else {
                                         imgs.setVisibility(View.GONE);
                                         prevButton.setVisibility(View.GONE);
                                         nextButton.setVisibility(View.GONE);
@@ -97,7 +99,7 @@ public class FlashbackActivity extends AppCompatActivity {
                                         public void onClick(View v) {
                                             if (imgIndex > 0)
                                                 imgIndex--;
-                                            setImageSwitcher(FlashbackActivity.this, imgs, imgIndex,imgIds);
+                                            setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, imgIds);
                                         }
                                     });
                                     nextButton.setOnClickListener(new View.OnClickListener() {
