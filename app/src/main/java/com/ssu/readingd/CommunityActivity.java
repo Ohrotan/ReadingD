@@ -331,7 +331,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
             overridePendingTransition(0, 0);
             //   finish();
         }
-        finish();
+        //finish();
     }
 
 }

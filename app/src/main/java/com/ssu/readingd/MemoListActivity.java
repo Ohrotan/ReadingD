@@ -181,7 +181,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
             overridePendingTransition(0, 0);
         }
-        finish();
+      //  finish();
     }
 
 
