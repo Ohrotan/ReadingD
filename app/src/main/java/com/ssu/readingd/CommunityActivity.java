@@ -3,7 +3,9 @@ package com.ssu.readingd;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +14,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -25,12 +34,6 @@ import com.ssu.readingd.dto.UserDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class CommunityActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,6 +53,9 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     final Calendar cal = Calendar.getInstance();
     Dialog alertDialog;
 
+    String from;
+    String to;
+
     UserDTO user;
 
 
@@ -65,6 +71,13 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
 
         memoBtn.setOnClickListener(this);
         memoSearchBtn.setOnClickListener(this);
+        init();
+        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
+        String login_id=sharedPref.getString("id", "none");
+        if(login_id.equals("none")){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
 //        if(user == null){
 //            Intent intent = new Intent(this, LoginActivity.class);
@@ -137,6 +150,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         final Button startDate = dialogView.findViewById(R.id.startDate);
         final Button endDate = dialogView.findViewById(R.id.endDate);
 
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
 
@@ -156,6 +170,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                 final String author = writerSearchTxt.getText().toString();
                 final String content = contentSearchTxt.getText().toString();
 
+                CommunitySearchResult(book_name, author, content, from, to);
                 Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
                 intent.putExtra("book_name", book_name);
                 intent.putExtra("author", author);
@@ -190,11 +205,14 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                             fromYear = year;
                             fromMonth = month + 1;
                             fromDate = date;
-                        } else if (view == endDate) {
+                            from = fromYear + "-" + fromMonth + "-" + fromDate+" "+"00:00";
+                        }
+                        else if (view == endDate) {
                             endDate.setText(msg);
                             toYear = year;
                             toMonth = month + 1;
                             toDate = date;
+                            to = toYear+"-"+toMonth+"-"+toDate+" "+"23:59";
                         }
 
                         //Toast.makeText(MemoListActivity.this, msg, Toast.LENGTH_SHORT).show();
@@ -214,6 +232,69 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         alertDialog = builder.create();
         alertDialog.show();
     }
+
+
+    public void CommunitySearchResult(String book_name, String author, String content, String from, String to) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference memoRef = db.collection("memos");
+        Query query = db.collection("memos").whereEqualTo("share",true);
+
+        arrayList = new ArrayList<>();
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new MemoListAdapter(this,arrayList,2);
+        recyclerView.setAdapter(adapter);
+
+        if(!book_name.equals("") && author.equals("") && content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("share",true);
+        }
+        else if(book_name.equals("") && !author.equals("") && content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("share",true);
+        }
+        else if(book_name.equals("") && author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("content",content).whereEqualTo("share",true);
+        }
+        else if( !book_name.equals("") && !author.equals("") && content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("share",true);
+        }
+        else if( !book_name.equals("") && author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("share",true);
+        }
+
+        else if( book_name.equals("") && !author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("content",content).whereEqualTo("share",true);
+        }
+        else if( !book_name.equals("") && !author.equals("") && !content.equals("")){
+            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content);
+        }
+        else {
+            // name, author, content 없을 때
+        }
+
+
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("hs_test", "Listen failed.", e);
+                    return;
+                }
+                int count = value.size();
+                arrayList.clear();
+                for (QueryDocumentSnapshot doc : value) {
+                    if (doc.get("book_name") != null) {
+                        MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                        arrayList.add(memoDTO);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+
+    }
+
 
 
     public void clickTab(View v) {
@@ -257,4 +338,5 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         }
 
     }
+
 }

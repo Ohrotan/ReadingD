@@ -3,28 +3,33 @@ package com.ssu.readingd.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.ssu.readingd.BookMemoListActivity;
+import com.ssu.readingd.MemoRegisterActivity;
 import com.ssu.readingd.R;
 import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
-
 public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
     ArrayList<BookSimpleDTO> items;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     boolean delete = false;
     //Holder holder;
     private int displayWidth; //화면 크기
@@ -55,16 +60,18 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private ImageView book_image;
         private ConstraintLayout book_layout;
+        private TextView book_name_tv;
         private BookSimpleDTO data;
         private int position;
         private String id;
+        private long btnPressTime = 0;
 
         ViewHolder_Grid(View itemView) {
             super(itemView);
 
             // 뷰 객체에 대한 참조. (hold strong reference)
             book_image = itemView.findViewById(R.id.book_img);
-            book_layout = itemView.findViewById(R.id.book_layout);
+            book_name_tv = itemView.findViewById(R.id.book_name);
 
         }
 
@@ -73,10 +80,12 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             this.position = position;
             this.id = data.getId();
 
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            RelativeLayout deleteLayout = (RelativeLayout) layoutInflater.inflate(R.layout.layout_book_img_delete, null);
-            book_layout.addView(deleteLayout);
-            deleteLayout.setVisibility(View.INVISIBLE);
+            LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            RelativeLayout deleteLayout = (RelativeLayout)layoutInflater.inflate(R.layout.layout_book_img_delete, null);
+
+            book_name_tv.setText(data.getBook_name());
+            //ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
+
 
             if (delete) {
                 deleteLayout.setVisibility(View.VISIBLE);
@@ -90,18 +99,40 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }).start();
 
+
             //new DBUtil().setImageViewFromDB(context, book_image, data.getImg());
             //book_image.setImageResource(R.drawable.book_1);
             book_image.setOnClickListener(this);
+            book_image.setOnLongClickListener(new View.OnLongClickListener(){
+                @Override
+                public boolean onLongClick(View v) {
+                    Log.d("hs_test", "롱클릭");
+                    Intent intent = new Intent(context, MemoRegisterActivity.class);
+                    intent.putExtra("book", data);
+                    context.startActivity(intent);
+                    return true;
+                }
+            });
 
         }
 
         @Override
         public void onClick(View v) {
 
-            Intent intent = new Intent(v.getContext(), BookMemoListActivity.class);
-            intent.putExtra("book", data);
-            context.startActivity(intent);
+            if (System.currentTimeMillis() <= btnPressTime + 1000) {
+
+                Intent intent = new Intent(context, MemoRegisterActivity.class);
+                intent.putExtra("book", data);
+                context.startActivity(intent);
+
+            }
+            else{
+                Intent intent = new Intent(v.getContext(), BookMemoListActivity.class);
+                intent.putExtra("book", data);
+                context.startActivity(intent);
+            }
+
+
 
         }
 
