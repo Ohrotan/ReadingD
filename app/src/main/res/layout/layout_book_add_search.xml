@@ -21,7 +21,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="책 제목"
-        android:text="맨발"
+        android:text=""
         android:textColorHint="@color/colorAccent"
         android:paddingBottom="20dp"
         android:layout_marginBottom="20dp"

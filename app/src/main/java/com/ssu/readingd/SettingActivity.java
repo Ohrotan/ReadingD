@@ -109,6 +109,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);     // finish();
             overridePendingTransition(0, 0);
         }
-        finish();
+        //finish();
     }
 }
