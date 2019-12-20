@@ -199,7 +199,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             bookName.setText(data.getBook_name());
             bookWriter.setText(data.getBook_author());
-            bookPage.setText(String.valueOf((data.getR_page())));
+            bookPage.setText(String.valueOf((data.getR_page()))+" page");
             bookDate.setText(data.getReg_date()) ;
             memoContent_short.setText(String.valueOf(data.getMemo_text()));
             memoContent_long.setText(String.valueOf(data.getMemo_text()));
@@ -238,7 +238,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
-            final MemoDTO memodata = this.data;
+            final MemoDTO memodata = this.memo;
 
             memoEditSpn.setSelection(2);
             memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -313,7 +313,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             }
             if(imgcnt != 0)
-                setImageSwitcher(context, memoImage, imgIndex, data);
+                setImageSwitcher(context, memoImage, imgIndex, memo);
             // 해당 포지션의 변화를 알림
             if (prePosition != -1) notifyItemChanged(prePosition);
             notifyItemChanged(position);
@@ -366,7 +366,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         memoImage.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                         prevButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                         nextButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-                        setImageSwitcher(context, memoImage, imgIndex, data);
+                        setImageSwitcher(context, memoImage, imgIndex, memo);
                     }
                     else{
                         memoImage.setVisibility(View.GONE);
@@ -610,8 +610,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageButton prevButton, nextButton;
         int imgIndex, imgcnt;
         List<String> imgs;
-        int imgIndex;
-        int imgcnt;
+
 
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
@@ -647,15 +646,15 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             EmailView.setText(data.getUser_id());
             imgIndex = 0;
             imgcnt = imgs.size();
-            final MemoDTO memodata = this.data;
+            final MemoDTO memodata = this.memo;
             if(imgcnt != 0){
-                setImageSwitcher(context, imageView, imgIndex, data);
+                setImageSwitcher(context, memoImage, imgIndex, data);
                 prevButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (imgIndex > 0)
                             imgIndex--;
-                        setImageSwitcher(context, imageView, imgIndex, memodata);
+                        setImageSwitcher(context, memoImage, imgIndex, memodata);
 
                     }
                 });
@@ -664,13 +663,13 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     public void onClick(View v) {
                         if (imgIndex < imgcnt - 1)
                             imgIndex++;
-                        setImageSwitcher(context, imageView, imgIndex, memodata);
+                        setImageSwitcher(context, memoImage, imgIndex, memodata);
                     }
                 });
 
             }
             else{
-                imageView.setVisibility(View.GONE);
+                memoImage.setVisibility(View.GONE);
                 prevButton.setVisibility(View.GONE);
                 nextButton.setVisibility(View.GONE);
             }
