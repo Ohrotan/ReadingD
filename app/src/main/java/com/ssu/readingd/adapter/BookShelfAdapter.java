@@ -194,8 +194,8 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // 뷰 객체에 대한 참조. (hold strong reference)
             book_image = itemView.findViewById(R.id.book_img);
             book_name_tv = itemView.findViewById(R.id.book_name);
-            book_delete_button = itemView.findViewById(R.id.imagedelete_btn);
-            book_delete_button.setVisibility(View.GONE);
+           // book_delete_button = itemView.findViewById(R.id.imagedelete_btn);
+           // book_delete_button.setVisibility(View.GONE);
             book_layout = itemView.findViewById(R.id.book_layout);
 
         }

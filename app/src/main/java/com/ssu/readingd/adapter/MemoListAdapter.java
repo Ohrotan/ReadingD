@@ -232,10 +232,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
-
-
-            changeVisibility(selectedItems.get(position));
-
             roundLayout.setOnClickListener(this);
 
 
@@ -311,8 +307,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             }
-            if(imgcnt != 0)
-                setImageSwitcher(context, memoImage, imgIndex, memo);
+            ///if(imgcnt != 0)
+               // setImageSwitcher(context, memoImage, imgIndex, memo);
             // 해당 포지션의 변화를 알림
             if (prePosition != -1) notifyItemChanged(prePosition);
             notifyItemChanged(position);
@@ -365,7 +361,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         memoImage.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                         prevButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                         nextButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-                        setImageSwitcher(context, memoImage, imgIndex, memo);
+                        if(isExpanded)
+                            setImageSwitcher(context, memoImage, imgIndex, memo);
                     }
                     else{
                         memoImage.setVisibility(View.GONE);
@@ -620,6 +617,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private MemoDTO memo;
         private int position;
 
+
         ViewHolder_Community(View itemView) {
             super(itemView);
 
@@ -637,6 +635,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         void onBind(MemoDTO data, int position) {
+
             this.memo = data;
             this.position = position;
             this.imgs = data.getImg();
@@ -652,7 +651,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             final MemoDTO memodata = data;
             if(imgcnt != 0){
-                setImageSwitcher(context, memoImage, imgIndex, data);
+                //setImageSwitcher(context, memoImage, imgIndex, data);
                 prevButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -671,6 +670,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         setImageSwitcher(context,memoImage, imgIndex, memodata);
                     }
                 });
+                setImageSwitcher(context, memoImage, imgIndex, memo);
 
             }
             else{
@@ -687,7 +687,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imgcnt = 0;
             if(memo.getImg()!=null)
                 imgcnt = data.getImg().size();
-            setImageSwitcher(context, memoImage, imgIndex, memo);
+
+            //setImageSwitcher(context, memoImage, imgIndex, memo);
 
             memoImage.setOnTouchListener(new View.OnTouchListener() {
 
@@ -767,6 +768,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imgname = imgs.get(imgIndex);
         if (!imgname.contains("jpg"))
             imgname = imgname + ".PNG";
+
         StorageReference httpsReference = FirebaseStorage.getInstance()
                 .getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + imgname);
         httpsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {

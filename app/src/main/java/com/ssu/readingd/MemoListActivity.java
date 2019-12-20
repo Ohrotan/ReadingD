@@ -24,7 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,7 +35,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.ssu.readingd.adapter.MemoListAdapter;
+
 import com.ssu.readingd.dto.BookSimpleDTO;
+
+import com.ssu.readingd.dto.BookDTO;
 import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.ArrayList;
@@ -151,7 +153,22 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                         } else {
                             Log.d("hs_test", "메모추가 실패");
                             Log.d("hs_test", task.getException().toString());
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+
+                            Intent intent = new Intent(context, MemoRegisterActivity.class);
+                            MemoDTO memo = document.toObject(MemoDTO.class);
+                            BookDTO book = new BookDTO();
+
+                            book.setBook_name(memo.getBook_name());
+                            book.setAuthor(memo.getBook_author());
+                            book.setW_page(memo.getW_page());
+
+                            intent.putExtra("book", book);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            startActivity(intent);
+
                         }
+
                     }
                 });
 
@@ -172,20 +189,20 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
-          //  finish();
+            //  finish();
             overridePendingTransition(0, 0);
         } else if (v == img[1]) {
             Intent intent = new Intent(this, MemoListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
-          //  finish();
+            //  finish();
             overridePendingTransition(0, 0);
         } else if (v == img[2]) {
             Intent intent = new Intent(this, BookShelfActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-           // Toast.makeText(this,"bookshelf",Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this,"bookshelf",Toast.LENGTH_SHORT).show();
             startActivity(intent);
             overridePendingTransition(0, 0);
         } else if (v == img[3]) {
