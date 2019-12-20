@@ -228,13 +228,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
-
-
-            changeVisibility(selectedItems.get(position));
-
             roundLayout.setOnClickListener(this);
-
-
 
             memoEditSpn.setSelection(2);
             memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -307,8 +301,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             }
-            if(imgcnt != 0)
-                setImageSwitcher(context, memoImage, imgIndex, memo);
+            //if(imgcnt != 0)
+              //      setImageSwitcher(context, memoImage, imgIndex, memo);
             // 해당 포지션의 변화를 알림
             if (prePosition != -1) notifyItemChanged(prePosition);
             notifyItemChanged(position);
@@ -361,7 +355,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         memoImage.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                         prevButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                         nextButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-                        setImageSwitcher(context, memoImage, imgIndex, memo);
+                        if(isExpanded)
+                            setImageSwitcher(context, memoImage, imgIndex, memo);
                     }
                     else{
                         memoImage.setVisibility(View.GONE);
@@ -525,7 +520,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             if(data.getImg()!=null)
                 imgcnt = data.getImg().size();
-            setImageSwitcher(context, memoImage, imgIndex, data);
+            //setImageSwitcher(context, memoImage, imgIndex, data);
             // 해당 포지션의 변화를 알림
             if (prePosition != -1) notifyItemChanged(prePosition);
             notifyItemChanged(position);
@@ -576,7 +571,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         memoImage.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                         prevButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                         nextButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-                        setImageSwitcher(context, memoImage, imgIndex, data);
+                        if(isExpanded)
+                            setImageSwitcher(context, memoImage, imgIndex, data);
                     }
                     else{
                         memoImage.setVisibility(View.GONE);
@@ -675,31 +671,11 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             //changeVisibility(selectedItems.get(position));
             //roundLayout.setOnClickListener(this);
-            imgIndex = 0;
-            imgcnt = 0;
-            if(memo.getImg()!=null)
-                imgcnt = data.getImg().size();
-            setImageSwitcher(context, memoImage, imgIndex, memo);
-
-            memoImage.setOnTouchListener(new View.OnTouchListener() {
-
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    float x = event.getX();
-                    float width = v.getX() + v.getWidth()/2;
-                    if(x > width){
-                        if(imgIndex < imgcnt -1)
-                            imgIndex++;
-                        setImageSwitcher(context, memoImage, imgIndex, memo);
-                    }
-                    else{
-                        if(imgIndex > 0)
-                            imgIndex--;
-                        setImageSwitcher(context, memoImage, imgIndex, memo);
-                    }
-                    return true;
-                }
-            });
+           // imgIndex = 0;
+            //imgcnt = 0;
+            //if(memo.getImg()!=null)
+             //   imgcnt = data.getImg().size();
+            //setImageSwitcher(context, memoImage, imgIndex, memo);
 
 
             if(imgcnt != 0){
