@@ -153,7 +153,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
         recyclerView.setLayoutManager(gridLayoutManager);
         arrayList = new ArrayList<>();
-        adapter = new BookShelfAdapter(this, arrayList);
+        adapter = new BookShelfAdapter(this, arrayList, delete);
         recyclerView.setAdapter(adapter);
 
 
@@ -289,10 +289,11 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
 
         if (v == deleteBtn) {
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+            //GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
             delete = !delete;
 
+            /*
             recyclerView.setLayoutManager(gridLayoutManager);
             arrayList = new ArrayList<>();
             // Toast.makeText(this, "delete", Toast.LENGTH_SHORT).show();
@@ -402,6 +403,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                     sortSpinner.setSelection(0);
                 }
             });
+            */
         } else if (v == bookSearchBtn || v == imageButton) {
             View dialogView = getLayoutInflater().inflate(R.layout.memo_search_layout, null);
 
