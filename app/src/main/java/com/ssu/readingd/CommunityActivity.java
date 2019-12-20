@@ -14,12 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,6 +28,12 @@ import com.ssu.readingd.dto.UserDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CommunityActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -72,9 +72,9 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         memoBtn.setOnClickListener(this);
         memoSearchBtn.setOnClickListener(this);
         init();
-        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
-        String login_id=sharedPref.getString("id", "none");
-        if(login_id.equals("none")){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String login_id = sharedPref.getString("id", "none");
+        if (login_id.equals("none")) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
@@ -205,14 +205,13 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                             fromYear = year;
                             fromMonth = month + 1;
                             fromDate = date;
-                            from = fromYear + "-" + fromMonth + "-" + fromDate+" "+"00:00";
-                        }
-                        else if (view == endDate) {
+                            from = fromYear + "-" + fromMonth + "-" + fromDate + " " + "00:00";
+                        } else if (view == endDate) {
                             endDate.setText(msg);
                             toYear = year;
                             toMonth = month + 1;
                             toDate = date;
-                            to = toYear+"-"+toMonth+"-"+toDate+" "+"23:59";
+                            to = toYear + "-" + toMonth + "-" + toDate + " " + "23:59";
                         }
 
                         //Toast.makeText(MemoListActivity.this, msg, Toast.LENGTH_SHORT).show();
@@ -238,36 +237,28 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference memoRef = db.collection("memos");
-        Query query = db.collection("memos").whereEqualTo("share",true);
+        Query query = db.collection("memos").whereEqualTo("share", true);
 
         arrayList = new ArrayList<>();
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MemoListAdapter(this,arrayList,2);
+        adapter = new MemoListAdapter(this, arrayList, 2);
         recyclerView.setAdapter(adapter);
 
-        if(!book_name.equals("") && author.equals("") && content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("share",true);
-        }
-        else if(book_name.equals("") && !author.equals("") && content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("share",true);
-        }
-        else if(book_name.equals("") && author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("content",content).whereEqualTo("share",true);
-        }
-        else if( !book_name.equals("") && !author.equals("") && content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("share",true);
-        }
-        else if( !book_name.equals("") && author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("share",true);
-        }
-
-        else if( book_name.equals("") && !author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("content",content).whereEqualTo("share",true);
-        }
-        else if( !book_name.equals("") && !author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content);
-        }
-        else {
+        if (!book_name.equals("") && author.equals("") && content.equals("")) {
+            query = db.collection("memos").whereEqualTo("book_name", book_name).whereEqualTo("share", true);
+        } else if (book_name.equals("") && !author.equals("") && content.equals("")) {
+            query = db.collection("memos").whereEqualTo("book_author", author).whereEqualTo("share", true);
+        } else if (book_name.equals("") && author.equals("") && !content.equals("")) {
+            query = db.collection("memos").whereEqualTo("content", content).whereEqualTo("share", true);
+        } else if (!book_name.equals("") && !author.equals("") && content.equals("")) {
+            query = db.collection("memos").whereEqualTo("book_name", book_name).whereEqualTo("book_author", author).whereEqualTo("share", true);
+        } else if (!book_name.equals("") && author.equals("") && !content.equals("")) {
+            query = db.collection("memos").whereEqualTo("book_name", book_name).whereEqualTo("book_author", author).whereEqualTo("share", true);
+        } else if (book_name.equals("") && !author.equals("") && !content.equals("")) {
+            query = db.collection("memos").whereEqualTo("book_author", author).whereEqualTo("content", content).whereEqualTo("share", true);
+        } else if (!book_name.equals("") && !author.equals("") && !content.equals("")) {
+            query = db.collection("memos").whereEqualTo("book_name", book_name).whereEqualTo("book_author", author).whereEqualTo("content", content);
+        } else {
             // name, author, content 없을 때
         }
 
@@ -296,7 +287,6 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-
     public void clickTab(View v) {
         ImageView[] img = new ImageView[5];
         img[0] = findViewById(R.id.tab_flash_back);
@@ -307,36 +297,41 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
 
         if (v == img[0]) {
             Intent intent = new Intent(this, FlashbackActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             overridePendingTransition(0, 0);
+            // finish();
         } else if (v == img[1]) {
             Intent intent = new Intent(this, MemoListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             overridePendingTransition(0, 0);
+            //  finish();
         } else if (v == img[2]) {
             Intent intent = new Intent(this, BookShelfActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             overridePendingTransition(0, 0);
+            //  finish();
         } else if (v == img[3]) {
             Intent intent = new Intent(this, CommunityActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             overridePendingTransition(0, 0);
+            //   finish();
         } else if (v == img[4]) {
             Intent intent = new Intent(this, SettingActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             overridePendingTransition(0, 0);
+            //   finish();
         }
-
+        finish();
     }
 
 }
