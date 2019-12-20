@@ -237,7 +237,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
-            final MemoDTO memodata = this.memo;
+           // final MemoDTO memodata = this.memo;
 
             memoEditSpn.setSelection(2);
             memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
