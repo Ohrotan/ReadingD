@@ -230,7 +230,16 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
+
+
+            changeVisibility(selectedItems.get(position));
+
+            roundLayout.setOnClickListener(this);
+
+
+
             final MemoDTO memodata = this.data;
+
             memoEditSpn.setSelection(2);
             memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -597,14 +606,12 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView BookDateView;
         TextView EmailView;
         TextView contentView;
-<<<<<<< HEAD
+
         ImageButton prevButton, nextButton;
         int imgIndex, imgcnt;
         List<String> imgs;
-=======
         int imgIndex;
         int imgcnt;
->>>>>>> 4e73016a26d87bdd8a221871ff4181f88072188b
 
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;

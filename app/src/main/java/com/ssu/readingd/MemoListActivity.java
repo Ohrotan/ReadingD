@@ -103,7 +103,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
     public void AddMemo(View v) {
 
 
-        db.collection("memos")
+        db.collection("memos").whereEqualTo("user_id", login_id)
                 .orderBy("reg_date", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -180,7 +180,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     //최신순 정렬
-                    db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING).whereEqualTo("user_id", login_id)
+                    db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
