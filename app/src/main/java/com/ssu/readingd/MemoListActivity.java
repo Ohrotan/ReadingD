@@ -97,6 +97,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         login_id=sharedPref.getString("id", "none");
         if(login_id.equals("none")){
             Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
 
@@ -117,6 +118,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                 Intent intent = new Intent(context, MemoRegisterActivity.class);
                                 MemoDTO memo = document.toObject(MemoDTO.class);
                                 intent.putExtra("memo", memo);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                 startActivity(intent);
 
                                 break;
@@ -142,26 +144,31 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
         if (v == img[0]) {
             Intent intent = new Intent(this, FlashbackActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             overridePendingTransition(0, 0);
         } else if (v == img[1]) {
             Intent intent = new Intent(this, MemoListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             overridePendingTransition(0, 0);
         } else if (v == img[2]) {
             Intent intent = new Intent(this, BookShelfActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             overridePendingTransition(0, 0);
         } else if (v == img[3]) {
             Intent intent = new Intent(this, CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             overridePendingTransition(0, 0);
         } else if (v == img[4]) {
             Intent intent = new Intent(this, SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             overridePendingTransition(0, 0);
@@ -324,6 +331,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                         intent.putExtra("toMonth",toMonth);
                         intent.putExtra("toDate",toDate);
                         intent.putExtra("Activity", "MemoListActivity");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
                         startActivity(intent);
 

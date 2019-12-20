@@ -151,7 +151,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         // 책제목, 작가, 내용 없을 때 -> 전체메모 보여주기
         if (position == 0) {
             //최신순
-            db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING)
+            db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING).whereEqualTo("user_id", login_id)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value,
@@ -183,7 +183,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                     });
         } else if (position == 1) {
             //오래된순
-            memoRef.orderBy("reg_date")
+            memoRef.orderBy("reg_date").whereEqualTo("user_id", login_id)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value,
@@ -215,7 +215,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                         }
                     });
         } else {
-            memoRef.orderBy("book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            memoRef.orderBy("book_name").whereEqualTo("user_id", login_id).addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {
@@ -325,7 +325,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference memoRef = db.collection("memos");
-        Query query = db.collection("memos").whereEqualTo("book_name", book_name);
+        Query query = db.collection("memos").whereEqualTo("book_name", book_name).whereEqualTo("user_id", login_id);
 
         arrayList = new ArrayList<>();
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -345,7 +345,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
 
         if (position == 0) {
             //최신순 정렬
-            query.whereEqualTo("user_id", login_id).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {
@@ -366,7 +366,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
             });
         } else if (position == 1) {
             //오래된순 정렬
-            query.whereEqualTo("user_id", login_id).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {
@@ -387,7 +387,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
             });
         } else if (position == 2) {
             //책제목순 정렬
-            query.whereEqualTo("user_id", login_id).orderBy("book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            query.orderBy("book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {
