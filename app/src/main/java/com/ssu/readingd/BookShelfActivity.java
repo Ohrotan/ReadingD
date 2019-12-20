@@ -158,7 +158,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     //전체
-                    db.collection("books")
+                    db.collection("books").whereEqualTo("user_id",login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,

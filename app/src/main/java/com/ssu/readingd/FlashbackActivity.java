@@ -2,8 +2,10 @@ package com.ssu.readingd;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,6 +44,7 @@ public class FlashbackActivity extends AppCompatActivity {
     ImageButton prevButton, nextButton;
     Map<String, Object> memo;
     ArrayList<String> imgIds;
+    String user_id;
     int imgIndex = 0;
     int imgcnt = 0;
 
@@ -61,9 +64,11 @@ public class FlashbackActivity extends AppCompatActivity {
 
         final String TAG = "Async Task";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
+        user_id=sharedPref.getString("id", "none");
 
         db.collection("memos")
-                //.whereEqualTo("user_id", "admin")
+                .whereEqualTo("user_id", "admin")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
