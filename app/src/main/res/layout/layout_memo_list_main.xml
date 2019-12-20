@@ -107,11 +107,35 @@
             android:text="줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트 줄인 텍스트" />
 
 
-        <ImageView
-            android:id="@+id/pictureML"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/down_arrow" />
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/pictureML"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></ImageView>
+            <ImageButton
+                android:id="@+id/next_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/nextbtn"
+                android:background="@android:color/transparent"
+                android:layout_alignRight="@+id/pictureML"
+                android:layout_alignBottom="@id/pictureML"
+                ></ImageButton>
+
+                <ImageButton
+                    android:id="@+id/prev_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/prevbtn"
+                    android:background="@android:color/transparent"
+                    android:layout_alignLeft="@+id/pictureML"
+                    android:layout_alignBottom="@id/pictureML"
+                    ></ImageButton>
+        </RelativeLayout>
 
 
         <TextView

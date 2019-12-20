@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -156,6 +157,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView memoContent_short;
         private TextView memoContent_long;
         public ImageView memoImage;
+        private ImageButton prevButton, nextButton;
         public int imgIndex;
         public int imgcnt;
         private Spinner memoEditSpn;
@@ -180,7 +182,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             //expandedArea = itemView.findViewById(R.id.memoExpandArea);
             roundLayout = itemView.findViewById(R.id.round_layout);
             memoEditSpn = itemView.findViewById(R.id.memoEditSpinner);
-
+            prevButton = itemView.findViewById(R.id.prev_btn);
+            nextButton = itemView.findViewById(R.id.next_btn);
 
         }
 
@@ -203,29 +206,29 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             imgIndex = 0;
             imgcnt = 0;
-            memoImage.setOnTouchListener(new View.OnTouchListener() {
-
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    float x = event.getX();
-                    float width = v.getX() + v.getWidth() / 2;
-                    if (x > width) {
-                        if (imgIndex < imgcnt - 1)
-                            imgIndex++;
-                        setImageSwitcher(context, memoImage, imgIndex, data);
-                    } else {
-                        if (imgIndex > 0)
-                            imgIndex--;
-                        setImageSwitcher(context, memoImage, imgIndex, data);
-                    }
-                    return true;
-                }
-            });
-
+            if(data.getImg()!=null)
+                imgcnt = data.getImg().size();
 
             changeVisibility(selectedItems.get(position));
 
             roundLayout.setOnClickListener(this);
+            prevButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (imgIndex > 0)
+                        imgIndex--;
+                    setImageSwitcher(context, memoImage, imgIndex, data);
+
+                }
+            });
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (imgIndex < imgcnt - 1)
+                        imgIndex++;
+                    setImageSwitcher(context, memoImage, imgIndex, data);
+                }
+            });
 
             final MemoDTO memodata = this.data;
             memoEditSpn.setSelection(2);
@@ -300,9 +303,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             }
-            if(data.getImg()!=null)
-                imgcnt = data.getImg().size();
-            setImageSwitcher(context, memoImage, imgIndex, data);
+            if(imgcnt != 0)
+                setImageSwitcher(context, memoImage, imgIndex, data);
             // 해당 포지션의 변화를 알림
             if (prePosition != -1) notifyItemChanged(prePosition);
             notifyItemChanged(position);
@@ -351,8 +353,17 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     //expandedArea.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                     memoContent_short.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
                     memoContent_long.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-                    memoImage.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-
+                    if(imgcnt!=0) {
+                        memoImage.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                        prevButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                        nextButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                        setImageSwitcher(context, memoImage, imgIndex, data);
+                    }
+                    else{
+                        memoImage.setVisibility(View.GONE);
+                        prevButton.setVisibility(View.GONE);
+                        nextButton.setVisibility(View.GONE);
+                    }
 
                 }
             });
@@ -374,6 +385,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView memoContent_short;
         private TextView memoContent_long;
         public ImageView memoImage;
+        private ImageButton prevButton, nextButton;
         int imgIndex, imgcnt;
 
         //private LinearLayout expandedArea;
@@ -397,6 +409,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             //expandedArea = itemView.findViewById(R.id.memoExpandArea);
             roundLayout = itemView.findViewById(R.id.round_layout);
             memoEditSpinner = itemView.findViewById(R.id.memoEditSpinner);
+            prevButton = itemView.findViewById(R.id.prev_btn);
+            nextButton = itemView.findViewById(R.id.next_btn);
 
 
         }
@@ -414,30 +428,28 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             memoContent_short.setText(String.valueOf(data.getMemo_text() + "short text"));
             memoContent_long.setText(String.valueOf(data.getMemo_text() + "long text"));
             imgIndex = 0;
-            imgcnt = 0;
-          
-            memoImage.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    float x = event.getX();
-                    float width = v.getX() + v.getWidth() / 2;
-                    if (x > width) {
-                        if (imgIndex < imgcnt - 1)
-                            imgIndex++;
-                        setImageSwitcher(context, memoImage, imgIndex, data);
-                    } else {
-                        if (imgIndex > 0)
-                            imgIndex--;
-                        setImageSwitcher(context, memoImage, imgIndex, data);
-                    }
-                    return true;
-                }
-            });
-
+            imgcnt = data.getImg().size();
 
             changeVisibility(selectedItems.get(position));
 
             roundLayout.setOnClickListener(this);
+            prevButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (imgIndex > 0)
+                        imgIndex--;
+                    setImageSwitcher(context, memoImage, imgIndex, data);
+
+                }
+            });
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (imgIndex < imgcnt - 1)
+                        imgIndex++;
+                    setImageSwitcher(context, memoImage, imgIndex, data);
+                }
+            });
 
             final MemoDTO memodata = this.data;
             memoEditSpinner.setSelection(2);
@@ -556,9 +568,17 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     //expandedArea.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                     memoContent_short.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
                     memoContent_long.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-                    memoImage.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-
-
+                    if(imgcnt!=0) {
+                        memoImage.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                        prevButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                        nextButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                        setImageSwitcher(context, memoImage, imgIndex, data);
+                    }
+                    else{
+                        memoImage.setVisibility(View.GONE);
+                        prevButton.setVisibility(View.GONE);
+                        nextButton.setVisibility(View.GONE);
+                    }
                 }
             });
 
@@ -666,6 +686,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             // 클릭된 position 저장
             prePosition = position;
         }
+
     }
 
 
@@ -687,8 +708,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setImageSwitcher(final Context con, final ImageView imageview, int imgIndex, MemoDTO data){
         List<String> imgs = data.getImg();
-        String imgname = "default_image.jpg";
         int imgcnt = 0;
+        String imgname = "default_image.jpg";
         imageview.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         if (imgs != null) {
             imgcnt = imgs.size();

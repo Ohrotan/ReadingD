@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,7 +39,9 @@ public class FlashbackActivity extends AppCompatActivity {
     TextView date_tv;
     ImageView imgs;
     TextView memo_tv;
+    ImageButton prevButton, nextButton;
     Map<String, Object> memo;
+    ArrayList<String> imgIds;
     int imgIndex = 0;
     int imgcnt = 0;
 
@@ -52,6 +56,8 @@ public class FlashbackActivity extends AppCompatActivity {
         date_tv = findViewById(R.id.fdate_tv);
         imgs = findViewById(R.id.fimage_switcher);
         memo_tv = findViewById(R.id.fmemo_tv);
+        prevButton = findViewById(R.id.prev_btn);
+        nextButton = findViewById(R.id.next_btn);
 
         final String TAG = "Async Task";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -73,34 +79,36 @@ public class FlashbackActivity extends AppCompatActivity {
                                 Log.v(TAG, "memo" + memo.get("book_name"));
                                 if (memo.get("img") != null) {
                                     imgIndex = 0;
-                                    imgcnt = ((ArrayList<String>) memo.get("img")).size();
-                                    setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, (ArrayList<String>) memo.get("img"));
-
-                                    imgs.setOnTouchListener(new View.OnTouchListener() {
-
+                                    imgIds = (ArrayList<String>) memo.get("img");
+                                    imgcnt = imgIds.size();
+                                    book_title_tv.setText((String) memo.get("book_name"));
+                                    page_tv.setText(((long) memo.get("r_page")) + " p");
+                                    date_tv.setText((String) memo.get("reg_date"));
+                                    memo_tv.setText((String) memo.get("memo_text"));
+                                    if(imgcnt != 0)
+                                        setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, imgIds);
+                                    else{
+                                        imgs.setVisibility(View.GONE);
+                                        prevButton.setVisibility(View.GONE);
+                                        nextButton.setVisibility(View.GONE);
+                                    }
+                                    prevButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
-                                        public boolean onTouch(View v, MotionEvent event) {
-                                            float x = event.getX();
-                                            float width = v.getX() + v.getWidth() / 2;
-                                            if (x > width) {
-                                                if (imgIndex < imgcnt - 1)
-                                                    imgIndex++;
-                                                setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, (ArrayList<String>) memo.get("img"));
-
-                                            } else {
-                                                if (imgIndex > 0)
-                                                    imgIndex--;
-                                                setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, (ArrayList<String>) memo.get("img"));
-
-                                            }
-                                            return true;
+                                        public void onClick(View v) {
+                                            if (imgIndex > 0)
+                                                imgIndex--;
+                                            setImageSwitcher(FlashbackActivity.this, imgs, imgIndex,imgIds);
                                         }
                                     });
+                                    nextButton.setOnClickListener(new View.OnClickListener() {
+                                        public void onClick(View v) {
+                                            if (imgIndex < imgcnt - 1)
+                                                imgIndex++;
+                                            setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, imgIds);
+                                        }
+                                    });
+
                                 }
-                                book_title_tv.setText((String) memo.get("book_name"));
-                                page_tv.setText(((long) memo.get("r_page")) + " p");
-                                date_tv.setText((String) memo.get("reg_date"));
-                                memo_tv.setText((String) memo.get("memo_text"));
 
 
                             }
@@ -127,26 +135,19 @@ public class FlashbackActivity extends AppCompatActivity {
          */
     }
 
-    public void setImageSwitcher(final Context con, ImageView imageview, int imgIndex, List<String> imgs) {
-        String imgname = "default_image.jpg";
-        int imgcnt = 0;
-        imageview.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        if (imgs != null) {
-            imgcnt = imgs.size();
-        }
-        if (imgcnt != 0)
-            imgname = imgs.get(imgIndex);
+    public void setImageSwitcher(final Context con, final ImageView imageview, int imgIndex, ArrayList<String> imgs) {
+        String imgname = imgs.get(imgIndex);
         if (!imgname.contains("jpg"))
             imgname = imgname + ".PNG";
         StorageReference httpsReference = FirebaseStorage.getInstance()
                 .getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + imgname);
+        httpsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(con).load(uri).override(700, 500).into(imageview);
+            }
+        });
 
-        Task<Uri> uritask = httpsReference.getDownloadUrl();
-        while (!uritask.isSuccessful()) {
-            ;
-        }
-        Uri uri = uritask.getResult();
-        Glide.with(con).load(uri).override(600, 400).into(imageview);
     }
 
     public void clickTab(View v) {
