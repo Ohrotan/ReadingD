@@ -28,9 +28,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v== btn1){//박슬우
+            Intent intent = new Intent(this, TestSeulwooActivity.class);
+            startActivity(intent);
 
         }else if(v== btn2){//임혜선
-
+            Intent intent = new Intent(this, activity_test_HyeSeon.class);
+            startActivity(intent);
         }else if(v== btn3){//조란
             Intent intent = new Intent(this,TestRanActivity.class);
             startActivity(intent);

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <LinearLayout
+        android:id="@+id/round_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/more_round_shape_gray"
+        android:orientation="vertical"
+        android:padding="34dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/BookTitleCm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="책 제목"
+
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" - " />
+
+            <TextView
+                android:id="@+id/BookWriterCm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/BookTitleCm"
+
+                android:text="저자" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/BookWriterCm"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  " />
+
+                <TextView
+                    android:id="@+id/BookPageCm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="214" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="p" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" / " />
+
+                <TextView
+                    android:id="@+id/BookDateCm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2019.11.28" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/emailCm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linearLayout"
+                android:text="hshs@ssu.ac.kr" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/communityPicture"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+            <ImageButton
+                android:id="@+id/next_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignRight="@+id/communityPicture"
+                android:layout_alignBottom="@id/communityPicture"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/nextbtn"></ImageButton>
+
+            <ImageButton
+                android:id="@+id/prev_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignLeft="@+id/communityPicture"
+                android:layout_alignBottom="@id/communityPicture"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/prevbtn"></ImageButton>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/communityContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
