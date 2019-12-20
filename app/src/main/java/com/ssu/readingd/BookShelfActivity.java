@@ -66,6 +66,8 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
     String login_id;
 
+    boolean delete = false;
+
     ArrayList<BookSimpleDTO> arrayList;
 
     @Override
@@ -282,9 +284,11 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
         if (v == deleteBtn) {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
+            delete = !delete;
+
             recyclerView.setLayoutManager(gridLayoutManager);
             arrayList = new ArrayList<>();
-            adapter = new BookShelfAdapter(this, arrayList, true);
+            adapter = new BookShelfAdapter(this, arrayList, delete);
             recyclerView.setAdapter(adapter);
 
             sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -292,7 +296,9 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (position == 0) {
                         //등록순 정렬
-                        db.collection("books").whereEqualTo("user_id", login_id)
+                        //.whereEqualTo("user_id", login_id)
+
+                        db.collection("books")
                                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot value,

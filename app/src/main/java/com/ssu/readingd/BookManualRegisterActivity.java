@@ -1,7 +1,9 @@
 package com.ssu.readingd;
 
 import android.app.DatePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -228,7 +230,9 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
             onBackPressed();
         } else if (v == save_btn) {
             // BookDTO result = new BookDTO((BookSimpleDTO) getIntent().getParcelableExtra("book"));
-            result.setUser_id("admin");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+            result.setUser_id(sharedPref.getString("id", null));
             if (!read_p_etv.getText().toString().equals("")) {
                 result.setR_page(Integer.parseInt(read_p_etv.getText().toString()));
             }
@@ -246,7 +250,7 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
                 finish();
             } else {
                 result.setReg_date(year + "." + (month + 1) + "." + day);
-                new DBUtil().addBook("admin", result);
+                new DBUtil().addBook(result.getId(), result);
                 //startActivity(new Intent(this, TestRanActivity.class));
                 finish();
             }

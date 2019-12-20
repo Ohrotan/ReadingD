@@ -22,75 +22,70 @@
             android:layout_marginBottom="20dp"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="&quot;"
-                    android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/BookNameML"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="책제목"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="&quot; - &quot;"
-                    android:textSize="18dp" />
+                    android:paddingRight="35dp"
+                    android:text="sdfsdfasdasdfadsfdsafadsfadsfasdfdsafasdfasdf"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/BookWriterML"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="저자"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="&quot; - "
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="page"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:layout_below="@+id/BookNameML"/>
 
                 <TextView
                     android:id="@+id/BookPageML"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="214"
+                    android:textSize="18dp"
+                    android:layout_below="@id/BookWriterML"/>
+
+                <TextView
+                    android:id="@+id/pg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="83dp"
+                    android:layout_marginRight="-152dp"
+                    android:layout_toLeftOf="@id/BookPageML"
+                    android:layout_toEndOf="@+id/BookPageML"
+                    android:text=""
                     android:textSize="18dp" />
 
-            </LinearLayout>
+            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/MemoDateML"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="-42dp"
                 android:layout_below="@id/linearLayout"
                 android:text="2019.12.02 15:10"
                 android:textSize="18dp" />
 
             <Spinner
                 android:id="@+id/memoEditSpinner"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:stateListAnimator="@null"
                 android:adjustViewBounds="true"
+                android:prompt="@string/prompt"
                 android:scaleType="fitCenter"
                 android:background="@drawable/more"
                 android:entries="@array/memo_edit"/>

@@ -77,6 +77,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             book_name_tv = itemView.findViewById(R.id.book_name);
             book_delete_button = itemView.findViewById(R.id.imagedelete_btn);
             book_delete_button.setVisibility(View.GONE);
+            book_layout = itemView.findViewById(R.id.book_layout);
 
         }
 
@@ -87,6 +88,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             RelativeLayout deleteLayout = (RelativeLayout)layoutInflater.inflate(R.layout.layout_book_img_delete, null);
+
 
             book_name_tv.setText(data.getBook_name());
             //ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
@@ -102,6 +104,11 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 });*/
             }
 
+            //ImageView view = deleteLayout.findViewById(R.id.book_deleteBtn);
+            //book_layout.addView(deleteLayout);
+            //view.setVisibility(View.INVISIBLE);
+            //deleteLayout.addView(view);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -109,9 +116,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }).start();
 
-
-            //new DBUtil().setImageViewFromDB(context, book_image, data.getImg());
-            //book_image.setImageResource(R.drawable.book_1);
+            book_name_tv.setText(data.getBook_name());
             book_image.setOnClickListener(this);
             book_image.setOnLongClickListener(new View.OnLongClickListener(){
                 @Override
@@ -123,6 +128,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     return true;
                 }
             });
+
 
         }
 
