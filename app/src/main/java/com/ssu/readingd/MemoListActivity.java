@@ -135,6 +135,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                                 intent.putExtra("book", book);
                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                                 startActivity(intent);
+                                                finish();
 
                                             } else {
                                                 Log.d("hs_test", "메모추가 실패");

@@ -45,9 +45,12 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private ArrayList<BookSimpleDTO> bookData = new ArrayList<>();
 
     private Context context;
+    private View view1;
 
     private int prePosition = -1;
     Dialog dialog;
+
+    ViewHolder_MemoList vh_m;
 
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
 
@@ -165,6 +168,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private String memo_id;
         private List<String> imgs;
 
+
         ViewHolder_MemoList(View itemView) {
             super(itemView);
 
@@ -181,6 +185,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             memoEditSpn = itemView.findViewById(R.id.memoEditSpinner);
             prevButton = itemView.findViewById(R.id.prev_btn);
             nextButton = itemView.findViewById(R.id.next_btn);
+            view1 = itemView;
 
         }
 
@@ -242,9 +247,11 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if(position ==0){
 
-                            Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
-                            intent.putExtra("memo", memodata);
-                            context.startActivity(intent);
+                        Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
+                        intent.putExtra("memo", memodata);
+                        context.startActivity(intent);
+
+
 
                     }
                     else if(position == 1){
@@ -269,11 +276,13 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             public void onClick(View v) {
                                 new DBUtil().DeleteMemo(memo_id);
                                 dialog.dismiss();
+                                view1.setVisibility(View.GONE);
                             }
                         });
 
                         dialog = builder.create();
                         dialog.show();
+
 
 
                     }
@@ -386,7 +395,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public ImageView memoImage;
         private ImageButton prevButton, nextButton;
         int imgIndex, imgcnt;
-
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
         private Spinner memoEditSpinner;
@@ -410,6 +418,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             memoEditSpinner = itemView.findViewById(R.id.memoEditSpinner);
             prevButton = itemView.findViewById(R.id.prev_btn);
             nextButton = itemView.findViewById(R.id.next_btn);
+            view1 = itemView;
 
 
         }
@@ -458,6 +467,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if(position ==0){
                             Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
+
+
                             intent.putExtra("memo", memodata);
                             context.startActivity(intent);
                     }
@@ -485,7 +496,9 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             public void onClick(View v) {
                                 new DBUtil().DeleteMemo(memo_id);
                                 Log.d("hs_test", "메모 ... 스피너 삭제--> 확인 버튼 클릭");
+
                                 dialog.dismiss();
+                                view1.setVisibility(View.GONE);
                             }
                         });
 

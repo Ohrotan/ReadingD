@@ -1,19 +1,10 @@
 package com.ssu.readingd;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,16 +12,10 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
@@ -41,26 +26,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.firestore.v1.Cursor;
 import com.ssu.readingd.dto.BookSimpleDTO;
-import com.ssu.readingd.util.DBUtil;
 import com.ssu.readingd.dto.MemoDTO;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -100,6 +84,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
 
     String user_id;
     String book_id;
+    Context context;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     // Create a storage reference from our app
@@ -138,6 +123,7 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
         TvBookname.setText(book_name);
         w_page = bookSimpleDTO.getW_page();
         book_author = bookSimpleDTO.getAuthor();
+        context = this;
        // user_id = "aaee";
        /* book_name = "hiehie";
         book_author = "aa";
@@ -247,8 +233,23 @@ public class MemoRegisterActivity extends AppCompatActivity implements View.OnCl
             MemoText = MemoEdit.getText().toString();
 
             memoDTO = new MemoDTO(book_name, book_author, Imgids2, MemoText, r_page, reg_date, share, user_id, w_page);
-            new DBUtil().addMemo(memoDTO);
-            onBackPressed();
+            db.collection("memos").document().set(memoDTO)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Intent intent = new Intent(context, MemoListActivity.class);
+                            startActivity(intent);
+                            finish();
+                            //onBackPressed();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
         }
     }
 

@@ -247,12 +247,10 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if (v == addMemoBtn) {
             Intent intent = new Intent(this, MemoRegisterActivity.class);
-
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
             intent.putExtra("book", book);
-
             startActivity(intent);
+            finish();
 
         } else if (v == bookEditBtn) {
             Intent intent = new Intent(this, BookManualRegisterActivity.class);
@@ -263,6 +261,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            finish();
         } else if (v == memoSearchBtn || v == memoBtn) {
             View dialogView = getLayoutInflater().inflate(R.layout.layout_book_memo_search, null);
 
