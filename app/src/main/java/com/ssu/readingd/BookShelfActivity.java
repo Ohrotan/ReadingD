@@ -1,6 +1,5 @@
 package com.ssu.readingd;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -37,7 +35,6 @@ import com.ssu.readingd.util.StillImageActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class BookShelfActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -148,8 +145,8 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
                 View dialogView = getLayoutInflater().inflate(R.layout.layout_book_search, null);
 
-                Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
-                Button searchBtn = dialogView.findViewById(R.id.searchBtn);
+                Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn_b);
+                Button searchBtn = dialogView.findViewById(R.id.searchBtn_b);
                 final EditText nameSearchTxt = dialogView.findViewById(R.id.title_book_search);
                 final EditText writerSearchTxt = dialogView.findViewById(R.id.writer_book_search);
 
@@ -166,16 +163,10 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onClick(View v) {
 
-                        if (!nameSearchTxt.equals("") && !writerSearchTxt.equals("")) {
-                        } else if (!nameSearchTxt.equals("") && writerSearchTxt.equals("")) {
-
-                        } else if (nameSearchTxt.equals("") && writerSearchTxt.equals("")) {
-
-                        } else {
-
-
-                        }
-
+                        Intent intent = new Intent(v.getContext(), BookShelfSearchActivity.class);
+                        intent.putExtra("book_name", nameSearchTxt.getText().toString());
+                        intent.putExtra("author", writerSearchTxt.getText().toString());
+                        startActivity(intent);
 
                         alertDialog.dismiss();
                     }
@@ -450,19 +441,15 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
             });
 
         } else if (v == bookSearchBtn || v == imageButton) {
-            View dialogView = getLayoutInflater().inflate(R.layout.memo_search_layout, null);
+            View dialogView = getLayoutInflater().inflate(R.layout.layout_book_search, null);
 
             Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
             Button searchBtn = dialogView.findViewById(R.id.searchBtn);
             final EditText nameSearchTxt = dialogView.findViewById(R.id.nameSearchText);
             final EditText writerSearchTxt = dialogView.findViewById(R.id.writerSearchText);
-            final EditText contentSearchTxt = dialogView.findViewById(R.id.contentSearchText);
-            final Button startDate = dialogView.findViewById(R.id.startDate);
-            final Button endDate = dialogView.findViewById(R.id.endDate);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setView(dialogView);
-
 
             cancelBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -477,50 +464,15 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
                     final String book_name = nameSearchTxt.getText().toString();
                     final String author = writerSearchTxt.getText().toString();
-                    final String content = contentSearchTxt.getText().toString();
-
-
-
-
+                    Intent intent = new Intent(v.getContext(), BookShelfSearchActivity.class);
+                    intent.putExtra("book_name", book_name);
+                    intent.putExtra("author", author);
                     alertDialog.dismiss();
+                    startActivity(intent);
                 }
             });
 
-            Button.OnClickListener btnListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final View view = v;
-                    DatePickerDialog dialog = new DatePickerDialog(BookShelfActivity.this, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int date) {
 
-                            String msg = String.format("%d.%d.%d", year, month + 1, date);
-
-                            if (view == startDate) {
-                                startDate.setText(msg);
-                                fromYear = year;
-                                fromMonth = month + 1;
-                                fromDate = date;
-                            } else if (view == endDate) {
-                                endDate.setText(msg);
-                                toYear = year;
-                                toMonth = month + 1;
-                                toDate = date;
-                            }
-
-                            //Toast.makeText(MemoListActivity.this, msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
-
-                    dialog.getDatePicker().setMaxDate(new Date().getTime());    //입력한 날짜 이후로 클릭 안되게 옵션
-                    dialog.show();
-
-
-                }
-            };
-
-            startDate.setOnClickListener(btnListener);
-            endDate.setOnClickListener(btnListener);
 
             alertDialog = builder.create();
             alertDialog.show();
