@@ -13,6 +13,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,11 +29,6 @@ import com.ssu.readingd.adapter.MemoListAdapter;
 import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.ArrayList;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MemoSearchResultActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -123,66 +123,13 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference memoRef = db.collection("memos");
-<<<<<<< HEAD
-        Query query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("user_id", login_id);
-=======
         //      Query query = db.collection("memos").whereEqualTo("book_name", book_name);
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
 
         arrayList = new ArrayList<>();
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new MemoListAdapter(this, arrayList, 0);
         recyclerView.setAdapter(adapter);
-<<<<<<< HEAD
 
-        if(!book_name.equals("") && author.equals("") && content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("user_id", login_id);
-        }
-        else if(book_name.equals("") && !author.equals("") && content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("user_id", login_id);
-        }
-        else if(book_name.equals("") && author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("content",content).whereEqualTo("user_id", login_id);
-        }
-        else if( !book_name.equals("") && !author.equals("") && content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("user_id", login_id);
-        }
-        else if( !book_name.equals("") && author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("user_id", login_id);
-        }
-
-        else if( book_name.equals("") && !author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_author",author).whereEqualTo("content",content).whereEqualTo("user_id", login_id);
-        }
-
-        else if( !book_name.equals("") && !author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("content",content)
-                    .whereEqualTo("user_id", login_id);
-        }
-
-        else if( book_name.equals("") && author.equals("") && content.equals("")){
-            // 책제목, 작가, 내용 없을 때 -> 전체메모 보여주기
-            if(position == 0){
-                //최신순
-                db.collection("memos").whereEqualTo("user_id", login_id)
-                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot value,
-                                                @Nullable FirebaseFirestoreException e) {
-                                if (e != null) {
-                                    Log.d("hs_test", "Listen failed.", e);
-                                    return;
-                                }
-                                int count = value.size();
-                                arrayList.clear();
-                                for (QueryDocumentSnapshot doc : value) {
-                                    if (doc.get("book_name") != null) {
-                                        MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                        memoDTO.setMemo_id(doc.getId());
-                                        arrayList.add(memoDTO);
-                                        Log.d("hs_test", "메모 불러오기", e);
-                                    }
-=======
 /*
         if (!book_name.equals("") && author.equals("") && content.equals("")) {
             query = db.collection("memos").whereEqualTo("book_name", book_name);
@@ -226,27 +173,12 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                                 } else if (content != null && dto.getMemo_text().contains(content)) {
                                     dto.setMemo_id(doc.getId());
                                     arrayList.add(dto);
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
                                 }
                                 Log.d("hs_test", "메모 불러오기", e);
 
                             }
-<<<<<<< HEAD
-                        });
-            }
-            else if(position == 1){
-                //오래된순
-                memoRef.whereEqualTo("user_id", login_id).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.d("hs_test", "Listen failed.", e);
-                            return;
-=======
                             //어답터 갱신
                             adapter.notifyDataSetChanged();
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
                         }
                     });
         } else if (position == 1) {
@@ -291,26 +223,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                         Log.d("hs_test", "Listen failed.", e);
                         return;
                     }
-<<<<<<< HEAD
-                });
-            }
-            else {
-                memoRef.whereEqualTo("user_id", login_id).orderBy("Book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.d("hs_test", "Listen failed.", e);
-                            return;
-                        }
-                        int count = value.size();
-                        arrayList.clear();
-                        for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get("book_name") != null) {
-                                MemoDTO memoDTO = doc.toObject(MemoDTO.class);
-                                arrayList.add(memoDTO);
-                            }
-=======
+
                     int count = value.size();
                     arrayList.clear();
                     for (QueryDocumentSnapshot doc : value) {
@@ -324,7 +237,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                         } else if (content != null && dto.getMemo_text().contains(content)) {
                             dto.setMemo_id(doc.getId());
                             arrayList.add(dto);
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
+
                         }
                         Log.d("hs_test", "메모 불러오기", e);
                     }
@@ -379,14 +292,9 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                     adapter.notifyDataSetChanged();
                 }
             });
-<<<<<<< HEAD
-        }
-        else {
-            query.whereEqualTo("user_id", login_id).orderBy("Book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
-=======
+
         } else {
             query.orderBy("Book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {
@@ -417,11 +325,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference memoRef = db.collection("memos");
-<<<<<<< HEAD
-        Query query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("user_id", login_id);
-=======
         Query query = db.collection("memos").whereEqualTo("book_name", book_name);
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
 
         arrayList = new ArrayList<>();
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -429,19 +333,6 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         recyclerView.setAdapter(adapter);
 
 
-<<<<<<< HEAD
-        if(!author.equals("") && content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("user_id", login_id);
-        }
-        else if( author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("memo_text",content).whereEqualTo("user_id", login_id);
-        }
-
-        else if( !author.equals("") && !content.equals("")){
-            query = db.collection("memos").whereEqualTo("book_name",book_name).whereEqualTo("book_author",author).whereEqualTo("memo_text",content).whereEqualTo("user_id", login_id);
-        }
-        else{
-=======
         if (!author.equals("") && content.equals("")) {
             query = db.collection("memos").whereEqualTo("book_name", book_name).whereEqualTo("book_author", author);
         } else if (author.equals("") && !content.equals("")) {
@@ -449,7 +340,6 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         } else if (!author.equals("") && !content.equals("")) {
             query = db.collection("memos").whereEqualTo("book_name", book_name).whereEqualTo("book_author", author).whereEqualTo("memo_text", content);
         } else {
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
             // 작가, 메모내용 없을 때
         }
 

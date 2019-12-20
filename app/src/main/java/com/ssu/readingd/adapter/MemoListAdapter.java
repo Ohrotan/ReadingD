@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -19,11 +20,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ssu.readingd.MemoEditActivity;
 import com.ssu.readingd.R;
 import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.dto.MemoDTO;
@@ -31,10 +37,6 @@ import com.ssu.readingd.util.DBUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -194,15 +196,10 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             bookName.setText(data.getBook_name());
             bookWriter.setText(data.getBook_author());
             bookPage.setText(String.valueOf((data.getR_page())));
-<<<<<<< HEAD
             bookDate.setText(data.getReg_date()) ;
             memoContent_short.setText(String.valueOf(data.getMemo_text()));
             memoContent_long.setText(String.valueOf(data.getMemo_text()));
-=======
-            bookDate.setText(data.getReg_date());
-            memoContent_short.setText(String.valueOf(data.getMemo_text() + "short text"));
-            memoContent_long.setText(String.valueOf(data.getMemo_text() + "long text"));
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
+
             imgIndex = 0;
             imgcnt = 0;
             if (data.getImg() != null)
@@ -467,10 +464,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         memoDeleteCancelBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-<<<<<<< HEAD
-=======
-                                Toast.makeText(v.getContext(), "삭제 버튼 클릭", Toast.LENGTH_SHORT).show();
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
                                 Log.d("hs_test", "메모 ... 스피너 삭제 --> 취소 버튼 클릭");
                                 dialog.dismiss();
                             }

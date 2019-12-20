@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-<<<<<<< HEAD
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.CollectionReference;
-=======
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -37,12 +34,6 @@ import com.ssu.readingd.dto.UserDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class CommunityActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -179,9 +170,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                 final String author = writerSearchTxt.getText().toString();
                 final String content = contentSearchTxt.getText().toString();
 
-<<<<<<< HEAD
                 CommunitySearchResult(book_name, author, content, from, to);
-=======
                 Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
                 intent.putExtra("book_name", book_name);
                 intent.putExtra("author", author);
@@ -195,7 +184,6 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                 intent.putExtra("Activity", "CommunityActivity");
 
                 startActivity(intent);
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
 
 
                 alertDialog.dismiss();
@@ -217,13 +205,9 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
                             fromYear = year;
                             fromMonth = month + 1;
                             fromDate = date;
-<<<<<<< HEAD
                             from = fromYear + "-" + fromMonth + "-" + fromDate+" "+"00:00";
                         }
-                        else if(view == endDate){
-=======
-                        } else if (view == endDate) {
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
+                        else if (view == endDate) {
                             endDate.setText(msg);
                             toYear = year;
                             toMonth = month + 1;
@@ -249,7 +233,7 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         alertDialog.show();
     }
 
-<<<<<<< HEAD
+
     public void CommunitySearchResult(String book_name, String author, String content, String from, String to) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -312,7 +296,6 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-=======
 
     public void clickTab(View v) {
         ImageView[] img = new ImageView[5];
@@ -355,5 +338,5 @@ public class CommunityActivity extends AppCompatActivity implements View.OnClick
         }
 
     }
->>>>>>> a685d039af6a4fe0260786b0dc57381b13bbcacf
+
 }
