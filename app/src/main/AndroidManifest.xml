@@ -43,6 +43,9 @@
             android:name=".BookShelfActivity"
             android:theme="@style/NoTitle" />
         <activity
+            android:name=".BookShelfSearchActivity"
+            android:theme="@style/NoTitle" />
+        <activity
             android:name=".MemoSearchResultActivity"
             android:launchMode="singleTop"
             android:theme="@style/NoTitle" />
