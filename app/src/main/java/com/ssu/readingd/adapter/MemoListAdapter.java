@@ -612,6 +612,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private MemoDTO memo;
         private int position;
 
+
         ViewHolder_Community(View itemView) {
             super(itemView);
 
@@ -629,6 +630,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         void onBind(MemoDTO data, int position) {
+
             this.memo = data;
             this.position = position;
             this.imgs = data.getImg();
@@ -644,7 +646,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             final MemoDTO memodata = data;
             if(imgcnt != 0){
-                setImageSwitcher(context, memoImage, imgIndex, data);
+                //setImageSwitcher(context, memoImage, imgIndex, data);
                 prevButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -679,7 +681,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imgcnt = 0;
             if(memo.getImg()!=null)
                 imgcnt = data.getImg().size();
-            setImageSwitcher(context, memoImage, imgIndex, memo);
+
+            //setImageSwitcher(context, memoImage, imgIndex, memo);
 
             memoImage.setOnTouchListener(new View.OnTouchListener() {
 
@@ -759,6 +762,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imgname = imgs.get(imgIndex);
         if (!imgname.contains("jpg"))
             imgname = imgname + ".PNG";
+
         StorageReference httpsReference = FirebaseStorage.getInstance()
                 .getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/ssu-readingd.appspot.com/o/" + imgname);
         httpsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {

@@ -17,10 +17,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.ssu.readingd.adapter.MemoListAdapter;
+import com.ssu.readingd.dto.BookDTO;
 import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.ArrayList;
@@ -107,25 +108,28 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
 
         db.collection("memos").whereEqualTo("user_id", login_id)
-                .orderBy("reg_date", Query.Direction.ASCENDING)
+                .orderBy("reg_date", Query.Direction.ASCENDING).limit(1)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
 
-                                Intent intent = new Intent(context, MemoRegisterActivity.class);
-                                MemoDTO memo = document.toObject(MemoDTO.class);
-                                intent.putExtra("memo", memo);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                startActivity(intent);
+                            Intent intent = new Intent(context, MemoRegisterActivity.class);
+                            MemoDTO memo = document.toObject(MemoDTO.class);
+                            BookDTO book = new BookDTO();
 
-                                break;
-                            }
-                        } else {
-                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                            book.setBook_name(memo.getBook_name());
+                            book.setAuthor(memo.getBook_author());
+                            book.setW_page(memo.getW_page());
+
+                            intent.putExtra("book", book);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            startActivity(intent);
+                            
                         }
+
                     }
                 });
 
@@ -146,20 +150,20 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
-          //  finish();
+            //  finish();
             overridePendingTransition(0, 0);
         } else if (v == img[1]) {
             Intent intent = new Intent(this, MemoListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
-          //  finish();
+            //  finish();
             overridePendingTransition(0, 0);
         } else if (v == img[2]) {
             Intent intent = new Intent(this, BookShelfActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-           // Toast.makeText(this,"bookshelf",Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this,"bookshelf",Toast.LENGTH_SHORT).show();
             startActivity(intent);
             overridePendingTransition(0, 0);
         } else if (v == img[3]) {
