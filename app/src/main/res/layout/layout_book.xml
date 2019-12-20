@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+
     <ImageView
         android:id="@+id/book_img"
         android:layout_width="match_parent"
@@ -22,6 +23,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/default_book" />
+    <ImageButton
+        android:id="@+id/imagedelete_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/imagedeletebtn"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        ></ImageButton>
 
     <TextView
         android:id="@+id/book_name"
@@ -35,6 +46,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/book_img" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -49,7 +49,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
 
     private int prePosition = -1;
-    private boolean isFirstSelected = true;
     Dialog dialog;
 
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
@@ -195,7 +194,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imgs = new ArrayList<>();
 
 
-            final MemoDTO memoDTO = data;
+            final MemoDTO memodata = data;
 
             bookName.setText(data.getBook_name());
             bookWriter.setText(data.getBook_author());
@@ -246,7 +245,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                     if(position ==0){
-
 
                             Intent intent = new Intent(view.getContext(), MemoEditActivity.class);
                             intent.putExtra("memo", memodata);
@@ -646,7 +644,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             EmailView.setText(data.getUser_id());
             imgIndex = 0;
             imgcnt = imgs.size();
-            final MemoDTO memodata = this.memo;
+
+            final MemoDTO memodata = data;
             if(imgcnt != 0){
                 setImageSwitcher(context, memoImage, imgIndex, data);
                 prevButton.setOnClickListener(new View.OnClickListener() {
@@ -663,7 +662,8 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     public void onClick(View v) {
                         if (imgIndex < imgcnt - 1)
                             imgIndex++;
-                        setImageSwitcher(context, memoImage, imgIndex, memodata);
+
+                        setImageSwitcher(context,memoImage, imgIndex, memodata);
                     }
                 });
 

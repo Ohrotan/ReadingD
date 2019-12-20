@@ -43,6 +43,7 @@ public class FlashbackActivity extends AppCompatActivity {
     ImageButton prevButton, nextButton;
     Map<String, Object> memo;
     ArrayList<String> imgIds;
+    String user_id;
     int imgIndex = 0;
     int imgcnt = 0;
 

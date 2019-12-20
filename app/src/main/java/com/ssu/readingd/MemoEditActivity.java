@@ -71,7 +71,7 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
     String book_author;
     TextView TvBookname;
     String user_id;
-    String memo_id = "CdLyCrIvFtsA17h3ylgK";
+    String memo_id;
     ImageView BtnAddphoto;
     SeekBar Seekbar;
     TextView TvCurpage;
@@ -121,11 +121,10 @@ public class MemoEditActivity extends AppCompatActivity implements View.OnClickL
         BtnSave = findViewById(R.id.save_btn);
         imageSwitcher = findViewById(R.id.image_switcher);
 
-   //     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-   //     user_id = pref.getString("id", null);
+        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
+        user_id=sharedPref.getString("id", "none");
        Intent intent = getIntent();
        memoDTO = (MemoDTO)intent.getExtras().getSerializable("memo");
-       user_id = "aa";
 
 /*
         DocumentReference docRef = db.collection("memos").document(memo_id);
