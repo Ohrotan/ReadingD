@@ -18,12 +18,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -37,6 +31,12 @@ import com.ssu.readingd.util.StillImageActivity;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class BookShelfActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -91,9 +91,9 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
         imageButton.setOnClickListener(this);
 
         init();
-        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
-        login_id=sharedPref.getString("id", "none");
-        if(login_id.equals("none")){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        login_id = sharedPref.getString("id", "none");
+        if (login_id.equals("none")) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
@@ -151,7 +151,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
         recyclerView.setLayoutManager(gridLayoutManager);
         arrayList = new ArrayList<>();
-        adapter = new BookShelfAdapter(this, arrayList);
+        adapter = new BookShelfAdapter(this, arrayList, delete);
         recyclerView.setAdapter(adapter);
 
 
@@ -160,7 +160,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     //전체
-                    db.collection("books").whereEqualTo("user_id",login_id)
+                    db.collection("books").whereEqualTo("user_id", login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -245,36 +245,41 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
         if (v == img[0]) {
             Intent intent = new Intent(this, FlashbackActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+
             overridePendingTransition(0, 0);
         } else if (v == img[1]) {
             Intent intent = new Intent(this, MemoListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+
             overridePendingTransition(0, 0);
         } else if (v == img[2]) {
             Intent intent = new Intent(this, BookShelfActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+
             overridePendingTransition(0, 0);
         } else if (v == img[3]) {
             Intent intent = new Intent(this, CommunityActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+
             overridePendingTransition(0, 0);
         } else if (v == img[4]) {
             Intent intent = new Intent(this, SettingActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+
             overridePendingTransition(0, 0);
         }
-
+        finish();
     }
 
 
@@ -282,10 +287,11 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
 
         if (v == deleteBtn) {
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+            //GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
             delete = !delete;
 
+            /*
             recyclerView.setLayoutManager(gridLayoutManager);
             arrayList = new ArrayList<>();
             adapter = new BookShelfAdapter(this, arrayList, delete);
@@ -356,6 +362,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
 
                 }
             });
+            */
         } else if (v == bookSearchBtn || v == imageButton) {
             View dialogView = getLayoutInflater().inflate(R.layout.memo_search_layout, null);
 
