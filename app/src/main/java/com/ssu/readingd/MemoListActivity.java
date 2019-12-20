@@ -17,13 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,6 +34,13 @@ import com.ssu.readingd.dto.MemoDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MemoListActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -95,8 +96,9 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         login_id = sharedPref.getString("id", "none");
         if (login_id.equals("none")) {
             Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            finish();
         }
 
     }
@@ -116,7 +118,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                 Intent intent = new Intent(context, MemoRegisterActivity.class);
                                 MemoDTO memo = document.toObject(MemoDTO.class);
                                 intent.putExtra("memo", memo);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                 startActivity(intent);
 
                                 break;
@@ -141,36 +143,41 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
         if (v == img[0]) {
             Intent intent = new Intent(this, FlashbackActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
+          //  finish();
             overridePendingTransition(0, 0);
         } else if (v == img[1]) {
             Intent intent = new Intent(this, MemoListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
+          //  finish();
             overridePendingTransition(0, 0);
         } else if (v == img[2]) {
             Intent intent = new Intent(this, BookShelfActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+           // Toast.makeText(this,"bookshelf",Toast.LENGTH_SHORT).show();
             startActivity(intent);
             overridePendingTransition(0, 0);
         } else if (v == img[3]) {
             Intent intent = new Intent(this, CommunityActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
+            //finish();
             overridePendingTransition(0, 0);
         } else if (v == img[4]) {
             Intent intent = new Intent(this, SettingActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
+
             overridePendingTransition(0, 0);
         }
-
+        finish();
     }
 
 
@@ -293,7 +300,6 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setView(dialogView);
-
 
 
             cancelBtn.setOnClickListener(new View.OnClickListener() {
