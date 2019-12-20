@@ -12,10 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.ssu.readingd.BookMemoListActivity;
@@ -25,6 +21,10 @@ import com.ssu.readingd.dto.BookSimpleDTO;
 import com.ssu.readingd.util.ImageViewFromURL;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -86,8 +86,8 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             this.position = position;
             this.id = data.getId();
 
-            LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            RelativeLayout deleteLayout = (RelativeLayout)layoutInflater.inflate(R.layout.layout_book_img_delete, null);
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            RelativeLayout deleteLayout = (RelativeLayout) layoutInflater.inflate(R.layout.layout_book_img_delete, null);
 
 
             book_name_tv.setText(data.getBook_name());
@@ -108,17 +108,19 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             //book_layout.addView(deleteLayout);
             //view.setVisibility(View.INVISIBLE);
             //deleteLayout.addView(view);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
-                }
-            }).start();
-
+            if (data.getImg() == null || data.getImg().equals("")) {
+                book_image.setImageDrawable(context.getResources().getDrawable(R.drawable.default_book, null));
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
+                    }
+                }).start();
+            }
             book_name_tv.setText(data.getBook_name());
             book_image.setOnClickListener(this);
-            book_image.setOnLongClickListener(new View.OnLongClickListener(){
+            book_image.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     Log.d("hs_test", "롱클릭");
@@ -143,14 +145,12 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 context.startActivity(intent);
 
-            }
-            else{
+            } else {
                 Intent intent = new Intent(v.getContext(), BookMemoListActivity.class);
                 intent.putExtra("book", data);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 context.startActivity(intent);
             }
-
 
 
         }

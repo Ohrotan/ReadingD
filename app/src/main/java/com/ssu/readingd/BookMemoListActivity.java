@@ -65,6 +65,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
     MemoDTO memoDTO;
     ArrayList<MemoDTO> arrayList;
 
+    String login_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +98,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
 
         init();
         SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
-        String login_id=sharedPref.getString("id", "none");
+        login_id=sharedPref.getString("id", "none");
         if(login_id.equals("none")){
             Intent intent2 = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -167,7 +168,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                     //최신순 정렬
                     Log.v("setdata", "최신");
                     db.collection("memos")
-                            //.whereEqualTo("user_id","")
+                            .whereEqualTo("user_id",login_id)
                             .whereEqualTo("book_name", book.getBook_name())
                             .orderBy("reg_date", Query.Direction.DESCENDING)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -199,7 +200,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                     Log.v("setdata", "오래");
                     //오래된순
                     db.collection("memos")
-                            //.whereEqualTo("user_id","")
+                            .whereEqualTo("user_id",login_id)
                             .whereEqualTo("book_name", book.getBook_name())
                             .orderBy("reg_date")
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
