@@ -18,7 +18,10 @@
         android:roundIcon="@mipmap/book"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GuideActivity"></activity>
+        <activity android:name=".BookShelfSearchActivity"
+            android:theme="@style/NoTitle">
+        </activity>
+        <activity android:name=".GuideActivity" />
         <activity android:name=".SettingActivity" />
         <activity
             android:name=".MemoEditActivity"
@@ -38,7 +41,7 @@
             android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/NoTitle"></activity>
+            android:theme="@style/NoTitle" />
         <activity
             android:name=".BookShelfActivity"
             android:theme="@style/NoTitle" />
