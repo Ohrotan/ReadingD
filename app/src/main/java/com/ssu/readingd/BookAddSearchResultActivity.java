@@ -1,6 +1,5 @@
 package com.ssu.readingd;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -63,7 +62,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
     Button select_btn;
     String keyword;
     BookSimpleDTO selecBook;
-    int cur_page =1;
+    int cur_page = 1;
 
     private boolean lastItemVisibleFlag = false;
     private boolean mLockListView = false;
@@ -89,7 +88,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
         book_search_result_list = findViewById(R.id.book_search_result_list);
 
         book_search_result_list.setOnScrollListener(this);
-        adapter =new BookResultListAdapter(this, resultList);
+        adapter = new BookResultListAdapter(this, resultList);
         book_search_result_list.setAdapter(adapter);
 
 
@@ -157,6 +156,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                 Intent intent = new Intent(this, BookManualRegisterActivity.class);
                 intent.putExtra("book", selecBook);
                 startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(this, "책을 선택해주세요.", Toast.LENGTH_SHORT).show();
             }
@@ -207,7 +207,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag && mLockListView == false) {
 
             progressBar.setVisibility(View.VISIBLE);
-            setPAGE_NO(""+(++cur_page));
+            setPAGE_NO("" + (++cur_page));
             setREQUEST_URL();
             getJSON();
         }
@@ -215,7 +215,7 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        Log.v("scroll",firstVisibleItem+"/"+visibleItemCount+"/"+totalItemCount);
+        Log.v("scroll", firstVisibleItem + "/" + visibleItemCount + "/" + totalItemCount);
         lastItemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
     }
 
@@ -243,15 +243,14 @@ public class BookAddSearchResultActivity extends AppCompatActivity implements Vi
                         JsonParser jp = new JsonParser();
                         JsonElement je = jp.parse(jsonString);
                         String count = je.getAsJsonObject().get("TOTAL_COUNT").getAsString();
-                        if(count.equals("0")){
+                        if (count.equals("0")) {
                             Intent intent = new Intent(mainactivity, BookManualRegisterActivity.class);
-                            intent.putExtra("book",new BookSimpleDTO(mainactivity.keyword));
+                            intent.putExtra("book", new BookSimpleDTO(mainactivity.keyword));
                             mainactivity.startActivity(intent);
-                            mainactivity.overridePendingTransition(0,0);
+                            mainactivity.overridePendingTransition(0, 0);
                             mainactivity.finish();
 
-                        }
-                        else {
+                        } else {
                             mainactivity.result_count_tv.setText(count + " 건");
                             JsonArray ja = je.getAsJsonObject().getAsJsonArray("docs");
                             for (int i = 0; i < ja.size(); i++) {
