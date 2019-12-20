@@ -136,13 +136,11 @@ public class FlashbackActivity extends AppCompatActivity {
         if (result == null) {
             Log.v("flashback", "null");
         } else {
-
             book_title_tv.setText((String) result.get("book_name"));
             page_tv.setText((String) result.get("r_page"));
             date_tv.setText((String) result.get("reg_date"));
             memo_tv.setText((String) result.get("memo_text"));
         }
-
          */
     }
 
@@ -210,6 +208,3 @@ public class FlashbackActivity extends AppCompatActivity {
     }
 
 }
-
-
-
