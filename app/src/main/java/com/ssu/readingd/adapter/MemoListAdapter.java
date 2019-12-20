@@ -581,6 +581,9 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView BookDateView;
         TextView EmailView;
         TextView contentView;
+        ImageButton prevButton, nextButton;
+        int imgIndex, imgcnt;
+        List<String> imgs;
 
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
@@ -598,12 +601,15 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             BookDateView = itemView.findViewById(R.id.BookDateCm);
             EmailView = itemView.findViewById(R.id.emailCm);
             contentView = itemView.findViewById(R.id.communityContent);
+            prevButton = itemView.findViewById(R.id.prev_btn);
+            nextButton = itemView.findViewById(R.id.next_btn);
 
         }
 
         void onBind(MemoDTO data, int position) {
             this.data = data;
             this.position = position;
+            this.imgs = data.getImg();
 
             BookNameView.setText(data.getBook_name());
             BookWriterView.setText(data.getBook_author());
@@ -611,6 +617,37 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             BookDateView.setText(data.getReg_date());
             contentView.setText(data.getMemo_text());
             EmailView.setText(data.getUser_id());
+            imgIndex = 0;
+            imgcnt = imgs.size();
+            final MemoDTO memodata = this.data;
+            if(imgcnt != 0){
+                setImageSwitcher(context, imageView, imgIndex, data);
+                prevButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (imgIndex > 0)
+                            imgIndex--;
+                        setImageSwitcher(context, imageView, imgIndex, memodata);
+
+                    }
+                });
+                nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (imgIndex < imgcnt - 1)
+                            imgIndex++;
+                        setImageSwitcher(context, imageView, imgIndex, memodata);
+                    }
+                });
+
+            }
+            else{
+                imageView.setVisibility(View.GONE);
+                prevButton.setVisibility(View.GONE);
+                nextButton.setVisibility(View.GONE);
+            }
+
+
 
             //changeVisibility(selectedItems.get(position));
             //roundLayout.setOnClickListener(this);
@@ -642,8 +679,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mData = list;
         this.context = context;
         this.adapter_type = adapter_type;
-
-
     }
 
 

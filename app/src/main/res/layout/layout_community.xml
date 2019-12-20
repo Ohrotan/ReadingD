@@ -91,12 +91,39 @@
 
 
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/communityPicture"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:srcCompat="@drawable/book_1" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/communityPicture"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                 />
+
+            <ImageButton
+                android:id="@+id/next_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/nextbtn"
+                android:background="@android:color/transparent"
+                android:layout_alignRight="@+id/communityPicture"
+                android:layout_alignBottom="@id/communityPicture"
+                ></ImageButton>
+
+            <ImageButton
+                android:id="@+id/prev_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/prevbtn"
+                android:background="@android:color/transparent"
+                android:layout_alignLeft="@+id/communityPicture"
+                android:layout_alignBottom="@id/communityPicture"
+                ></ImageButton>
+
+        </RelativeLayout>
 
 
         <TextView
