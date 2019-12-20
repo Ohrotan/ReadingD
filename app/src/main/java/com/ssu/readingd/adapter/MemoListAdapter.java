@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -236,8 +235,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             roundLayout.setOnClickListener(this);
 
 
-
-            final MemoDTO memodata = this.memo;
+            
 
             memoEditSpn.setSelection(2);
             memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
