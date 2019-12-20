@@ -250,7 +250,7 @@ public class BookManualRegisterActivity extends AppCompatActivity implements Vie
                 finish();
             } else {
                 result.setReg_date(year + "." + (month + 1) + "." + day);
-                new DBUtil().addBook("admin", result);
+                new DBUtil().addBook(result.getId(), result);
                 //startActivity(new Intent(this, TestRanActivity.class));
                 finish();
             }

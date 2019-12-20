@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private int displayWidth; //화면 크기
     private int size; //이미지 크기
     private int padding; //패딩
+    boolean isDeleting = false;
 
     @NonNull
     @Override
@@ -59,6 +61,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class ViewHolder_Grid extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView book_image;
+        private ImageButton book_delete_button;
         private ConstraintLayout book_layout;
         private TextView book_name_tv;
         private BookSimpleDTO data;
@@ -72,6 +75,8 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // 뷰 객체에 대한 참조. (hold strong reference)
             book_image = itemView.findViewById(R.id.book_img);
             book_name_tv = itemView.findViewById(R.id.book_name);
+            book_delete_button = itemView.findViewById(R.id.imagedelete_btn);
+            book_delete_button.setVisibility(View.GONE);
             book_layout = itemView.findViewById(R.id.book_layout);
 
         }
@@ -83,6 +88,22 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             RelativeLayout deleteLayout = (RelativeLayout)layoutInflater.inflate(R.layout.layout_book_img_delete, null);
+
+
+            book_name_tv.setText(data.getBook_name());
+            //ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
+
+
+            if (delete) {
+                book_delete_button.setVisibility(View.VISIBLE);
+                book_delete_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
+
             //ImageView view = deleteLayout.findViewById(R.id.book_deleteBtn);
             //book_layout.addView(deleteLayout);
             //view.setVisibility(View.INVISIBLE);
