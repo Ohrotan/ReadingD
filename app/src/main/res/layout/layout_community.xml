@@ -28,20 +28,23 @@
                 android:layout_height="wrap_content"
                 android:text="책 제목"
                 android:textSize="30dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_alignParentRight="true">
+                android:layout_below="@id/BookTitleCm">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" - "
-                    android:layout_marginLeft="30dp"/>
+                    />
 
                 <TextView
                     android:id="@+id/BookWriterCm"
@@ -81,7 +84,6 @@
             <TextView
                 android:id="@+id/emailCm"
                 android:layout_below="@id/linearLayout"
-                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="hshs@ssu.ac.kr"/>
@@ -130,7 +132,7 @@
             android:id="@+id/communityContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:text="가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하"/>
 

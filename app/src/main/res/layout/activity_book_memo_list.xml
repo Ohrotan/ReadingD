@@ -30,7 +30,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:layout_centerInParent="true"
-            android:text="책 제목1"
+            android:layout_toRightOf="@id/addBookBtn"
+            android:layout_toLeftOf="@id/book_edit_btn"
+            android:gravity="center"
+            android:text="책 제목"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="20sp"
             android:textStyle="bold" />
 
