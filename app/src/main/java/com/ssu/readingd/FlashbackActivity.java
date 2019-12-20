@@ -202,7 +202,7 @@ public class FlashbackActivity extends AppCompatActivity {
             //  finish();
             overridePendingTransition(0, 0);
         }
-        finish();
+       // finish();
 
     }
 
