@@ -7,10 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -41,14 +41,12 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(!delete){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_book, parent, false);
-            return new BookShelfAdapter.ViewHolder_Grid(view);
-        }
-        else{
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_book, parent, false);
-            return new BookShelfAdapter.ViewHolder_Grid_D(view);
-        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.layout_book, null);
+
+        // View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_book, parent, false);
+        return new BookShelfAdapter.ViewHolder_Grid(view);
 
     }
 
@@ -63,7 +61,6 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         else {
             return 1;
         }
-
 
     }
 
@@ -81,8 +78,6 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             vh_g_d.onBind(book_model, position);
         }
 
-
-
     }
 
 
@@ -95,7 +90,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class ViewHolder_Grid extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView book_image;
-        private ImageButton book_delete_button;
+        private ImageView book_delete_button;
         private ConstraintLayout book_layout;
         private TextView book_name_tv;
         private BookSimpleDTO data;
@@ -109,8 +104,8 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // 뷰 객체에 대한 참조. (hold strong reference)
             book_image = itemView.findViewById(R.id.book_img);
             book_name_tv = itemView.findViewById(R.id.book_name);
-            book_delete_button = itemView.findViewById(R.id.imagedelete_btn);
-            book_delete_button.setVisibility(View.GONE);
+          //  book_delete_button = itemView.findViewById(R.id.imagedelete_btn);
+          //  book_delete_button.setVisibility(View.GONE);
             book_layout = itemView.findViewById(R.id.book_layout);
 
         }
@@ -128,15 +123,6 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             //ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
 
 
-            if (delete) {
-                book_delete_button.setVisibility(View.VISIBLE);
-                book_delete_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-            }
 
             //ImageView view = deleteLayout.findViewById(R.id.book_deleteBtn);
             //book_layout.addView(deleteLayout);
