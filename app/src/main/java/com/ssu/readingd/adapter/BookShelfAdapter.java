@@ -124,6 +124,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     Log.d("hs_test", "롱클릭");
                     Intent intent = new Intent(context, MemoRegisterActivity.class);
                     intent.putExtra("book", data);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     context.startActivity(intent);
                     return true;
                 }
@@ -139,12 +140,14 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 Intent intent = new Intent(context, MemoRegisterActivity.class);
                 intent.putExtra("book", data);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 context.startActivity(intent);
 
             }
             else{
                 Intent intent = new Intent(v.getContext(), BookMemoListActivity.class);
                 intent.putExtra("book", data);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 context.startActivity(intent);
             }
 

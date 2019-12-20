@@ -17,6 +17,12 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -31,12 +37,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class BookMemoListActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -100,6 +100,7 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
         String login_id=sharedPref.getString("id", "none");
         if(login_id.equals("none")){
             Intent intent2 = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent2);
         }
 
@@ -305,6 +306,8 @@ public class BookMemoListActivity extends AppCompatActivity implements View.OnCl
                     intent.putExtra("toMonth", toMonth);
                     intent.putExtra("toDate", toDate);
                     intent.putExtra("Activity", "BookMemoListActivity");
+
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
                     startActivity(intent);
 
