@@ -7,11 +7,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +23,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -64,17 +63,24 @@ public class FlashbackActivity extends AppCompatActivity {
 
         final String TAG = "Async Task";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
-        user_id=sharedPref.getString("id", "none");
-
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String userid = sharedPref.getString("id", null);
+        if (userid == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+        Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
         db.collection("memos")
-                .whereEqualTo("user_id", "admin")
+                .whereEqualTo("user_id", userid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             int total = task.getResult().size();
+                            if (total <= 0) {
+                                return;
+                            }
                             Random r = new Random();
                             int i = r.nextInt(total);
                             memo = task.getResult().getDocuments().get(i).getData();
@@ -90,9 +96,9 @@ public class FlashbackActivity extends AppCompatActivity {
                                     page_tv.setText(((long) memo.get("r_page")) + " p");
                                     date_tv.setText((String) memo.get("reg_date"));
                                     memo_tv.setText((String) memo.get("memo_text"));
-                                    if(imgcnt != 0)
+                                    if (imgcnt != 0)
                                         setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, imgIds);
-                                    else{
+                                    else {
                                         imgs.setVisibility(View.GONE);
                                         prevButton.setVisibility(View.GONE);
                                         nextButton.setVisibility(View.GONE);
@@ -102,7 +108,7 @@ public class FlashbackActivity extends AppCompatActivity {
                                         public void onClick(View v) {
                                             if (imgIndex > 0)
                                                 imgIndex--;
-                                            setImageSwitcher(FlashbackActivity.this, imgs, imgIndex,imgIds);
+                                            setImageSwitcher(FlashbackActivity.this, imgs, imgIndex, imgIds);
                                         }
                                     });
                                     nextButton.setOnClickListener(new View.OnClickListener() {
@@ -130,13 +136,11 @@ public class FlashbackActivity extends AppCompatActivity {
         if (result == null) {
             Log.v("flashback", "null");
         } else {
-
             book_title_tv.setText((String) result.get("book_name"));
             page_tv.setText((String) result.get("r_page"));
             date_tv.setText((String) result.get("reg_date"));
             memo_tv.setText((String) result.get("memo_text"));
         }
-
          */
     }
 
@@ -204,6 +208,3 @@ public class FlashbackActivity extends AppCompatActivity {
     }
 
 }
-
-
-

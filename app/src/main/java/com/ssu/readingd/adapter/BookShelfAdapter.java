@@ -93,13 +93,13 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
             if (delete) {
-                book_delete_button.setVisibility(View.VISIBLE);
+                /*book_delete_button.setVisibility(View.VISIBLE);
                 book_delete_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                     }
-                });
+                });*/
             }
 
             new Thread(new Runnable() {
