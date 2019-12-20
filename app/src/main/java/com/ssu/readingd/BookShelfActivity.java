@@ -125,6 +125,7 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
                         intent.putExtra("keyword", keyword.getText().toString());
 
                         startActivity(intent);
+                        dialog.dismiss();
                         //제목이나 저자로 책검색 이동
 
 
