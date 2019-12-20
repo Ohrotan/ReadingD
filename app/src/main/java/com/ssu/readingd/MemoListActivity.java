@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,9 +36,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.ssu.readingd.adapter.MemoListAdapter;
-
-import com.ssu.readingd.dto.BookSimpleDTO;
-
 import com.ssu.readingd.dto.BookDTO;
 import com.ssu.readingd.dto.MemoDTO;
 
@@ -116,43 +114,6 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-
-                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                            MemoDTO memo = document.toObject(MemoDTO.class);
-                            Log.d("hs_test", "메모추가");
-
-                            db.collection("books").whereEqualTo("user_id", login_id)
-                                    .whereEqualTo("book_name", memo.getBook_name())
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-
-                                                DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                                                Log.d("hs_test", "메모추가");
-                                                BookSimpleDTO book = document.toObject(BookSimpleDTO.class);
-
-                                                Intent intent = new Intent(context, MemoRegisterActivity.class);
-                                                intent.putExtra("book", book);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                                startActivity(intent);
-                                                finish();
-
-                                            } else {
-                                                Log.d("hs_test", "메모추가 실패");
-                                                Log.d("hs_test", task.getException().toString());
-                                            }
-                                        }
-                                    });
-
-
-
-                            //for (QueryDocumentSnapshot doc : task.getResult()) {}
-
-                        } else {
-                            Log.d("hs_test", "메모추가 실패");
-                            Log.d("hs_test", task.getException().toString());
                             DocumentSnapshot document = task.getResult().getDocuments().get(0);
 
                             Intent intent = new Intent(context, MemoRegisterActivity.class);
@@ -333,91 +294,91 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         if (v == memoBtn || v == memoSearchBtn || v == searchBox) {
             View dialogView = getLayoutInflater().inflate(R.layout.memo_search_layout, null);
 
-            Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
-            Button searchBtn = dialogView.findViewById(R.id.searchBtn);
-            final EditText nameSearchTxt = dialogView.findViewById(R.id.nameSearchText);
-            final EditText writerSearchTxt = dialogView.findViewById(R.id.writerSearchText);
-            final EditText contentSearchTxt = dialogView.findViewById(R.id.contentSearchText);
-            final Button startDate = dialogView.findViewById(R.id.startDate);
-            final Button endDate = dialogView.findViewById(R.id.endDate);
+        Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
+        Button searchBtn = dialogView.findViewById(R.id.searchBtn);
+        final EditText nameSearchTxt = dialogView.findViewById(R.id.nameSearchText);
+        final EditText writerSearchTxt = dialogView.findViewById(R.id.writerSearchText);
+        final EditText contentSearchTxt = dialogView.findViewById(R.id.contentSearchText);
+        final Button startDate = dialogView.findViewById(R.id.startDate);
+        final Button endDate = dialogView.findViewById(R.id.endDate);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(dialogView);
-
-
-            cancelBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    alertDialog.dismiss();
-                }
-            });
-            searchBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    final String book_name = nameSearchTxt.getText().toString();
-                    final String author = writerSearchTxt.getText().toString();
-                    final String content = contentSearchTxt.getText().toString();
-
-                    Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
-                    intent.putExtra("book_name", book_name);
-                    intent.putExtra("author", author);
-                    intent.putExtra("content", content);
-                    intent.putExtra("fromYear", fromYear);
-                    intent.putExtra("fromMonth", fromMonth);
-                    intent.putExtra("fromDate", fromDate);
-                    intent.putExtra("toYear", toYear);
-                    intent.putExtra("toMonth", toMonth);
-                    intent.putExtra("toDate", toDate);
-                    intent.putExtra("Activity", "MemoListActivity");
-
-                    startActivity(intent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
 
 
-                    alertDialog.dismiss();
-                }
-            });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            Button.OnClickListener btnListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final View view = v;
-                    DatePickerDialog dialog = new DatePickerDialog(MemoListActivity.this, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                final String book_name = nameSearchTxt.getText().toString();
+                final String author = writerSearchTxt.getText().toString();
+                final String content = contentSearchTxt.getText().toString();
 
-                            String msg = String.format("%d.%d.%d", year, month + 1, date);
+                Intent intent = new Intent(v.getContext(), MemoSearchResultActivity.class);
+                intent.putExtra("book_name", book_name);
+                intent.putExtra("author", author);
+                intent.putExtra("content", content);
+                intent.putExtra("fromYear", fromYear);
+                intent.putExtra("fromMonth", fromMonth);
+                intent.putExtra("fromDate", fromDate);
+                intent.putExtra("toYear", toYear);
+                intent.putExtra("toMonth", toMonth);
+                intent.putExtra("toDate", toDate);
+                intent.putExtra("Activity", "MemoListActivity");
 
-                            if (view == startDate) {
-                                startDate.setText(msg);
-                                fromYear = year;
-                                fromMonth = month + 1;
-                                fromDate = date;
-                            } else if (view == endDate) {
-                                endDate.setText(msg);
-                                toYear = year;
-                                toMonth = month + 1;
-                                toDate = date;
-                            }
+                startActivity(intent);
 
-                            //Toast.makeText(MemoListActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+                alertDialog.dismiss();
+            }
+        });
+
+        Button.OnClickListener btnListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final View view = v;
+                DatePickerDialog dialog = new DatePickerDialog(MemoListActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+
+                        String msg = String.format("%d.%d.%d", year, month + 1, date);
+
+                        if (view == startDate) {
+                            startDate.setText(msg);
+                            fromYear = year;
+                            fromMonth = month + 1;
+                            fromDate = date;
+                        } else if (view == endDate) {
+                            endDate.setText(msg);
+                            toYear = year;
+                            toMonth = month + 1;
+                            toDate = date;
                         }
-                    }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
 
-                    dialog.getDatePicker().setMaxDate(new Date().getTime());    //입력한 날짜 이후로 클릭 안되게 옵션
-                    dialog.show();
+                        //Toast.makeText(MemoListActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
+
+                dialog.getDatePicker().setMaxDate(new Date().getTime());    //입력한 날짜 이후로 클릭 안되게 옵션
+                dialog.show();
 
 
-                }
-            };
+            }
+        };
 
-            startDate.setOnClickListener(btnListener);
-            endDate.setOnClickListener(btnListener);
+        startDate.setOnClickListener(btnListener);
+        endDate.setOnClickListener(btnListener);
 
-            alertDialog = builder.create();
-            alertDialog.show();
+        alertDialog = builder.create();
+        alertDialog.show();
 
-        }
+    }
     }
 
 

@@ -142,6 +142,52 @@ public class BookShelfActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+        bookSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                View dialogView = getLayoutInflater().inflate(R.layout.layout_book_search, null);
+
+                Button cancelBtn = dialogView.findViewById(R.id.searchCancelBtn);
+                Button searchBtn = dialogView.findViewById(R.id.searchBtn);
+                final EditText nameSearchTxt = dialogView.findViewById(R.id.title_book_search);
+                final EditText writerSearchTxt = dialogView.findViewById(R.id.writer_book_search);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setView(dialogView);
+
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+                searchBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (!nameSearchTxt.equals("") && !writerSearchTxt.equals("")) {
+                        } else if (!nameSearchTxt.equals("") && writerSearchTxt.equals("")) {
+
+                        } else if (nameSearchTxt.equals("") && writerSearchTxt.equals("")) {
+
+                        } else {
+
+
+                        }
+
+
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog = builder.create();
+                alertDialog.show();
+
+            }
+
+        });
+
         init();
 
 
