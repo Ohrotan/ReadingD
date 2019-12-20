@@ -72,6 +72,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // 뷰 객체에 대한 참조. (hold strong reference)
             book_image = itemView.findViewById(R.id.book_img);
             book_name_tv = itemView.findViewById(R.id.book_name);
+            book_layout = itemView.findViewById(R.id.book_layout);
 
         }
 
@@ -82,15 +83,10 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             RelativeLayout deleteLayout = (RelativeLayout)layoutInflater.inflate(R.layout.layout_book_img_delete, null);
-
-            book_name_tv.setText(data.getBook_name());
-            //ImageViewFromURL.setImageView((Activity) context, book_image, data.getImg());
-
-
-            if (delete) {
-                deleteLayout.setVisibility(View.VISIBLE);
-                //book_layout.addView(deleteLayout);
-            }
+            //ImageView view = deleteLayout.findViewById(R.id.book_deleteBtn);
+            //book_layout.addView(deleteLayout);
+            //view.setVisibility(View.INVISIBLE);
+            //deleteLayout.addView(view);
 
             new Thread(new Runnable() {
                 @Override
@@ -99,9 +95,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }).start();
 
-
-            //new DBUtil().setImageViewFromDB(context, book_image, data.getImg());
-            //book_image.setImageResource(R.drawable.book_1);
+            book_name_tv.setText(data.getBook_name());
             book_image.setOnClickListener(this);
             book_image.setOnLongClickListener(new View.OnLongClickListener(){
                 @Override
@@ -113,6 +107,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     return true;
                 }
             });
+
 
         }
 
