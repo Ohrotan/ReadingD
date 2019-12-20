@@ -2,8 +2,11 @@ package com.ssu.readingd;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,12 +18,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -47,6 +53,8 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
     StorageReference storageRef;
     LinearLayout searchBox;
     Spinner memoEditSpinner;
+    String login_id;
+    Context context;
 
     int fromYear;
     int fromMonth;
@@ -78,23 +86,48 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
         addMemoTitleBtn = (ImageButton)findViewById(R.id.addBookBtn);
         searchBox = (LinearLayout)findViewById(R.id.searchBox);
         memoEditSpinner = findViewById(R.id.memoEditSpinner);
+        context = this;
 
         memoSearchBtn.setOnClickListener(this);
         searchBox.setOnClickListener(this);
         memoBtn.setOnClickListener(this);
 
         init();
-        //List<String> imgs = new ArrayList<>();
-
-        // String 랜덤변수 생성 - 대문자 20글자
-
+        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
+        login_id=sharedPref.getString("id", "none");
+        if(login_id.equals("none")){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
     }
 
     public void AddMemo(View v){
 
-        Intent intent = new Intent(this, MemoRegisterActivity.class);
-        startActivity(intent);
+
+        db.collection("memos")
+                .orderBy("reg_date", Query.Direction.ASCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                Intent intent = new Intent(context, MemoRegisterActivity.class);
+                                MemoDTO memo = document.toObject(MemoDTO.class);
+                                intent.putExtra("memo", memo);
+                                startActivity(intent);
+
+                                break;
+                            }
+                        } else {
+                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
 
     }
 
@@ -150,7 +183,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0){
                     //최신순 정렬
-                    db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING)
+                    db.collection("memos").orderBy("reg_date", Query.Direction.DESCENDING).whereEqualTo("user_id", login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -164,8 +197,8 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                     for (QueryDocumentSnapshot doc : value) {
                                         if (doc.get("book_name") != null) {
                                             MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            memoDTO.setMemo_id(doc.getId());
                                             arrayList.add(memoDTO);
-
                                         }
                                     }
                                     //어답터 갱신
@@ -175,7 +208,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                 }
                 else if(position == 1){
                     //오래된순
-                    db.collection("memos").orderBy("reg_date", Query.Direction.ASCENDING)
+                    db.collection("memos").orderBy("reg_date", Query.Direction.ASCENDING).whereEqualTo("user_id", login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value,
@@ -190,6 +223,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                         if (doc.get("book_name") != null) {
                                             Log.d("hs_test", "읽기 성공", e);
                                             MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            memoDTO.setMemo_id(doc.getId());
                                             arrayList.add(0, memoDTO);
                                         }
                                         Log.d("hs_test", "읽기 성공222", e);
@@ -202,7 +236,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                 }
                 else{
                     //책이름순
-                    db.collection("memos").orderBy("book_name")
+                    db.collection("memos").orderBy("book_name").whereEqualTo("user_id", login_id)
                             .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                                 @Override
@@ -217,6 +251,7 @@ public class MemoListActivity extends AppCompatActivity implements View.OnClickL
                                     for (QueryDocumentSnapshot doc : value) {
                                         if (doc.get("book_name") != null) {
                                             MemoDTO memoDTO = doc.toObject(MemoDTO.class);
+                                            memoDTO.setMemo_id(doc.getId());
                                             arrayList.add(memoDTO);
                                         }
                                                                             }

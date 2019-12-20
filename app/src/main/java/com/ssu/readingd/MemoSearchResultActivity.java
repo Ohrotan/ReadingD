@@ -1,7 +1,9 @@
 package com.ssu.readingd;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -10,6 +12,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -22,11 +29,6 @@ import com.ssu.readingd.adapter.MemoListAdapter;
 import com.ssu.readingd.dto.MemoDTO;
 
 import java.util.ArrayList;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MemoSearchResultActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -49,6 +51,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
     int toMonth;
     int toDate;
     String activity;
+    String login_id;
 
 
     @Override
@@ -81,6 +84,12 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         toDate = intent.getIntExtra("toDate", 0);
         activity = intent.getStringExtra("Activity");
 
+        SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (this);
+        String login_id=sharedPref.getString("id", "none");
+        if(login_id.equals("none")){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         sortMemoSpinner.setOnItemSelectedListener(this);
         Log.v("search_test", book_name + "/" + author + "/" + content);
@@ -120,6 +129,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new MemoListAdapter(this, arrayList, 0);
         recyclerView.setAdapter(adapter);
+
 /*
         if (!book_name.equals("") && author.equals("") && content.equals("")) {
             query = db.collection("memos").whereEqualTo("book_name", book_name);
@@ -213,6 +223,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                         Log.d("hs_test", "Listen failed.", e);
                         return;
                     }
+
                     int count = value.size();
                     arrayList.clear();
                     for (QueryDocumentSnapshot doc : value) {
@@ -226,6 +237,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                         } else if (content != null && dto.getMemo_text().contains(content)) {
                             dto.setMemo_id(doc.getId());
                             arrayList.add(dto);
+
                         }
                         Log.d("hs_test", "메모 불러오기", e);
                     }
@@ -238,7 +250,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
 /*
         if (position == 0) {
             //최신순
-            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            query.whereEqualTo("user_id", login_id).addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {
@@ -260,7 +272,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
             });
         } else if (position == 1) {
             //오래된순
-            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            query.whereEqualTo("user_id", login_id).addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {
@@ -280,6 +292,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
                     adapter.notifyDataSetChanged();
                 }
             });
+
         } else {
             query.orderBy("Book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
@@ -332,7 +345,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
 
         if (position == 0) {
             //최신순 정렬
-            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            query.whereEqualTo("user_id", login_id).addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {
@@ -353,7 +366,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
             });
         } else if (position == 1) {
             //오래된순 정렬
-            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            query.whereEqualTo("user_id", login_id).addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {
@@ -374,7 +387,7 @@ public class MemoSearchResultActivity extends AppCompatActivity implements Adapt
             });
         } else if (position == 2) {
             //책제목순 정렬
-            query.orderBy("book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            query.whereEqualTo("user_id", login_id).orderBy("book_name").addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value,
                                     @Nullable FirebaseFirestoreException e) {

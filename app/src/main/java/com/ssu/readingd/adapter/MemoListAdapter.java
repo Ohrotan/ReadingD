@@ -21,6 +21,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,10 +39,6 @@ import com.ssu.readingd.util.DBUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -163,9 +163,10 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private Spinner memoEditSpn;
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
-        private MemoDTO data;
+        private MemoDTO memo;
         private int position;
         private String memo_id;
+        private List<String> imgs;
 
         ViewHolder_MemoList(View itemView) {
             super(itemView);
@@ -188,18 +189,21 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @SuppressLint("ClickableViewAccessibility")
         void onBind(final MemoDTO data, int position) {
-            this.data = data;
+            this.memo = data;
             this.position = position;
             this.memo_id = data.getMemo_id();
+            imgs = new ArrayList<>();
+
 
             final MemoDTO memoDTO = data;
 
             bookName.setText(data.getBook_name());
             bookWriter.setText(data.getBook_author());
             bookPage.setText(String.valueOf((data.getR_page())));
-            bookDate.setText(data.getReg_date());
-            memoContent_short.setText(String.valueOf(data.getMemo_text() + "short text"));
-            memoContent_long.setText(String.valueOf(data.getMemo_text() + "long text"));
+            bookDate.setText(data.getReg_date()) ;
+            memoContent_short.setText(String.valueOf(data.getMemo_text()));
+            memoContent_long.setText(String.valueOf(data.getMemo_text()));
+
             imgIndex = 0;
             imgcnt = 0;
             if(data.getImg()!=null)
@@ -334,8 +338,16 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     //memoContent_long.getLayoutParams().height = value;
                     memoContent_long.requestLayout();
 
-                    memoImage.getLayoutParams().height = value;
-                    memoImage.requestLayout();
+                    if(imgcnt != 0){
+                        memoImage.getLayoutParams().height = value;
+                        memoImage.requestLayout();
+                        Log.d("hs_test", "not empty");
+                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT );
+                        param.topMargin = (int)(20 * context.getResources().getDisplayMetrics().density);
+                        //memoContent_long.setLayoutParams(param);
+                    }
+
+
                     // imageView가 실제로 사라지게하는 부분
 
                     //expandedArea.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -464,7 +476,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         memoDeleteCancelBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(v.getContext(), "삭제 버튼 클릭", Toast.LENGTH_SHORT).show();
                                 Log.d("hs_test", "메모 ... 스피너 삭제 --> 취소 버튼 클릭");
                                 dialog.dismiss();
                             }
@@ -474,7 +485,6 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             @Override
                             public void onClick(View v) {
                                 new DBUtil().DeleteMemo(memo_id);
-                                Toast.makeText(v.getContext(), "삭제 버튼 클릭", Toast.LENGTH_SHORT).show();
                                 Log.d("hs_test", "메모 ... 스피너 삭제--> 확인 버튼 클릭");
                                 dialog.dismiss();
                             }
@@ -545,8 +555,14 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     //memoContent_long.getLayoutParams().height = value;
                     memoContent_long.requestLayout();
 
-                    memoImage.getLayoutParams().height = value;
-                    memoImage.requestLayout();
+                    if(imgcnt != 0){
+                        memoImage.getLayoutParams().height = value;
+                        memoImage.requestLayout();
+                        Log.d("hs_test", "not empty");
+                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT );
+                        param.topMargin = (int)(20 * context.getResources().getDisplayMetrics().density);
+                        //memoContent_long.setLayoutParams(param);
+                    }
                     // imageView가 실제로 사라지게하는 부분
 
                     //expandedArea.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -574,24 +590,26 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class ViewHolder_Community extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView imageView;
+        ImageView memoImage;
         TextView BookNameView;
         TextView BookWriterView;
         TextView BookPageView;
         TextView BookDateView;
         TextView EmailView;
         TextView contentView;
+        int imgIndex;
+        int imgcnt;
 
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
-        private MemoDTO data;
+        private MemoDTO memo;
         private int position;
 
         ViewHolder_Community(View itemView) {
             super(itemView);
 
             roundLayout = itemView.findViewById(R.id.round_layout);
-            imageView = itemView.findViewById(R.id.communityPicture);
+            memoImage = itemView.findViewById(R.id.communityPicture);
             BookNameView = itemView.findViewById(R.id.BookTitleCm);
             BookWriterView = itemView.findViewById(R.id.BookWriterCm);
             BookPageView = itemView.findViewById(R.id.BookPageCm);
@@ -602,7 +620,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         void onBind(MemoDTO data, int position) {
-            this.data = data;
+            this.memo = data;
             this.position = position;
 
             BookNameView.setText(data.getBook_name());
@@ -614,6 +632,41 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             //changeVisibility(selectedItems.get(position));
             //roundLayout.setOnClickListener(this);
+            imgIndex = 0;
+            imgcnt = 0;
+            if(memo.getImg()!=null)
+                imgcnt = data.getImg().size();
+            setImageSwitcher(context, memoImage, imgIndex, memo);
+
+            memoImage.setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    float x = event.getX();
+                    float width = v.getX() + v.getWidth()/2;
+                    if(x > width){
+                        if(imgIndex < imgcnt -1)
+                            imgIndex++;
+                        setImageSwitcher(context, memoImage, imgIndex, memo);
+                    }
+                    else{
+                        if(imgIndex > 0)
+                            imgIndex--;
+                        setImageSwitcher(context, memoImage, imgIndex, memo);
+                    }
+                    return true;
+                }
+            });
+
+
+            if(imgcnt != 0){
+                memoImage.getLayoutParams().height = (int)(150*context.getResources().getDisplayMetrics().density);
+                memoImage.requestLayout();
+                Log.d("hs_test", "not empty");
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT );
+                param.topMargin = (int)(20 * context.getResources().getDisplayMetrics().density);
+                //memoContent_long.setLayoutParams(param);
+            }
         }
 
         @Override

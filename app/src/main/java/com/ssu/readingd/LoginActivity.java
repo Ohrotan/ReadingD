@@ -3,7 +3,9 @@ package com.ssu.readingd;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -62,6 +64,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String id = idText.getText().toString();
         final String pw1 = pwText.getText().toString();
 
+
+
+
         if(v == loginBtn){
 
             if( id.equals("")){
@@ -84,10 +89,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             String loginPwd = Hashing.sha256().hashString(pw1, StandardCharsets.UTF_8).toString();
                             if(user.getPwd().equals(loginPwd)){
-                                //Toast.makeText(LoginActivity.this, "로그인", Toast.LENGTH_SHORT).show();
-                                Log.d("hs_test", "user.getPwd() = " + user.getPwd());
+                                //로그인 완료
 
-                                // 인텐트 객체 생성해서 결과 담벼락으로 보내고 종료하기
+                                //shared preference
+                                SharedPreferences sharedPref= PreferenceManager. getDefaultSharedPreferences (context);
+                                SharedPreferences.Editor editor=sharedPref.edit();
+                                editor.putString("id", id);
+                                editor.commit();
+
+                                // 메모리스트 실행
                                 Intent intent = new Intent(context, MemoListActivity.class);
                                 startActivity(intent);
                                 finish();
