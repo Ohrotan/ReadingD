@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,16 +64,23 @@ public class FlashbackActivity extends AppCompatActivity {
         final String TAG = "Async Task";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-
+        String userid = sharedPref.getString("id", null);
+        if (userid == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+        Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
         db.collection("memos")
-                .whereEqualTo("user_id", sharedPref.getString("id", null))
+                .whereEqualTo("user_id", userid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             int total = task.getResult().size();
+                            if (total <= 0) {
+                                return;
+                            }
                             Random r = new Random();
                             int i = r.nextInt(total);
                             memo = task.getResult().getDocuments().get(i).getData();

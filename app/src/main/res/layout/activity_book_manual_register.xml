@@ -26,7 +26,7 @@
             android:id="@+id/book_cover_img"
             android:layout_width="150dp"
             android:layout_height="200dp"
-            app:srcCompat="@drawable/book_add" />
+            app:srcCompat="@drawable/default_book" />
 
         <LinearLayout
             android:layout_width="match_parent"

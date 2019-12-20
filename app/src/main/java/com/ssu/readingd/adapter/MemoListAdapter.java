@@ -198,7 +198,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             bookName.setText(data.getBook_name());
             bookWriter.setText(data.getBook_author());
-            bookPage.setText(String.valueOf((data.getR_page())));
+            bookPage.setText(String.valueOf((data.getR_page()))+" page");
             bookDate.setText(data.getReg_date()) ;
             memoContent_short.setText(String.valueOf(data.getMemo_text()));
             memoContent_long.setText(String.valueOf(data.getMemo_text()));
@@ -237,7 +237,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
-            final MemoDTO memodata = this.data;
+            final MemoDTO memodata = this.memo;
 
             memoEditSpn.setSelection(2);
             memoEditSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -608,8 +608,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageButton prevButton, nextButton;
         int imgIndex, imgcnt;
         List<String> imgs;
-        int imgIndex;
-        int imgcnt;
+
 
         //private LinearLayout expandedArea;
         private LinearLayout roundLayout;
@@ -645,6 +644,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             EmailView.setText(data.getUser_id());
             imgIndex = 0;
             imgcnt = imgs.size();
+
             final MemoDTO memodata = data;
             if(imgcnt != 0){
                 setImageSwitcher(context, memoImage, imgIndex, data);
@@ -662,6 +662,7 @@ public class MemoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     public void onClick(View v) {
                         if (imgIndex < imgcnt - 1)
                             imgIndex++;
+
                         setImageSwitcher(context,memoImage, imgIndex, memodata);
                     }
                 });
